@@ -1,5 +1,5 @@
 <div class="footer">
-    This is footer
+
 </div>
 <!-- JS - jquery-3.5.0 -->
 <script src="<?php echo $js ?>jquery-3.5.0.min.js"></script>
