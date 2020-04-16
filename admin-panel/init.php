@@ -1,4 +1,7 @@
 <?php
+// connnect to database 
+include 'connectDB.php';
+
 
 // Routes - more dynamic for maintanence
 $tpl = 'includes/templates/'; //Templates Dir
