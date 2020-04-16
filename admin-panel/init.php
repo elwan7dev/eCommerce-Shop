@@ -4,3 +4,4 @@
 $tpl = 'includes/templates/'; //Templates Dir
 $css = 'layout/css/'; //css Dir
 $js = 'layout/js/'; //js Dir
+$langs ='includes/languages/'; //langs Dir

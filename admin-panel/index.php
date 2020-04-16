@@ -2,6 +2,11 @@
 // initialize php file
 include 'init.php';
 include $tpl . 'header.php';
+include $langs . 'en.php';
+
 ?>
-    Welcome to index pages
+    <?php
+        echo lang('MESSAGE').' '. lang('ADMIN') ;
+    
+    ?>
 <?php include $tpl . 'footer.php'?>
