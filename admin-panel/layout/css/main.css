@@ -37,5 +37,15 @@ body{
     margin-right: 5rem;
 }
 
-
 /* end Bootstrap edits */
+
+/* start members page */
+h1 {
+    margin: 22px 0px;
+    font-size: 50px;
+    color: #5d5b5b;
+
+}
+
+
+/* end members page */
