@@ -12,7 +12,7 @@
     <!-- custom styles -->
     <link rel="stylesheet" href="<?php echo $css ?>main.css">
 
-    <title>Admin</title>
+    <title><?php getTitle(); ?></title>
 </head>
 
 <body>
