@@ -1,12 +1,19 @@
 <?php
 session_start();
-$pageTitle = 'Dashboard';
+
 
 if (isset($_SESSION['username'])) {
-    // Page Code
-
+    $pageTitle = 'Dashboard';
     include 'init.php'; // initialize php file
 
+    // Page Code here
+
+
+
+
+
+    
+    // foooter temp
     include $tpl . 'footer.php';
 } else {
     header('location: index.php');
