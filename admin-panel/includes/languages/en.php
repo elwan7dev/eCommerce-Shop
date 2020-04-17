@@ -3,9 +3,17 @@
 function lang($phrase)
 {
     static $lang = array(
-        // Home page words
-        'MESSAGE' => 'Welcome',
-        'ADMIN' => 'Adminstrator'
+        // dashboard page
+        'HOME' => 'Home',
+        'CATEGORIES' => 'Categories',
+        'ITEMS' => 'Items',
+        'MEMBERS' => 'Members',
+        'STATISTICS' => 'Statistics',
+        'LOGS' => 'Logs',
+        'PROFILE' => 'Profile',
+        'SETTING' => 'Setting',
+        'LOGOUT' => 'Logout',
+        'SEARCH' => 'Search',
 
         // setting page
     );

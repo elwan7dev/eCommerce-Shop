@@ -1,6 +1,8 @@
 /* start main rules */
 body{
+    font-size: 16px;
     background-color: #f4f4f4;
+
 }
 
 
@@ -24,6 +26,16 @@ body{
     background-color: #eaeaea;
 }
 
-
-
 /* end login-form */
+
+/* start Bootstrap edits */
+.mr-px {
+    margin-right: 70px;
+}
+
+.navbar-brand {
+    margin-right: 5rem;
+}
+
+
+/* end Bootstrap edits */

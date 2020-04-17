@@ -1,14 +1,13 @@
 <?php
 // start session
 session_start();
+$noNavBar = ''; // this page has no navbar
 if (isset($_SESSION['username'])) {
     header('location: dashboard.php'); // redirect to  dashboard page
 }
 
 // initialize php file
 include 'init.php';
-include $tpl . 'header.php';
-include $langs . 'en.php';
 
 // check if the user coming from the http POST request
 if ($_SERVER['REQUEST_METHOD'] == "POST") {

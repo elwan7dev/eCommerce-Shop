@@ -3,8 +3,14 @@
 function lang($phrase)
 {
     static $lang = array(
-        'MESSAGE' => 'مرحباً',
-        'ADMIN' => 'المدير',
+         // dashboard page
+         'HOME' => 'الرئيسية',
+         'CATEGORIES' => 'الأصناف',
+         'PROFILE' => 'الحساب',
+         'SETTING' => 'الاعدادات',
+         'LOGOUT' => 'تسجيل الخروج',
+         'SEARCH' => 'بحث'
+ 
 
     );
     return $lang[$phrase];
