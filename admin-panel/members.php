@@ -45,23 +45,23 @@ if (isset($_SESSION['username'])) {
             <div class="form-group col-md-6">
                 <label for="username">Username</label>
                 <input type="text" name="username" class="form-control" value="<?php echo $row['Username']; ?>"
-                    autocomplete="off">
+                    autocomplete="off" required="required">
             </div>
             <div class="form-group col-md-6">
                 <label for="password">Password</label>
                 <input type="hidden" name="oldPassword" value="<?php echo $row['Password']; ?>">
-                <input type="password" name="newPassword" class="form-control" autocomplete="off">
+                <input type="password" name="newPassword" class="form-control" autocomplete="new-password" placeholder="Leave Blank If You Don't Want To Reset It" >
             </div>
         </div>
         <!-- start email field -->
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" name="email" class="form-control" value="<?php echo $row['Email']; ?>">
+            <input type="email" name="email" class="form-control" value="<?php echo $row['Email']; ?>" required="required">
         </div>
         <!-- start Full Name field -->
         <div class="form-group">
             <label for="fullname">Full Name</label>
-            <input type="text" name="fullname" class="form-control" value="<?php echo $row['FullName']; ?>">
+            <input type="text" name="fullname" class="form-control" value="<?php echo $row['FullName']; ?>" required="required">
 
         </div>
         <!-- start button field -->
@@ -74,11 +74,11 @@ if (isset($_SESSION['username'])) {
 <?php
 } else {
                 // Error:No such ID
-                echo "  <div class='container' style='width: 70%; margin-top: 50px;'>
-                            <div class='alert alert-danger' role='alert'>
-                                Error: No Such ID
-                            </div>
-                         </div>";
+                echo "<div class='container' style='width: 70%; margin-top: 50px;'>
+                        <div class='alert alert-danger' role='alert'>
+                            Error: No Such ID
+                        </div>
+                    </div>";
             }
             break; // *************** End Member Edit page *****************
 
@@ -142,7 +142,7 @@ if (isset($_SESSION['username'])) {
                 // Error POST Request: You Can't Browse This Page Directly 
                 echo "<div class='alert alert-danger' role='alert'>Error: You Can't Browse This Page Directly</div>";
             }
-            echo "</div>"; //end of container class
+            echo "</div>"; //end of container div
 
             break; // ************* Start Member Update page ***************
         case 'delete':
