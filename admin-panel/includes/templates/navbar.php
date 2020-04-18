@@ -10,7 +10,7 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="dashboard.php"><?php echo lang('HOME'); ?> <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
@@ -20,7 +20,7 @@
                 <a class="nav-link" href="#"><?php echo lang('ITEMS'); ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#"><?php echo lang('MEMBERS'); ?></a>
+                <a class="nav-link" href="members.php"><?php echo lang('MEMBERS'); ?></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#"><?php echo lang('STATISTICS'); ?></a>

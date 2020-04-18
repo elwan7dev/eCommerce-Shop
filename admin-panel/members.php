@@ -15,11 +15,85 @@ if (isset($_SESSION['username'])) {
 
     switch ($action) {
         case 'manage':
-            echo 'Welcome in manage page';
+            echo 'Welcome in manage page <br />';
+            echo "<a href='?action=add'>Add New Member</a>";
+
             break;
-        case 'add':
-            echo 'Welcome in add page';
-            break;
+        case 'add': // ************* Start Member Add page *******************
+            ?>
+
+<!-- start html componants -->
+<h1 class="text-center">Add New Member</h1>
+<div class="container" style="width: 70%;">
+    <form action="?action=insert" method="POST">
+        <!-- start username & password in same row field -->
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="username">Username</label>
+                <input type="text" name="username" class="form-control" autocomplete="off" required="required"
+                    placeholder="">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="password">Password</label>
+                <input type="password" name="password" class="form-control" autocomplete="off" required="required" placeholder="">
+            </div>
+        </div>
+        <!-- start email field -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" class="form-control" required="required" placeholder="">
+        </div>
+        <!-- start Full Name field -->
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="fullname">Full Name</label>
+                <input type="text" name="fullname" class="form-control" autocomplete="off" required="required"
+                    placeholder="">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputState">State</label>
+                <select id="inputState" class="form-control">
+                    <option selected>Choose...</option>
+                    <option>Admin</option>
+                    <option>User</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="trustedCheck">
+                <label class="form-check-label" for="radio1">
+                    Trusted User
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="approvedCheck">
+                <label class="form-check-label" for="radio2">
+                    Approved User
+                </label>
+            </div>
+        </div>
+
+        <!-- start button field -->
+        <input type="submit" value="Add Member" class="btn btn-primary">
+    </form>
+</div>
+
+
+<?php
+            break; // ************* End Member Add page *******************
+
+        case 'insert': // ************* Start Member insert page *******************
+            echo 'welcome in insert page';
+            echo $_POST['username']. "</br>";
+            echo $_POST['password']. "</br>";
+            echo $_POST['email']. "</br>";
+            echo $_POST['fullname']. "</br>";
+           
+
+
+
+            break;    
         case 'edit': // ************* Start Member Edit page *******************
             // check if get request user id is numeric & get the integer value of it.
             $userid = (isset($_GET['userid']) && is_numeric($_GET['userid'])) ? intval($_GET['userid']) : 0;
@@ -50,18 +124,21 @@ if (isset($_SESSION['username'])) {
             <div class="form-group col-md-6">
                 <label for="password">Password</label>
                 <input type="hidden" name="oldPassword" value="<?php echo $row['Password']; ?>">
-                <input type="password" name="newPassword" class="form-control" autocomplete="new-password" placeholder="Leave Blank If You Don't Want To Reset It" >
+                <input type="password" name="newPassword" class="form-control" autocomplete="new-password"
+                    placeholder="Leave Blank If You Don't Want To Reset It">
             </div>
         </div>
         <!-- start email field -->
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" name="email" class="form-control" value="<?php echo $row['Email']; ?>" required="required">
+            <input type="email" name="email" class="form-control" value="<?php echo $row['Email']; ?>"
+                required="required">
         </div>
         <!-- start Full Name field -->
         <div class="form-group">
             <label for="fullname">Full Name</label>
-            <input type="text" name="fullname" class="form-control" value="<?php echo $row['FullName']; ?>" required="required">
+            <input type="text" name="fullname" class="form-control" value="<?php echo $row['FullName']; ?>"
+                required="required">
 
         </div>
         <!-- start button field -->
@@ -72,7 +149,7 @@ if (isset($_SESSION['username'])) {
 </div>
 
 <?php
-} else {
+            } else {
                 // Error:No such ID
                 echo "<div class='container' style='width: 70%; margin-top: 50px;'>
                         <div class='alert alert-danger' role='alert'>

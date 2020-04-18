@@ -2,8 +2,15 @@
 body{
     font-size: 16px;
     background-color: #f4f4f4;
-
 }
+
+/* .astrisk{
+    font-size: 21px;
+    color: #e02121;
+    position: absolute;
+    right: 31px;
+    top: 38px;
+} */
 
 
 /* end main rules */
@@ -36,6 +43,10 @@ body{
 .navbar-brand {
     margin-right: 5rem;
 }
+
+/* .form-control {
+    position: relative; 
+} */
 
 /* end Bootstrap edits */
 

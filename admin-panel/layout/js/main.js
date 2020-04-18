@@ -13,10 +13,10 @@ $(function () {
     });
 
   // add astrisk for the required input fields
-  $("input").each(function () {
-    // element == this
-    if ($(this).attr("required") == "required") {
-      $(this).after("<span class='astrisk'>*</span>");
-    }
-  });
+  // $("input").each(function () {
+  //   // element == this
+  //   if ($(this).attr("required") == "required") {
+  //     $(this).after("<span class='astrisk'>*</span>");
+  //   }
+  // });
 });
