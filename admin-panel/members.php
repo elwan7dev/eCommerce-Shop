@@ -84,6 +84,8 @@ if (isset($_SESSION['username'])) {
 
         case 'update': // ************* Start Member Update page ***************
             echo "<h1 class='text-center'>Update Member</h1>";
+            echo "<div class='container' style='width: 70%;'>";
+
             // check if user coming from http POST request to prevent browseing page directly
             if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
@@ -92,44 +94,55 @@ if (isset($_SESSION['username'])) {
                 $userName = $_POST['username'];
                 $email = $_POST['email'];
                 $fullName = $_POST['fullname'];
-               
-
                 // password trick
                 $pass = empty($_POST['newPassword']) ? $_POST['oldPassword'] : sha1($_POST['newPassword']);
-               
-                // Update the DB record with this info 
-                $stmt = $conn->prepare("UPDATE users SET username = ?, email = ?, fullname = ?, password = ?
-                                        WHERE userid =?");
-                                        //if i used $_SESSION['userid'] instead if $_GET['userid'] = $userId
-                                        //fatal error update in current user only
-                $stmt->execute(array($userName, $email, $fullName, $pass, $userId)); 
-                $count = $stmt->rowCount();
 
-                if ($count > 0) {
-                    // Successful Message
-                    // echo "[ $count ]" . ' Record Updated';
-                    echo "  <div class='container' style='width: 70%;'>
-                                <div class='alert alert-success' role='alert'>
-                                    <strong>$count</strong>  Record Have Been Updated
-                                </div>
-                            </div>";
-                } else {
-                    // Error Message No Data Updated Yet!
-                    echo "  <div class='container' style='width: 70%;'>
-                                <div class='alert alert-warning' role='alert'>
-                                    No Data Updated Yet!
-                                </div>
-                            </div>";
+                // validate Form in server side
+                // declare empty errors array
+                $formErrors = array();
+                if (empty($userName)) {
+                    $formErrors[] = "<div class='alert alert-danger' role='alert'>Username Field Can't Be <strong>Empty!</strong></div>";
+                }
+                if (strlen($userName) < 4) {
+                    $formErrors[] = "<div class='alert alert-danger' role='alert'>Username Can't Be Less Than <strong> 4 Character</strong></div>";
+                }
+                if (empty($email)) {
+                    $formErrors[] = "<div class='alert alert-danger' role='alert'>Email Field Can't Be <strong>Empty!</strong></div>";
+                }
+                if (empty($fullName)) {
+                    $formErrors[] = "<div class='alert alert-danger' role='alert'>Full-name Field Can't Be <strong>Empty!</strong></div>";
+                }
+                // if there is errors - print alert errors in update page
+                if (!empty($formErrors)) {
+                    foreach ($formErrors as $error) {
+                        echo $error;
+                    }
+                }
+
+                // if there is no errors - update in DB
+                if (empty($formErrors)) {
+                    // Update the DB record with this info
+                    $stmt = $conn->prepare("UPDATE users SET username = ?, email = ?, fullname = ?, password = ?
+                                            WHERE userid =?");
+                    //if i used $_SESSION['userid'] instead if $_GET['userid'] = $userId
+                    //fatal error update in current user only
+                    $stmt->execute(array($userName, $email, $fullName, $pass, $userId));
+                    $count = $stmt->rowCount();
+
+                    if ($count > 0) {
+                        // Successful updating Message
+                        echo "<div class='alert alert-success' role='alert'> <strong>$count</strong> Record Have Been Updated</div>";
+                    } else {
+                        // Error Updating Message - No Data Updated Yet!
+                        echo "<div class='alert alert-warning' role='alert'>No Data Updated Yet!</div>";
+                    }
                 }
 
             } else {
-                // Error: You Can't Browse This Page Directly
-                echo "  <div class='container' style='width: 70%;'>
-                                <div class='alert alert-danger' role='alert'>
-                                Error: You Can't Browse This Page Directly
-                                </div>
-                            </div>";
+                // Error POST Request: You Can't Browse This Page Directly 
+                echo "<div class='alert alert-danger' role='alert'>Error: You Can't Browse This Page Directly</div>";
             }
+            echo "</div>"; //end of container class
 
             break; // ************* Start Member Update page ***************
         case 'delete':
