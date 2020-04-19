@@ -21,7 +21,6 @@ $(function () {
   // });
 
   // convert password field to text field when hover on eye icon.
-  
   var passField = $(".password");
   $(".show-pass").hover(
     function () {
@@ -34,5 +33,8 @@ $(function () {
     }
   );
 
-  
+  // Confirmation Message on Button
+  $(".confirm").click(function () {
+    return confirm("Are You Sure?");
+  });
 });

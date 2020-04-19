@@ -1,7 +1,7 @@
 <?php
 /**
  * Manage members page
- * You can [Add , Edit , Delete] members from here
+ * You can [Add(insert) , Edit(update) , Delete ] members from here
  *
  */
 session_start();
@@ -15,12 +15,12 @@ if (isset($_SESSION['username'])) {
 
     switch ($action) {
         case 'manage': // ************* Start Member Manage page [Members page] ***************
-            
+
             // retreive all users from DB except admins
             $stmt = $conn->prepare("SELECT * FROM users WHERE group_id != 1");
             $stmt->execute();
             // fetch all data and asign in array
-            $rows = $stmt->fetchAll();     ?>
+            $rows = $stmt->fetchAll();?>
 
 <!-- start html componants -->
 <h1 class="text-center">All Members</h1>
@@ -39,20 +39,20 @@ if (isset($_SESSION['username'])) {
             </thead>
             <tbody>
                 <?php
-                // loop on $rows array and print dynamic data
-                foreach ($rows as $row) {
-                    echo "<tr>";
-                        echo "<th scope='row'>" . $row['user_id'] . " </th>";
-                        echo "<td>" . $row['username'] . " </td>";
-                        echo "<td>" . $row['email'] . " </td>";
-                        echo "<td>" . $row['full_name'] . " </td>";
-                        echo "<td></td>";
-                        echo "<td>
-                            <a href='members.php?action=edit&userid=" . $row['user_id']. "' class='btn btn-success btn-sm'>Edit</a>
-                            <a href='members.php?action=delete&userid=" . $row['user_id']. "' class='btn btn-danger btn-sm'>Delete</a>
+// loop on $rows array and print dynamic data
+            foreach ($rows as $row) {
+                echo "<tr>";
+                echo "<th scope='row'>" . $row['user_id'] . " </th>";
+                echo "<td>" . $row['username'] . " </td>";
+                echo "<td>" . $row['email'] . " </td>";
+                echo "<td>" . $row['full_name'] . " </td>";
+                echo "<td></td>";
+                echo "<td>
+                            <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm'>Edit</a>
+                            <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm'>Delete</a>
                         </td>";
-                    echo "</tr>";
-                }  ?>
+                echo "</tr>";
+            }?>
 
             </tbody>
         </table>
@@ -62,8 +62,7 @@ if (isset($_SESSION['username'])) {
 </div>
 
 <?php
-            break; // ********* End Member Manage page [Members page] ************
-
+break; // ********* End Member Manage page [Members page] ************
 
         case 'add': // ************* Start Member Add page *******************
             ?>
@@ -196,7 +195,6 @@ break; // ************* End Member Add page *******************
 
             break; // ************* End Member Insert page *******************
 
-
         case 'edit': // ************* Start Member Edit page *******************
 
             // check if get request user id is numeric & get the integer value of it.
@@ -251,7 +249,7 @@ break; // ************* End Member Add page *******************
 </div>
 
 <?php
-            } else {
+} else {
                 // Error:No such ID
                 echo "<div class='container' style='width: 70%; margin-top: 50px;'>
                         <div class='alert alert-danger' role='alert'>
@@ -325,9 +323,36 @@ break; // ************* End Member Add page *******************
 
             break; // ************* Start Member Update page ***************
 
-        case 'delete':
-            echo 'Welcome in delete page';
-            break;
+        case 'delete': // ************* Start Member Delete page *******************
+            echo "<h1 class='text-center'>Delete Member</h1>";
+            echo "<div class='container' style='width: 70%;'>";
+            // check if get request user id is numeric & get the integer value of it.
+            $userid = (isset($_GET['userid']) && is_numeric($_GET['userid'])) ? intval($_GET['userid']) : 0;
+
+            // Select all fields from record depend on this id
+            $stmt = $conn->prepare("SELECT * FROM users WHERE user_id=? LIMIT 1");
+            //execute Query
+            $stmt->execute(array($userid)); //if userid are equal- select
+            $row = $stmt->fetch(); //fetch row data from DB
+
+            $count = $stmt->rowCount();
+            // if there is such ID - delete it
+            if ($count > 0) {
+                // prepare Query
+                $stmt = $conn->prepare("DELETE FROM users WHERE user_id = :xid");
+                // bind params
+                $stmt->bindParam(':xid', $userid);
+                $stmt->execute();
+
+                // Successful deleting Message
+                echo "<div class='alert alert-success' role='alert'> <strong>$count</strong> Record Have Been Deleted</div>";
+
+            } else {
+                // Error deleting Message - No Such ID!
+                echo "<div class='alert alert-warning' role='alert'>No Such ID!</div>";
+            }
+            echo "</div>";
+            break; // ************* Start Member Delete page *******************
         default:
             echo 'Error 404 : This page not found';
             break;
