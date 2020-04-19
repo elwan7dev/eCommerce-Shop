@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     
     // check if the user exist in database
     $stmt = $conn->prepare("SELECT 
-                                userid, username, password
+                                user_id, username, password
                             FROM 
                                 users
                             WHERE 
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             AND 
                                 password=?
                             AND 
-                                groupId = 1  
+                                group_id = 1  
                             LIMIT 1");
                             //group = 1 - retreive admins only
     $stmt->execute(array($username, $hashedPass));
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $count = $stmt->rowCount();
     if ($count > 0) {
         $_SESSION['username'] = $username; // regiter username in session
-        $_SESSION['userid'] = $row['userid']; // register userid in session
+        $_SESSION['userid'] = $row['user_id']; // register userid in session
         header('location: dashboard.php'); // redirect to  dashboard page
         exit();
         

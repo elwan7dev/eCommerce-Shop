@@ -15,12 +15,18 @@ if (isset($_SESSION['username'])) {
 
     switch ($action) {
         case 'manage': // ************* Start Member Manage page [Members page] ***************
-            ?>
+            
+            // retreive all users from DB except admins
+            $stmt = $conn->prepare("SELECT * FROM users WHERE group_id != 1");
+            $stmt->execute();
+            // fetch all data and asign in array
+            $rows = $stmt->fetchAll();     ?>
+
 <!-- start html componants -->
 <h1 class="text-center">All Members</h1>
-<div class="container">
+<div class="container-md">
     <div class="table-responsive">
-        <table class="table table-bordered">
+        <table class="table table-bordered text-center">
             <thead class="thead-light">
                 <tr>
                     <th scope="col">#ID</th>
@@ -32,48 +38,28 @@ if (isset($_SESSION['username'])) {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                    <td>
-                        <a href="#" class="btn btn-success">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    <td>@mdo</td>
-                    <td>
-                        <a href="#" class="btn btn-success">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Larry the Bird</td>
-                    <td>@twitter</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                    <td>
-                        <a href="#" class="btn btn-success">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
+                <?php
+                // loop on $rows array and print dynamic data
+                foreach ($rows as $row) {
+                    echo "<tr>";
+                        echo "<th scope='row'>" . $row['user_id'] . " </th>";
+                        echo "<td>" . $row['username'] . " </td>";
+                        echo "<td>" . $row['email'] . " </td>";
+                        echo "<td>" . $row['full_name'] . " </td>";
+                        echo "<td></td>";
+                        echo "<td>
+                            <a href='members.php?action=edit&userid=" . $row['user_id']. "' class='btn btn-success btn-sm'>Edit</a>
+                            <a href='members.php?action=delete&userid=" . $row['user_id']. "' class='btn btn-danger btn-sm'>Delete</a>
+                        </td>";
+                    echo "</tr>";
+                }  ?>
+
             </tbody>
         </table>
     </div>
-    <a href='?action=add' class="btn btn-primary"><i class="fas fa-plus"></i> Add New Member</a>
+    <a href='?action=add' class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add New Member</a>
 
 </div>
-
-
-
 
 <?php
             break; // ********* End Member Manage page [Members page] ************
