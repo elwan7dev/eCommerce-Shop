@@ -26,7 +26,7 @@ if (isset($_SESSION['username'])) {
 <h1 class="text-center">All Members</h1>
 <div class="container">
     <div class="table-responsive">
-        <table class="table table-bordered text-center">
+        <table class="table main-table table-bordered  text-center">
             <thead class="thead-light">
                 <tr>
                     <th scope="col">#ID</th>
@@ -48,8 +48,8 @@ if (isset($_SESSION['username'])) {
                     echo "<td>" . $row['full_name'] . " </td>";
                     echo "<td></td>";
                     echo "<td>
-                            <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm'>Edit</a>
-                            <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm'>Delete</a>
+                            <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm'><i class='fas fa-edit'></i></a>
+                            <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm'><i class='fas fa-trash-alt'></i></a>
                           </td>";
                     echo "</tr>";
                 }
@@ -58,7 +58,7 @@ if (isset($_SESSION['username'])) {
             </tbody>
         </table>
     </div>
-    <a href='?action=add' class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add New Member</a>
+    <a href='?action=add' class="btn btn-primary"><i class="fas fa-plus"></i> New Member</a>
 
 </div>
 
