@@ -25,9 +25,9 @@ function redirect2Home($alertType, $msg, $seconds = 3, $url = 'dashboard.php')
     if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] !== '' && $url == $_SERVER['HTTP_REFERER']) {
         $link = 'Prevoius ';
 
-    }else {
-        $pageName =  str_replace('.php' , '', $url);
-        $link = $pageName; 
+    } else {
+        $pageName = str_replace('.php', '', $url);
+        $link = $pageName;
     }
     echo "<div class='alert alert-$alertType' role='alert'>$msg</div>";
     echo "<div class='alert alert-info' text-center>You Will Redirect To <strong>$link</strong> Page In <strong>$seconds</strong> Seconds</div>";
@@ -43,7 +43,8 @@ function redirect2Home($alertType, $msg, $seconds = 3, $url = 'dashboard.php')
  * $colName = itemName =>the item to select [EX: user, item , category + Must be naming like DB]
  * $tblName = tableName => the table to select from     [EX: users, items , categories]
  * $value = the value of the selected-item
- *
+ * @return
+ * 
  */
 
 function isExist($colName, $tblName, $value)
@@ -59,5 +60,23 @@ function isExist($colName, $tblName, $value)
         // not exist
         return false;
     }
+
+}
+
+/**
+ * count # of items function v1.0
+ * count number of items row in specific table
+ * $item = colname 
+ * $tblName = table name
+ * 
+ * @return  fetchColumn Numbers
+ */
+function countItems($item, $tblName)
+{
+    global $conn;
+    $stmt = $conn->prepare("SELECT COUNT($item) FROM $tblName");
+    $stmt->execute();
+    // nubers of col retreived
+    return $stmt->fetchColumn();
 
 }
