@@ -1,41 +1,68 @@
 /* start main rules */
-body{
-    font-size: 16px;
-    background-color: #f4f4f4;
-
+body {
+  font-size: 16px;
+  background-color: #f4f4f4;
 }
 
+/* .astrisk{
+    font-size: 21px;
+    color: #e02121;
+    position: absolute;
+    right: 31px;
+    top: 38px;
+} */
 
 /* end main rules */
 
-
-
 /* start login-form */
 .login-form {
-    width: 300px;
-    margin: 100px auto;
+  width: 300px;
+  margin: 100px auto;
 }
 
-.login-form h4{
-    color: #737373;
+.login-form h4 {
+  color: #737373;
 }
-.login-form input{
-    margin-bottom: 5px;
+.login-form input {
+  margin-bottom: 5px;
 }
-.login-form .form-control{
-    background-color: #eaeaea;
+.login-form .form-control {
+  background-color: #eaeaea;
 }
-
 /* end login-form */
 
 /* start Bootstrap edits */
 .mr-px {
-    margin-right: 70px;
+  margin-right: 70px;
 }
 
 .navbar-brand {
-    margin-right: 5rem;
+  margin-right: 5rem;
 }
-
+/* 
+.form-control {
+  position: relative;
+} */
 
 /* end Bootstrap edits */
+
+/* start members page */
+h1 {
+  margin: 22px 0px;
+  font-size: 50px;
+  color: #5d5b5b;
+}
+
+.show-pass {
+  position: absolute;
+  top: 43px;
+  right: 25px;
+  color: #717171;
+}
+
+.main-table{
+  background-color: #f9f9f9;
+  box-shadow: 0px 2px 5px #ccc;
+}
+
+/* end members page */

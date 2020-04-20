@@ -10,7 +10,7 @@ function lang($phrase)
         'MEMBERS' => 'Members',
         'STATISTICS' => 'Statistics',
         'LOGS' => 'Logs',
-        'PROFILE' => 'Profile',
+        'PROFILE' => 'Edit Profile',
         'SETTING' => 'Setting',
         'LOGOUT' => 'Logout',
         'SEARCH' => 'Search',

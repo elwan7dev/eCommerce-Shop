@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="dashboard.php">
         <img src="layout/images/bootstrap.svg" width="30" height="30" class="d-inline-block align-top" alt="logo">
         Brand
     </a>
@@ -10,8 +10,8 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#"><?php echo lang('HOME'); ?> <span class="sr-only">(current)</span></a>
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.php"><?php echo lang('HOME'); ?> <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#"><?php echo lang('CATEGORIES'); ?></a>
@@ -20,7 +20,7 @@
                 <a class="nav-link" href="#"><?php echo lang('ITEMS'); ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#"><?php echo lang('MEMBERS'); ?></a>
+                <a class="nav-link" href="members.php"><?php echo lang('MEMBERS'); ?></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#"><?php echo lang('STATISTICS'); ?></a>
@@ -36,7 +36,7 @@
                     <?php echo $_SESSION['username']; ?>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#"><?php echo lang('PROFILE'); ?></a>
+                    <a class="dropdown-item" href="members.php?action=edit&userid=<?php echo $_SESSION['userid'];?>"><?php echo lang('PROFILE'); ?></a>
                     <a class="dropdown-item" href="#"><?php echo lang('SETTING'); ?></a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="logout.php"><?php echo lang('LOGOUT'); ?></a>
