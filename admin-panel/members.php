@@ -12,7 +12,6 @@ if (isset($_SESSION['username'])) {
 
     // split page with GET request
     $action = isset($_GET['action']) ? $_GET['action'] : 'manage';
-   
 
     switch ($action) {
         case 'manage': // ************* Start Member Manage page [Members page] ***************
@@ -186,24 +185,24 @@ break; // ************* End Member Add page *******************
                         $count = $stmt->rowCount();
                         if ($count > 0) {
                             // Successful Inserted Message
-                            $errorMsg = "<strong>$count</strong> Record Have Been Inserted";
-                            redirect2Home('success', $errorMsg, 3, 'members.php');
+                            $msg = "<strong>$count</strong> Record Have Been Inserted";
+                            redirect2Home('success', $msg, 3, 'members.php');
                         } else {
                             // Error Inserted Message - No Data Inserted Yet!
-                            $errorMsg = "No Data Inserted Yet!";
-                            redirect2Home('info', $errorMsg, 3, $_SERVER['HTTP_REFERER']);
+                            $msg = "No Data Inserted Yet!";
+                            redirect2Home('info', $msg, 3, $_SERVER['HTTP_REFERER']);
                         }
-                    }else {
+                    } else {
                         // username exist in DB so, print error msg
                         // $_SERVER['HTTP_REFERER'] => previous page
-                        redirect2Home('danger', 'ERROR: Invalid Username', 3 , $_SERVER['HTTP_REFERER']);
+                        redirect2Home('danger', 'ERROR: Invalid Username', 3, $_SERVER['HTTP_REFERER']);
                     }
                 }
 
             } else {
                 // Error POST Request: You Can't Browse This Page Directly
-                $errorMsg = "Error: You Can't Browse This Page Directly";
-                redirect2Home('danger', $errorMsg, 6);
+                $msg = "Error: You Can't Browse This Page Directly";
+                redirect2Home('danger', $msg, 6);
 
             }
             echo "</div>"; //end of container div
@@ -265,9 +264,9 @@ break; // ************* End Member Add page *******************
 
 <?php
 } else {
-                // Error:No such ID
+                // Error:There Is No Such ID
                 echo "<div class='container' style='width: 70%; margin-top: 50px;'>";
-                redirect2Home('danger', 'Error: No Such ID', 6);
+                redirect2Home('danger', 'Error: There Is No Such ID', 6);       
                 echo "</div>";
             }
 
@@ -312,9 +311,10 @@ break; // ************* End Member Add page *******************
 
                 // if there is no errors - update in DB
                 if (empty($formErrors)) {
+
                     // Update the DB record with this info
                     $stmt = $conn->prepare("UPDATE users SET username = ?, email = ?, full_name = ?, password = ?
-                                            WHERE user_id =?");
+                                                WHERE user_id =?");
                     //if i used $_SESSION['userid'] instead if $_GET['userid'] = $userId
                     //fatal error update in current user only
                     $stmt->execute(array($userName, $email, $fullName, $pass, $userId));
@@ -322,19 +322,20 @@ break; // ************* End Member Add page *******************
 
                     if ($count > 0) {
                         // Successful updating Message
-                        $errorMsg = "<strong>$count</strong> Record Have Been Updated";
-                        redirect2Home('success', $errorMsg, 3, 'members.php');
+                        $msg = "<strong>$count</strong> Record Have Been Updated";
+                        redirect2Home('success', $msg, 3, 'members.php');
                     } else {
                         // Error Updating Message - No Data Updated Yet!
-                        $errorMsg = "No Data Updated Yet!";
-                        redirect2Home('info', $errorMsg, 3, $_SERVER['HTTP_REFERER']);
+                        $msg = "No Data Updated Yet!";
+                        redirect2Home('info', $msg, 3, $_SERVER['HTTP_REFERER']);
                     }
+
                 }
 
             } else {
                 // Error POST Request: You Can't Browse This Page Directly
-                $errorMsg = "Error: You Can't Browse This Page Directly";
-                redirect2Home('danger', $errorMsg, 6);
+                $msg = "Error: You Can't Browse This Page Directly";
+                redirect2Home('danger', $msg, 6);
 
             }
             echo "</div>"; //end of container div
@@ -363,18 +364,18 @@ break; // ************* End Member Add page *******************
                 $stmt->execute();
 
                 // Successful deleting Message
-                $errorMsg = "<strong>$count</strong> Record Have Been Deleted";
-                redirect2Home('success', $errorMsg, 3, 'members.php');
+                $msg = "<strong>$count</strong> Record Have Been Deleted";
+                redirect2Home('success', $msg, 3, 'members.php');
 
             } else {
-                // Error deleting Message - No Such ID!
-                $errorMsg = "No Such ID!";
-                redirect2Home('danger', $errorMsg, 3);
+                // Error deleting Message - There Is No Such ID!
+                $msg = "There Is No Such ID!";
+                redirect2Home('danger', $msg, 3);
             }
             echo "</div>";
             break; // ************* Start Member Delete page *******************
         default:
-            echo 'Error 404 : This page not found';
+            header('location: members.php');
             break;
     }
 
