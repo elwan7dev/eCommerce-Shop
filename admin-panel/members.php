@@ -46,7 +46,7 @@ if (isset($_SESSION['username'])) {
                 echo "<td>" . $row['username'] . " </td>";
                 echo "<td>" . $row['email'] . " </td>";
                 echo "<td>" . $row['full_name'] . " </td>";
-                echo "<td></td>";
+                echo "<td>". $row['date'] ." </td>";
                 echo "<td>
                             <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm'><i class='fas fa-edit'></i></a>
                             <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm'><i class='fas fa-trash-alt'></i></a>
@@ -99,10 +99,10 @@ break; // ********* End Member Manage page [Members page] ************
             </div>
             <div class="form-group col-md-4">
                 <label for="inputState">State</label>
-                <select id="inputState" class="form-control">
-                    <option selected>Choose...</option>
-                    <option>Admin</option>
-                    <option>User</option>
+                <select name="state" class="form-control" >
+                    <option value="User" selected >User</option>
+                    <option value="Admin" >Admin</option>
+
                 </select>
             </div>
         </div>
@@ -143,6 +143,7 @@ break; // ************* End Member Add page *******************
                 $fullName = $_POST['fullname'];
                 // password trick
                 $hashedPass = sha1($password);
+                $groupId = ($_POST['state'] === 'Admin') ? 1 : 0;
 
                 // validate Form in server side
                 // declare empty errors array
@@ -173,13 +174,14 @@ break; // ************* End Member Add page *******************
 
                         // Insert user data into the DB
                         $stmt = $conn->prepare("INSERT INTO users
-                                            (username, password, email, full_name)
-                                            VALUES (:xuser, :xpass, :xmail, :xname)");
+                                            (username, password, email, full_name ,group_id , date)
+                                            VALUES (:xuser, :xpass, :xmail, :xname , :xgroup ,now())");
                         $stmt->execute(array(
                             'xuser' => $userName,
                             'xpass' => $hashedPass,
                             'xmail' => $email,
                             'xname' => $fullName,
+                            'xgroup' => $groupId,
                         ));
 
                         $count = $stmt->rowCount();
