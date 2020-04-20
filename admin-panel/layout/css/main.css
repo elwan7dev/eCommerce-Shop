@@ -14,6 +14,22 @@ body {
 
 /* end main rules */
 
+/* start Bootstrap edits */
+.mr-px {
+  margin-right: 70px;
+}
+
+.navbar-brand {
+  margin-right: 5rem;
+}
+/* 
+.form-control {
+  position: relative;
+} */
+
+/* end Bootstrap edits */
+
+
 /* start login-form */
 .login-form {
   width: 300px;
@@ -31,20 +47,39 @@ body {
 }
 /* end login-form */
 
-/* start Bootstrap edits */
-.mr-px {
-  margin-right: 70px;
+/* Start dashboard page */
+.home-stats .stat{
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 6px;
+}
+.home-stats span{
+  display: block;
+  font-size: 40px;
 }
 
-.navbar-brand {
-  margin-right: 5rem;
+.home-stats .stat a{
+  color: #212529;
 }
-/* 
-.form-control {
-  position: relative;
-} */
 
-/* end Bootstrap edits */
+.home-stats .stat a:hover {
+  text-decoration: none;
+  
+  
+
+}
+
+
+.latest {
+  margin-top: 20px;
+}
+
+
+
+
+/* End dashboard page */
+
+
 
 /* start members page */
 h1 {

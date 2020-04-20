@@ -23,7 +23,7 @@ if (isset($_SESSION['username'])) {
             $rows = $stmt->fetchAll();?>
 
 <!-- start html componants -->
-<h1 class="text-center">All Members</h1>
+<h1 class="text-center">Manage Members</h1>
 <div class="container">
     <div class="table-responsive">
         <table class="table main-table table-bordered  text-center">
@@ -113,12 +113,6 @@ break; // ********* End Member Manage page [Members page] ************
                     Trusted User
                 </label>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="approvedCheck">
-                <label class="form-check-label" for="radio2">
-                    Approved User
-                </label>
-            </div>
         </div>
         <!-- start button field -->
         <input type="submit" value="Add Member" class="btn btn-primary">
@@ -173,9 +167,10 @@ break; // ************* End Member Add page *******************
                     if (!isExist('username', 'users', $userName)) {
 
                         // Insert user data into the DB
+                        // registeration_status = 1 by default bacause the admin adding this users - so, approved 
                         $stmt = $conn->prepare("INSERT INTO users
-                                            (username, password, email, full_name ,group_id , date)
-                                            VALUES (:xuser, :xpass, :xmail, :xname , :xgroup ,now())");
+                                            (username, password, email, full_name ,group_id , reg_status, date)
+                                            VALUES (:xuser, :xpass, :xmail, :xname , :xgroup , 1 , now())");
                         $stmt->execute(array(
                             'xuser' => $userName,
                             'xpass' => $hashedPass,
