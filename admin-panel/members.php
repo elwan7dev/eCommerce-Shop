@@ -5,15 +5,16 @@
  *
  */
 session_start();
-if (isset($_SESSION['username'])) {         
+if (isset($_SESSION['username'])) {
     $pageTitle = 'Members';
     include 'init.php'; // initialize php file
     // Page Code here
 
     // split page with GET request
     $action = isset($_GET['action']) ? $_GET['action'] : 'manage';
+   
 
-    switch ($action) {  
+    switch ($action) {
         case 'manage': // ************* Start Member Manage page [Members page] ***************
 
             // retreive all users from DB except admins
@@ -40,20 +41,20 @@ if (isset($_SESSION['username'])) {
             <tbody>
                 <?php
 // loop on $rows array and print dynamic data
-                foreach ($rows as $row) {
-                    echo "<tr>";
-                    echo "<th scope='row'>" . $row['user_id'] . " </th>";
-                    echo "<td>" . $row['username'] . " </td>";
-                    echo "<td>" . $row['email']  . " </td>";
-                    echo "<td>" . $row['full_name'] . " </td>";
-                    echo "<td></td>";
-                    echo "<td>
+            foreach ($rows as $row) {
+                echo "<tr>";
+                echo "<th scope='row'>" . $row['user_id'] . " </th>";
+                echo "<td>" . $row['username'] . " </td>";
+                echo "<td>" . $row['email'] . " </td>";
+                echo "<td>" . $row['full_name'] . " </td>";
+                echo "<td></td>";
+                echo "<td>
                             <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm'><i class='fas fa-edit'></i></a>
                             <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm'><i class='fas fa-trash-alt'></i></a>
                           </td>";
-                    echo "</tr>";
-                }
-                ?>
+                echo "</tr>";
+            }
+            ?>
 
             </tbody>
         </table>
@@ -167,34 +168,43 @@ break; // ************* End Member Add page *******************
                 }
                 // check if there is no errors - insert in DB
                 if (empty($formErrors)) {
-                    // Insert user data into the DB
-                    $stmt = $conn->prepare("INSERT INTO users
+                    // check if the username that coming from Form exist in DB or Not
+                    // like this " SELECT username FROM users WHERE username = $userName"
+                    if (!isExist('username', 'users', $userName)) {
+
+                        // Insert user data into the DB
+                        $stmt = $conn->prepare("INSERT INTO users
                                             (username, password, email, full_name)
                                             VALUES (:xuser, :xpass, :xmail, :xname)");
-                    $stmt->execute(array(
-                        'xuser' => $userName,
-                        'xpass' => $hashedPass,
-                        'xmail' => $email,
-                        'xname' => $fullName,
-                    ));
+                        $stmt->execute(array(
+                            'xuser' => $userName,
+                            'xpass' => $hashedPass,
+                            'xmail' => $email,
+                            'xname' => $fullName,
+                        ));
 
-                    $count = $stmt->rowCount();
-                    if ($count > 0) {
-                        // Successful Inserted Message
-                        $errorMsg =  "<strong>$count</strong> Record Have Been Inserted";
-                        redirect2Home('success' , $errorMsg , 3 , 'members.php');
-                    } else {
-                        // Error Inserted Message - No Data Inserted Yet!
-                        $errorMsg = "No Data Inserted Yet!";
-                        redirect2Home('info', $errorMsg , 3 , 'members?action=insert.php');
+                        $count = $stmt->rowCount();
+                        if ($count > 0) {
+                            // Successful Inserted Message
+                            $errorMsg = "<strong>$count</strong> Record Have Been Inserted";
+                            redirect2Home('success', $errorMsg, 3, 'members.php');
+                        } else {
+                            // Error Inserted Message - No Data Inserted Yet!
+                            $errorMsg = "No Data Inserted Yet!";
+                            redirect2Home('info', $errorMsg, 3, $_SERVER['HTTP_REFERER']);
+                        }
+                    }else {
+                        // username exist in DB so, print error msg
+                        // $_SERVER['HTTP_REFERER'] => previous page
+                        redirect2Home('danger', 'ERROR: Invalid Username', 3 , $_SERVER['HTTP_REFERER']);
                     }
                 }
 
             } else {
                 // Error POST Request: You Can't Browse This Page Directly
                 $errorMsg = "Error: You Can't Browse This Page Directly";
-                redirect2Home('danger' , $errorMsg, 6);
-                
+                redirect2Home('danger', $errorMsg, 6);
+
             }
             echo "</div>"; //end of container div
 
@@ -257,10 +267,10 @@ break; // ************* End Member Add page *******************
 } else {
                 // Error:No such ID
                 echo "<div class='container' style='width: 70%; margin-top: 50px;'>";
-                   redirect2Home('danger','Error: No Such ID' , 6);       
+                redirect2Home('danger', 'Error: No Such ID', 6);
                 echo "</div>";
             }
-            
+
             break; // *************** End Member Edit page *****************
 
         case 'update': // ************* Start Member Update page ***************
@@ -313,17 +323,17 @@ break; // ************* End Member Add page *******************
                     if ($count > 0) {
                         // Successful updating Message
                         $errorMsg = "<strong>$count</strong> Record Have Been Updated";
-                        redirect2Home('success', $errorMsg, 3 , 'members.php');
+                        redirect2Home('success', $errorMsg, 3, 'members.php');
                     } else {
                         // Error Updating Message - No Data Updated Yet!
-                        $errorMsg =  "No Data Updated Yet!";
-                        redirect2Home('info' , $errorMsg , 3 , 'members.php');
+                        $errorMsg = "No Data Updated Yet!";
+                        redirect2Home('info', $errorMsg, 3, $_SERVER['HTTP_REFERER']);
                     }
                 }
 
             } else {
                 // Error POST Request: You Can't Browse This Page Directly
-                $errorMsg =  "Error: You Can't Browse This Page Directly";
+                $errorMsg = "Error: You Can't Browse This Page Directly";
                 redirect2Home('danger', $errorMsg, 6);
 
             }
@@ -358,7 +368,7 @@ break; // ************* End Member Add page *******************
 
             } else {
                 // Error deleting Message - No Such ID!
-                $errorMsg =  "No Such ID!";
+                $errorMsg = "No Such ID!";
                 redirect2Home('danger', $errorMsg, 3);
             }
             echo "</div>";
