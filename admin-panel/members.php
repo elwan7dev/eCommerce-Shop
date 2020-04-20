@@ -348,22 +348,16 @@ break; // ************* End Member Add page *******************
             echo "<h1 class='text-center'>Delete Member</h1>";
             echo "<div class='container' style='width: 70%;'>";
             // check if get request user id is numeric & get the integer value of it.
-            $userid = (isset($_GET['userid']) && is_numeric($_GET['userid'])) ? intval($_GET['userid']) : 0;
+            $userid = (isset($_GET['userid']) && is_numeric($_GET['userid'])) ? intval($_GET['userid']) : false;
 
-            // Select all fields from record depend on this id
-            $stmt = $conn->prepare("SELECT * FROM users WHERE user_id=? LIMIT 1");
-            //execute Query
-            $stmt->execute(array($userid)); //if userid are equal- select
-            $row = $stmt->fetch(); //fetch row data from DB
-
-            $count = $stmt->rowCount();
             // if there is such ID - delete it
-            if ($count > 0) {
+            if ($userid != false && isExist('user_id', 'users' , $userid)) {
                 // prepare Query
                 $stmt = $conn->prepare("DELETE FROM users WHERE user_id = :xid");
                 // bind params
                 $stmt->bindParam(':xid', $userid);
                 $stmt->execute();
+                $count = $stmt->rowCount();
 
                 // Successful deleting Message
                 $msg = "<strong>$count</strong> Record Have Been Deleted";
