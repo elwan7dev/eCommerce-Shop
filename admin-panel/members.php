@@ -17,9 +17,8 @@ if (isset($_SESSION['username'])) {
         case 'manage': // ************* Start Member Manage page [Members page] ***************
 
             // (Smart way) to create member-pending page that depent on condition (reg_status = 0)
-            // if there is GET req  'page' = pending =>>> add this condition to query 
+            // if there is GET req  'page' = pending =>>> add this condition to query
             $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "AND reg_status = 0" : '';
-            
 
             // retreive all users from DB except admins
             $stmt = $conn->prepare("SELECT * FROM users WHERE group_id != 1 $condition");
@@ -46,19 +45,22 @@ if (isset($_SESSION['username'])) {
                 <?php
 // loop on $rows array and print dynamic data
             foreach ($rows as $row) {
-                echo "<tr>";
-                    echo "<th scope='row'>" . $row['user_id'] . " </th>";
-                    echo "<td>" . $row['username'] . " </td>";
-                    echo "<td>" . $row['email'] . " </td>";
-                    echo "<td>" . $row['full_name'] . " </td>";
-                    echo "<td>" . $row['date'] . " </td>";
-                    echo "<td>
-                            <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm'><i class='fas fa-edit'></i></a>
-                            <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm'><i class='fas fa-trash-alt'></i></a>";
-                            if ($row['reg_status'] == 0) {
-                                echo "<a href='members.php?action=activate&userid=" . $row['user_id'] . "' class='btn btn-primary btn-sm activate'><i class='fas fa-check'></i></a>";
-                            }
-                    echo "</td>";
+                // trick to change style of pending user row
+                $class = ($row['reg_status'] == 0) ? "class='table-secondary text-muted'" : '';
+
+                echo "<tr $class>"; 
+                echo "<th scope='row'>" . $row['user_id'] . " </th>";
+                echo "<td>" . $row['username'] . " </td>";
+                echo "<td>" . $row['email'] . " </td>";
+                echo "<td>" . $row['full_name'] . " </td>";
+                echo "<td>" . $row['date'] . " </td>";
+                echo "<td>
+                            <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm' title='Edit Member'><i class='fas fa-edit'></i></a>
+                            <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Member'><i class='fas fa-trash-alt'></i></a>";
+                if ($row['reg_status'] == 0) {
+                    echo "<a href='members.php?action=activate&userid=" . $row['user_id'] . "' class='btn btn-primary btn-sm activate confirm' title='Activate Member'><i class='fas fa-check'></i></a>";
+                }
+                echo "</td>";
                 echo "</tr>";
             }
             ?>
@@ -73,6 +75,33 @@ if (isset($_SESSION['username'])) {
 <?php
 break; // ********* End Member Manage page [Members page] ************
 
+        case 'activate': // ************* start Member activate page ***************
+            echo "<h1 class='text-center'>activate Member</h1>";
+            echo "<div class='container' style='width: 70%;'>";
+            // check if get request user id is numeric & get the integer value of it.
+            $userid = (isset($_GET['userid']) && is_numeric($_GET['userid'])) ? intval($_GET['userid']) : false;
+
+            // if there is such ID - activate it
+            if ($userid != false && isExist('user_id', 'users', $userid)) {
+                // prepare Query
+                $stmt = $conn->prepare("UPDATE users SET reg_status = 1 WHERE user_id = :xid");
+                // bind params
+                $stmt->bindParam(':xid', $userid);
+                $stmt->execute();
+                $count = $stmt->rowCount();
+
+                // Successful deleting Message
+                $msg = "<strong>$count</strong> User Activated ";
+                redirect2Home('success', $msg, 0, 'members.php');
+
+            } else {
+                // Error deleting Message - There Is No Such ID!
+                $msg = "There Is No Such ID!";
+                redirect2Home('danger', $msg, 3);
+            }
+            echo "</div>";
+
+            break; // ************* End Member activate page ***************
 
         case 'add': // ************* Start Member Add page *******************
             ?>
