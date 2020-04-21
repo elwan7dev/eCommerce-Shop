@@ -3,6 +3,9 @@ body {
   font-size: 16px;
   background-color: #f4f4f4;
 }
+body a:hover {
+  text-decoration: none;
+}
 
 /* .astrisk{
     font-size: 21px;
@@ -62,17 +65,25 @@ body {
   color: #212529;
 }
 
-.home-stats .stat a:hover {
-  text-decoration: none;
-  
-  
-
-}
-
 
 .latest {
   margin-top: 20px;
+  margin-bottom: 20px;
 }
+
+
+.card-header .card-tools {
+  float: right;
+  margin-right: -.625rem;
+}
+
+  .card-header .btn-tool {
+    background: 0 0;
+    color: #adb5bd;
+    font-size: .875rem;
+    margin: -.75rem 0;
+    padding: .25rem .5rem;
+  }
 
 
 

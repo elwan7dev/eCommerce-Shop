@@ -6,7 +6,7 @@
  */
 session_start();
 if (isset($_SESSION['username'])) {
-    $pageTitle = 'Members';
+    $pageTitle = 'Members'; //page title to check it for title tag
     include 'init.php'; // initialize php file
     // Page Code here
 
@@ -92,7 +92,7 @@ break; // ********* End Member Manage page [Members page] ************
 
                 // Successful deleting Message
                 $msg = "<strong>$count</strong> User Activated ";
-                redirect2Home('success', $msg, 0, 'members.php');
+                redirect2Home('success', $msg, 0, $_SERVER['HTTP_REFERER']);
 
             } else {
                 // Error deleting Message - There Is No Such ID!
@@ -394,7 +394,7 @@ break; // ************* End Member Add page *******************
 
                 // Successful deleting Message
                 $msg = "<strong>$count</strong> Record Have Been Deleted";
-                redirect2Home('success', $msg, 3, 'members.php');
+                redirect2Home('success', $msg, 3, $_SERVER['HTTP_REFERER']);
 
             } else {
                 // Error deleting Message - There Is No Such ID!
