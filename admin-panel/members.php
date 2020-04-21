@@ -6,7 +6,7 @@
  */
 session_start();
 if (isset($_SESSION['username'])) {
-    $pageTitle = 'Members';
+    $pageTitle = 'Members'; //page title to check it for title tag
     include 'init.php'; // initialize php file
     // Page Code here
 
@@ -16,14 +16,18 @@ if (isset($_SESSION['username'])) {
     switch ($action) {
         case 'manage': // ************* Start Member Manage page [Members page] ***************
 
+            // (Smart way) to create member-pending page that depent on condition (reg_status = 0)
+            // if there is GET req  'page' = pending =>>> add this condition to query
+            $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "AND reg_status = 0" : '';
+
             // retreive all users from DB except admins
-            $stmt = $conn->prepare("SELECT * FROM users WHERE group_id != 1");
+            $stmt = $conn->prepare("SELECT * FROM users WHERE group_id != 1 $condition");
             $stmt->execute();
             // fetch all data and asign in array
             $rows = $stmt->fetchAll();?>
 
 <!-- start html componants -->
-<h1 class="text-center">All Members</h1>
+<h1 class="text-center">Manage Members</h1>
 <div class="container">
     <div class="table-responsive">
         <table class="table main-table table-bordered  text-center">
@@ -41,16 +45,22 @@ if (isset($_SESSION['username'])) {
                 <?php
 // loop on $rows array and print dynamic data
             foreach ($rows as $row) {
-                echo "<tr>";
+                // trick to change style of pending user row
+                $class = ($row['reg_status'] == 0) ? "class='table-secondary text-muted'" : '';
+
+                echo "<tr $class>"; 
                 echo "<th scope='row'>" . $row['user_id'] . " </th>";
                 echo "<td>" . $row['username'] . " </td>";
                 echo "<td>" . $row['email'] . " </td>";
                 echo "<td>" . $row['full_name'] . " </td>";
-                echo "<td>". $row['date'] ." </td>";
+                echo "<td>" . $row['date'] . " </td>";
                 echo "<td>
-                            <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm'><i class='fas fa-edit'></i></a>
-                            <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm'><i class='fas fa-trash-alt'></i></a>
-                          </td>";
+                            <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm' title='Edit Member'><i class='fas fa-edit'></i></a>
+                            <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Member'><i class='fas fa-trash-alt'></i></a>";
+                if ($row['reg_status'] == 0) {
+                    echo "<a href='members.php?action=activate&userid=" . $row['user_id'] . "' class='btn btn-primary btn-sm activate confirm' title='Activate Member'><i class='fas fa-check'></i></a>";
+                }
+                echo "</td>";
                 echo "</tr>";
             }
             ?>
@@ -64,6 +74,34 @@ if (isset($_SESSION['username'])) {
 
 <?php
 break; // ********* End Member Manage page [Members page] ************
+
+        case 'activate': // ************* start Member activate page ***************
+            echo "<h1 class='text-center'>activate Member</h1>";
+            echo "<div class='container' style='width: 70%;'>";
+            // check if get request user id is numeric & get the integer value of it.
+            $userid = (isset($_GET['userid']) && is_numeric($_GET['userid'])) ? intval($_GET['userid']) : false;
+
+            // if there is such ID - activate it
+            if ($userid != false && isExist('user_id', 'users', $userid)) {
+                // prepare Query
+                $stmt = $conn->prepare("UPDATE users SET reg_status = 1 WHERE user_id = :xid");
+                // bind params
+                $stmt->bindParam(':xid', $userid);
+                $stmt->execute();
+                $count = $stmt->rowCount();
+
+                // Successful deleting Message
+                $msg = "<strong>$count</strong> User Activated ";
+                redirect2Home('success', $msg, 0, $_SERVER['HTTP_REFERER']);
+
+            } else {
+                // Error deleting Message - There Is No Such ID!
+                $msg = "There Is No Such ID!";
+                redirect2Home('danger', $msg, 3);
+            }
+            echo "</div>";
+
+            break; // ************* End Member activate page ***************
 
         case 'add': // ************* Start Member Add page *******************
             ?>
@@ -99,9 +137,9 @@ break; // ********* End Member Manage page [Members page] ************
             </div>
             <div class="form-group col-md-4">
                 <label for="inputState">State</label>
-                <select name="state" class="form-control" >
-                    <option value="User" selected >User</option>
-                    <option value="Admin" >Admin</option>
+                <select name="state" class="form-control">
+                    <option value="User" selected>User</option>
+                    <option value="Admin">Admin</option>
 
                 </select>
             </div>
@@ -111,12 +149,6 @@ break; // ********* End Member Manage page [Members page] ************
                 <input class="form-check-input" type="checkbox" id="trustedCheck">
                 <label class="form-check-label" for="radio1">
                     Trusted User
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="approvedCheck">
-                <label class="form-check-label" for="radio2">
-                    Approved User
                 </label>
             </div>
         </div>
@@ -173,9 +205,10 @@ break; // ************* End Member Add page *******************
                     if (!isExist('username', 'users', $userName)) {
 
                         // Insert user data into the DB
+                        // registeration_status = 1 by default bacause the admin adding this users - so, approved
                         $stmt = $conn->prepare("INSERT INTO users
-                                            (username, password, email, full_name ,group_id , date)
-                                            VALUES (:xuser, :xpass, :xmail, :xname , :xgroup ,now())");
+                                            (username, password, email, full_name ,group_id , reg_status, date)
+                                            VALUES (:xuser, :xpass, :xmail, :xname , :xgroup , 1 , now())");
                         $stmt->execute(array(
                             'xuser' => $userName,
                             'xpass' => $hashedPass,
@@ -268,7 +301,7 @@ break; // ************* End Member Add page *******************
 } else {
                 // Error:There Is No Such ID
                 echo "<div class='container' style='width: 70%; margin-top: 50px;'>";
-                redirect2Home('danger', 'Error: There Is No Such ID', 6);       
+                redirect2Home('danger', 'Error: There Is No Such ID', 6);
                 echo "</div>";
             }
 
@@ -351,7 +384,7 @@ break; // ************* End Member Add page *******************
             $userid = (isset($_GET['userid']) && is_numeric($_GET['userid'])) ? intval($_GET['userid']) : false;
 
             // if there is such ID - delete it
-            if ($userid != false && isExist('user_id', 'users' , $userid)) {
+            if ($userid != false && isExist('user_id', 'users', $userid)) {
                 // prepare Query
                 $stmt = $conn->prepare("DELETE FROM users WHERE user_id = :xid");
                 // bind params
@@ -361,7 +394,7 @@ break; // ************* End Member Add page *******************
 
                 // Successful deleting Message
                 $msg = "<strong>$count</strong> Record Have Been Deleted";
-                redirect2Home('success', $msg, 3, 'members.php');
+                redirect2Home('success', $msg, 3, $_SERVER['HTTP_REFERER']);
 
             } else {
                 // Error deleting Message - There Is No Such ID!

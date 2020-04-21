@@ -3,6 +3,9 @@ body {
   font-size: 16px;
   background-color: #f4f4f4;
 }
+body a:hover {
+  text-decoration: none;
+}
 
 /* .astrisk{
     font-size: 21px;
@@ -13,6 +16,22 @@ body {
 } */
 
 /* end main rules */
+
+/* start Bootstrap edits */
+.mr-px {
+  margin-right: 70px;
+}
+
+.navbar-brand {
+  margin-right: 5rem;
+}
+/* 
+.form-control {
+  position: relative;
+} */
+
+/* end Bootstrap edits */
+
 
 /* start login-form */
 .login-form {
@@ -31,20 +50,47 @@ body {
 }
 /* end login-form */
 
-/* start Bootstrap edits */
-.mr-px {
-  margin-right: 70px;
+/* Start dashboard page */
+.home-stats .stat{
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 6px;
+}
+.home-stats span{
+  display: block;
+  font-size: 40px;
 }
 
-.navbar-brand {
-  margin-right: 5rem;
+.home-stats .stat a{
+  color: #212529;
 }
-/* 
-.form-control {
-  position: relative;
-} */
 
-/* end Bootstrap edits */
+
+.latest {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+
+.card-header .card-tools {
+  float: right;
+  margin-right: -.625rem;
+}
+
+  .card-header .btn-tool {
+    background: 0 0;
+    color: #adb5bd;
+    font-size: .875rem;
+    margin: -.75rem 0;
+    padding: .25rem .5rem;
+  }
+
+
+
+
+/* End dashboard page */
+
+
 
 /* start members page */
 h1 {
@@ -65,4 +111,7 @@ h1 {
   box-shadow: 0px 2px 5px #ccc;
 }
 
+.activate {
+  margin-left: 5px;
+}
 /* end members page */

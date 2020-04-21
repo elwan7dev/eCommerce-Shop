@@ -37,4 +37,8 @@ $(function () {
   $(".confirm").click(function () {
     return confirm("Are You Sure?");
   });
+
+  $('.card').CardWidget();
+
+
 });
