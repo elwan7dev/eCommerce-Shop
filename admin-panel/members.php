@@ -46,7 +46,7 @@ if (isset($_SESSION['username'])) {
                 echo "<td>" . $row['username'] . " </td>";
                 echo "<td>" . $row['email'] . " </td>";
                 echo "<td>" . $row['full_name'] . " </td>";
-                echo "<td>". $row['date'] ." </td>";
+                echo "<td>" . $row['date'] . " </td>";
                 echo "<td>
                             <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm'><i class='fas fa-edit'></i></a>
                             <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm'><i class='fas fa-trash-alt'></i></a>
@@ -64,6 +64,54 @@ if (isset($_SESSION['username'])) {
 
 <?php
 break; // ********* End Member Manage page [Members page] ************
+
+        case 'pending': // ************* Start Member pending page ***************
+            // retreive pending users from DB  WEHRE reg_status = 0
+            $stmt = $conn->prepare("SELECT * FROM users WHERE reg_status = 0 ");
+            $stmt->execute();
+            // fetch all data and asign in array
+            $rows = $stmt->fetchAll();?>
+
+<!-- start html componants -->
+<h1 class="text-center">Pending Members</h1>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table main-table table-bordered  text-center">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">#ID</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Registerd Date</th>
+                    <th scope="col">Controls</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+// loop on $rows array and print dynamic data
+            foreach ($rows as $row) {
+                echo "<tr>";
+                echo "<th scope='row'>" . $row['user_id'] . " </th>";
+                echo "<td>" . $row['username'] . " </td>";
+                echo "<td>" . $row['email'] . " </td>";
+                echo "<td>" . $row['full_name'] . " </td>";
+                echo "<td>" . $row['date'] . " </td>";
+                echo "<td>
+                            <a href='members.php?action=activate&userid=" . $row['user_id'] . "' class='btn btn-primary btn-sm'><i class='fas fa-check'></i></a>
+                        </td>";
+                echo "</tr>";
+            }
+            ?>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<?php
+
+            break; // ************* End Member pending page ***************
 
         case 'add': // ************* Start Member Add page *******************
             ?>
@@ -99,9 +147,9 @@ break; // ********* End Member Manage page [Members page] ************
             </div>
             <div class="form-group col-md-4">
                 <label for="inputState">State</label>
-                <select name="state" class="form-control" >
-                    <option value="User" selected >User</option>
-                    <option value="Admin" >Admin</option>
+                <select name="state" class="form-control">
+                    <option value="User" selected>User</option>
+                    <option value="Admin">Admin</option>
 
                 </select>
             </div>
@@ -167,7 +215,7 @@ break; // ************* End Member Add page *******************
                     if (!isExist('username', 'users', $userName)) {
 
                         // Insert user data into the DB
-                        // registeration_status = 1 by default bacause the admin adding this users - so, approved 
+                        // registeration_status = 1 by default bacause the admin adding this users - so, approved
                         $stmt = $conn->prepare("INSERT INTO users
                                             (username, password, email, full_name ,group_id , reg_status, date)
                                             VALUES (:xuser, :xpass, :xmail, :xname , :xgroup , 1 , now())");
@@ -263,7 +311,7 @@ break; // ************* End Member Add page *******************
 } else {
                 // Error:There Is No Such ID
                 echo "<div class='container' style='width: 70%; margin-top: 50px;'>";
-                redirect2Home('danger', 'Error: There Is No Such ID', 6);       
+                redirect2Home('danger', 'Error: There Is No Such ID', 6);
                 echo "</div>";
             }
 
@@ -346,7 +394,7 @@ break; // ************* End Member Add page *******************
             $userid = (isset($_GET['userid']) && is_numeric($_GET['userid'])) ? intval($_GET['userid']) : false;
 
             // if there is such ID - delete it
-            if ($userid != false && isExist('user_id', 'users' , $userid)) {
+            if ($userid != false && isExist('user_id', 'users', $userid)) {
                 // prepare Query
                 $stmt = $conn->prepare("DELETE FROM users WHERE user_id = :xid");
                 // bind params
