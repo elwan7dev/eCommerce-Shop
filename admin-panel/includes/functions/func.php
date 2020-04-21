@@ -63,8 +63,8 @@ function isExist($colName, $tblName, $value)
 }
 
 /**
- * count # of items function v2.0
- * count number of items row in specific [table , condition] 
+ * count number of items function v2.0
+ * count # of items row in specific [table , condition] 
  * $item = colname 
  * $tblName = table name
  * $condition [optional] 
@@ -74,9 +74,26 @@ function isExist($colName, $tblName, $value)
 function countItems($item, $tblName , $condition ='')
 {
     global $conn;
-    $stmt = $conn->prepare("SELECT COUNT($item) FROM $tblName $condition");
-    $stmt->execute();
+    $countStmt = $conn->prepare("SELECT COUNT($item) FROM $tblName $condition");
+    $countStmt ->execute();
     // nubers of col retreived
-    return $stmt->fetchColumn();
+    return $countStmt ->fetchColumn();
 
 }
+/**
+ * get latest record function v1.0
+ * $select = col to selected 
+ * $tblName = table [EX: users , items , categories]
+ * $order = col to order by it
+ * $limit = number of records to get  [optional]
+ * 
+ * @return rows
+ */
+function getLatest($select, $tblName , $order , $limit = 5)
+{
+    global $conn;
+    $latestStmt = $conn->prepare("SELECT $select FROM $tblName ORDER BY $order DESC LIMIT $limit");
+    $latestStmt->execute();
+    $rows = $latestStmt->fetchAll();
+    return $rows;
+} 

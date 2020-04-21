@@ -6,6 +6,7 @@ if (isset($_SESSION['username'])) {
     $pageTitle = 'Dashboard';
     include 'init.php'; // initialize php file
     // Page Code here
+    $latestMembers = getLatest('*' , 'users', 'user_id');
    
     ?>
     <!-- HTML Components -->
@@ -61,7 +62,12 @@ if (isset($_SESSION['username'])) {
                                 <i class="fas fa-users"></i> Latest Registerd Users
                             </div>
                             <div class="card-body">
-                                body
+                                <?php
+                                     foreach ($latestMembers as $row) {
+                                         echo $row['username'] . "<br>";
+                                     }
+                                        
+                                ?>
                             </div>
                             <div class="card-footer">
                                 footer
