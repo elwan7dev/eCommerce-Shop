@@ -60,21 +60,21 @@ function isExist($colName, $tblName, $value)
         // not exist
         return false;
     }
-
 }
 
 /**
- * count # of items function v1.0
- * count number of items row in specific table
+ * count # of items function v2.0
+ * count number of items row in specific [table , condition] 
  * $item = colname 
  * $tblName = table name
+ * $condition [optional] 
  * 
  * @return  fetchColumn Numbers
  */
-function countItems($item, $tblName)
+function countItems($item, $tblName , $condition ='')
 {
     global $conn;
-    $stmt = $conn->prepare("SELECT COUNT($item) FROM $tblName");
+    $stmt = $conn->prepare("SELECT COUNT($item) FROM $tblName $condition");
     $stmt->execute();
     // nubers of col retreived
     return $stmt->fetchColumn();

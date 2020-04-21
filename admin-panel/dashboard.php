@@ -30,7 +30,8 @@ if (isset($_SESSION['username'])) {
                             Pending Members
                             <span>
                                 <a href="members.php?action=manage&page=pending">
-                                    300
+                                    <?php echo countItems('reg_status' , 'users', 'WHERE reg_status = 0'); ?>
+
                                 </a> 
                             </span>
                         </div>
