@@ -29,7 +29,7 @@ if (isset($_SESSION['username'])) {
                         <div class="stat bg-danger">
                             Pending Members
                             <span>
-                                <a href="members.php?action=pending">
+                                <a href="members.php?action=manage&page=pending">
                                     300
                                 </a> 
                             </span>

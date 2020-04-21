@@ -16,8 +16,13 @@ if (isset($_SESSION['username'])) {
     switch ($action) {
         case 'manage': // ************* Start Member Manage page [Members page] ***************
 
+            // (Smart way) to create member-pending page that depent on condition (reg_status = 0)
+            // if there is GET req  'page' = pending =>>> add this condition to query 
+            $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "AND reg_status = 0" : '';
+            
+
             // retreive all users from DB except admins
-            $stmt = $conn->prepare("SELECT * FROM users WHERE group_id != 1");
+            $stmt = $conn->prepare("SELECT * FROM users WHERE group_id != 1 $condition");
             $stmt->execute();
             // fetch all data and asign in array
             $rows = $stmt->fetchAll();?>
@@ -42,15 +47,18 @@ if (isset($_SESSION['username'])) {
 // loop on $rows array and print dynamic data
             foreach ($rows as $row) {
                 echo "<tr>";
-                echo "<th scope='row'>" . $row['user_id'] . " </th>";
-                echo "<td>" . $row['username'] . " </td>";
-                echo "<td>" . $row['email'] . " </td>";
-                echo "<td>" . $row['full_name'] . " </td>";
-                echo "<td>" . $row['date'] . " </td>";
-                echo "<td>
+                    echo "<th scope='row'>" . $row['user_id'] . " </th>";
+                    echo "<td>" . $row['username'] . " </td>";
+                    echo "<td>" . $row['email'] . " </td>";
+                    echo "<td>" . $row['full_name'] . " </td>";
+                    echo "<td>" . $row['date'] . " </td>";
+                    echo "<td>
                             <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm'><i class='fas fa-edit'></i></a>
-                            <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm'><i class='fas fa-trash-alt'></i></a>
-                          </td>";
+                            <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm'><i class='fas fa-trash-alt'></i></a>";
+                            if ($row['reg_status'] == 0) {
+                                echo "<a href='members.php?action=activate&userid=" . $row['user_id'] . "' class='btn btn-primary btn-sm activate'><i class='fas fa-check'></i></a>";
+                            }
+                    echo "</td>";
                 echo "</tr>";
             }
             ?>
@@ -65,53 +73,6 @@ if (isset($_SESSION['username'])) {
 <?php
 break; // ********* End Member Manage page [Members page] ************
 
-        case 'pending': // ************* Start Member pending page ***************
-            // retreive pending users from DB  WEHRE reg_status = 0
-            $stmt = $conn->prepare("SELECT * FROM users WHERE reg_status = 0 ");
-            $stmt->execute();
-            // fetch all data and asign in array
-            $rows = $stmt->fetchAll();?>
-
-<!-- start html componants -->
-<h1 class="text-center">Pending Members</h1>
-<div class="container">
-    <div class="table-responsive">
-        <table class="table main-table table-bordered  text-center">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">#ID</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Full Name</th>
-                    <th scope="col">Registerd Date</th>
-                    <th scope="col">Controls</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-// loop on $rows array and print dynamic data
-            foreach ($rows as $row) {
-                echo "<tr>";
-                echo "<th scope='row'>" . $row['user_id'] . " </th>";
-                echo "<td>" . $row['username'] . " </td>";
-                echo "<td>" . $row['email'] . " </td>";
-                echo "<td>" . $row['full_name'] . " </td>";
-                echo "<td>" . $row['date'] . " </td>";
-                echo "<td>
-                            <a href='members.php?action=activate&userid=" . $row['user_id'] . "' class='btn btn-primary btn-sm'><i class='fas fa-check'></i></a>
-                        </td>";
-                echo "</tr>";
-            }
-            ?>
-
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<?php
-
-            break; // ************* End Member pending page ***************
 
         case 'add': // ************* Start Member Add page *******************
             ?>
