@@ -15,7 +15,7 @@ if (isset($_SESSION['username'])) {
     // split page with GET request
     $action = isset($_GET['action']) ? $_GET['action'] : 'manage';
 
-    if ($action == 'manage') {
+    if ($action == 'manage') {  //***************start cat-manage page */
         
             // retreive all users from DB except admins
             $stmt = $conn->prepare("SELECT * FROM categories");
@@ -80,6 +80,7 @@ if (isset($_SESSION['username'])) {
 
 
 <?php
+    /***************End cat-manage page */
 
     }elseif ($action == 'add') { // ****** start cats-add page
         ?>
@@ -227,7 +228,98 @@ if (isset($_SESSION['username'])) {
         echo "</div>"; //end of container div
 
     }elseif ($action == 'edit') {
-        echo 'edit';
+
+        // check if get request user id is numeric & get the integer value of it.
+        $catID = (isset($_GET['catid']) && is_numeric($_GET['catid'])) ? intval($_GET['catid']) : 0;
+
+        // Select all fields from record depend on this id
+        $stmt = $conn->prepare("SELECT * FROM categories WHERE cat_id=? LIMIT 1");
+        //execute Query
+        $stmt->execute(array($catID)); //if userid are equal- select
+        $row = $stmt->fetch(); //fetch row data from DB
+
+        // if there is such ID - show the form
+        if ($stmt->rowCount() > 0) {   ?>
+
+
+<!-- start html componants -->
+<h1 class="text-center">Edit Category</h1>
+<div class="container" style="width: 70%;">
+    <form action="?action=update" method="POST">
+        <!-- start Name & Order in same row field -->
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="name">Name</label>
+                <input type="text" name="name" class="form-control" required="required" 
+                    value="<?php echo $row['name']; ?>">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="Order">Order</label>
+                <input type="text" name="order" class="form-control"
+                value="<?php echo $row['ordering']; ?>">
+            </div>
+        </div>
+        <!-- start description field -->
+        <div class="form-group">
+            <label for="desc">Description</label>
+            <input type="test" name="desc" class="form-control" value="<?php echo $row['description']; ?>">
+        </div>
+        <!-- start radio fields button -->
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label class="col-form-label">Visibility</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="visible" id="vis-yes" value="1" 
+                            <?php echo $check = $row['visibility'] == 1 ? 'checked' : ''; ?> >
+                    <label class="form-check-label" for="vis-yes">Yes</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="visible" id="vis-no" value="0"
+                            <?php echo $check = $row['visibility'] == 0 ? 'checked' : ''; ?>>
+                    <label class="form-check-label" for="vis-no">No</label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="col-form-label">Comments</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="comments" id="com-yes" value="1" 
+                            <?php echo $check = $row['allow_comments'] == 1 ? 'checked' : ''; ?>>
+                    <label class="form-check-label" for="com-yes">Yes</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="comments" id="com-no" value="0"
+                            <?php echo $check = $row['allow_comments'] == 0 ? 'checked' : ''; ?>>
+                    <label class="form-check-label" for="com-no">No</label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="col-form-label">Ads</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="ads" id="ads-yes" value="1" 
+                            <?php echo $check = $row['allow_ads'] == 1 ? 'checked' : ''; ?>>
+                    <label class="form-check-label" for="ads-yes">Yes</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="ads" id="ads-no" value="0"
+                            <?php echo $check = $row['allow_ads'] == 0 ? 'checked' : ''; ?>>
+                    <label class="form-check-label" for="ads-no">No</label>
+                </div>
+            </div>
+
+        </div>
+        <!-- start button field -->
+        <input type="submit" value="Save" class="btn btn-primary">
+    </form>
+</div>
+
+<?php
+        } else {
+            // Error:There Is No Such ID
+            echo "<div class='container' style='width: 70%; margin-top: 50px;'>";
+            redirect2Home('danger', 'Error: There Is No Such ID', 3);
+            echo "</div>";
+        }
+
     }elseif ($action == 'update') {
         echo 'update';
     }elseif ($action == 'delete') {
