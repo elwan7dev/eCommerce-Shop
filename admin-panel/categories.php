@@ -1,12 +1,13 @@
 <?php
 /**
  * Categories page
+ * [add (insert)  -   edit (update)   -  delete ]
  */
 
 session_start();
 
 if (isset($_SESSION['username'])) {
-    $pageTitle = ''; //page title to check it for title tag
+    $pageTitle = 'Categories'; //page title to check it for title tag
     include 'init.php'; // initialize php file
     // Page Code here
 
@@ -15,8 +16,70 @@ if (isset($_SESSION['username'])) {
     $action = isset($_GET['action']) ? $_GET['action'] : 'manage';
 
     if ($action == 'manage') {
-        echo 'manage';
-        echo "<a href='?action=add' class='btn btn-primary'><i class='fas fa-plus'></i> New Category</a>";
+        
+            // retreive all users from DB except admins
+            $stmt = $conn->prepare("SELECT * FROM categories");
+            $stmt->execute();
+            // fetch all data and asign in array
+            $rows = $stmt->fetchAll();?>
+
+<!-- start html componants -->
+<h1 class="text-center">Manage Members</h1>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table main-table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">#ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Registerd Date</th>
+                    <th scope="col">Controls</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+// loop on $rows array and print dynamic data
+            foreach ($rows as $row) {
+                $class = ($row['visibility'] != 1) ?  "class='table-secondary text-muted' title='Not Visible'" : '';
+                echo "<tr $class>"; 
+                echo "<th scope='row'>" . $row['cat_id'] . " </th>";
+                echo "<td>" . $row['name'] . "";
+                    if ($row['visibility'] == 1) {
+                        echo "<span class='badge badge-pill badge-success' title='Visible'><i class='far fa-eye'></i></span>";
+                    }else {
+                        echo "<span class='badge badge-pill badge-danger' title='Not Visible'><i class='far fa-eye-slash'></i></span>";
+
+                    }
+                    if ($row['allow_comments'] == 1) {
+                        echo "<span class='badge badge-pill badge-primary'  title='allow comments' > <i class='far fa-comments'></i></span>";
+                    }
+                    if ($row['allow_ads'] == 1) {
+                        echo "<span class='badge badge-pill badge-warning'  title='allow ads'><i class='fas fa-ad'></i></span>";
+                    }
+                    
+                echo "</td>";
+                echo "<td>" . $row['description'] . " </td>";
+                echo "<td>" . $row['date'] . " </td>";
+                echo "<td>
+                            <a href='categories.php?action=edit&catid=" . $row['cat_id'] . "' class='btn btn-success btn-sm' title='Edit Member'><i class='fas fa-edit'></i></a>
+                            <a href='categories.php?action=edit&catid=" . $row['cat_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Member'><i class='fas fa-trash-alt'></i></a>";
+                echo "</td>";
+                echo "</tr>";
+            }
+            ?>
+
+            </tbody>
+        </table>
+    </div>
+    <a href='?action=add' class="btn btn-primary"><i class="fas fa-plus"></i> New Category</a>
+
+</div>
+
+
+
+
+<?php
 
     }elseif ($action == 'add') { // ****** start cats-add page
         ?>
@@ -29,12 +92,12 @@ if (isset($_SESSION['username'])) {
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="name">Name</label>
-                <input type="text" name="name" class="form-control" autocomplete="off" required="required"
+                <input type="text" name="name" class="form-control" required="required"
                     placeholder="Category Name">
             </div>
             <div class="form-group col-md-6">
                 <label for="Order">Order</label>
-                <input type="text" name="order" class="form-control" autocomplete="off"
+                <input type="text" name="order" class="form-control"
                     placeholder="Arrange Categories by ordering">
             </div>
         </div>
