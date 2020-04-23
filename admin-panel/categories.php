@@ -15,7 +15,7 @@ if (isset($_SESSION['username'])) {
     // split page with GET request
     $action = isset($_GET['action']) ? $_GET['action'] : 'manage';
 
-    if ($action == 'manage') {  //***************start cat-manage page */
+    if ($action == 'manage') {  //***************start cats-manage page */
         
             // retreive all users from DB except admins
             $stmt = $conn->prepare("SELECT * FROM categories");
@@ -24,7 +24,7 @@ if (isset($_SESSION['username'])) {
             $rows = $stmt->fetchAll();?>
 
 <!-- start html componants -->
-<h1 class="text-center">Manage Members</h1>
+<h1 class="text-center">Manage Categories</h1>
 <div class="container">
     <div class="table-responsive">
         <table class="table main-table table-bordered">
@@ -246,6 +246,9 @@ if (isset($_SESSION['username'])) {
 <h1 class="text-center">Edit Category</h1>
 <div class="container" style="width: 70%;">
     <form action="?action=update" method="POST">
+        <!-- add catid input here to post it in form add  to get it in update page   -->
+        <input type="hidden" name="catid" value="<?php echo $catID; ?>">
+
         <!-- start Name & Order in same row field -->
         <div class="form-row">
             <div class="form-group col-md-6">
@@ -318,10 +321,81 @@ if (isset($_SESSION['username'])) {
             echo "<div class='container' style='width: 70%; margin-top: 50px;'>";
             redirect2Home('danger', 'Error: There Is No Such ID', 3);
             echo "</div>";
-        }
+        } /*****************End cat-edit page */
 
-    }elseif ($action == 'update') {
-        echo 'update';
+    }elseif ($action == 'update') { /***************Start cat-update page */
+        echo "<h1 class='text-center'>Update Category</h1>";
+        echo "<div class='container' style='width: 70%;'>";
+
+        // check if user coming from http POST request to prevent browseing page directly
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+
+            // get the vars from the form
+            $catID = $_POST['catid'];
+            $name = $_POST['name'];
+            $order = $_POST['order'];
+            $desc = $_POST['desc'];
+            $visible = $_POST['visible'];
+            $comments = $_POST['comments'];
+            $ads = $_POST['ads'];
+            
+
+            // validate Form in server side
+            // declare empty errors array
+            $formErrors = array();
+            if (empty($name)) {
+                $formErrors[] = "name Field Can't Be <strong>Empty!</strong>";
+            }
+            if (strlen($name) < 4) {
+                $formErrors[] = "name Can't Be Less Than <strong> 4 Character</strong>";
+            }
+           
+            // if there is errors - print alert errors in update page
+            if (!empty($formErrors)) {
+                foreach ($formErrors as $error) {
+                    echo "<div class='alert alert-danger' role='alert'>" . $error . "</div>";
+                }
+            }
+
+            // if there is no errors - update in DB
+            if (empty($formErrors)) {
+
+                // Update the DB record with this info
+                $stmt = $conn->prepare("UPDATE categories SET name = ?, description = ?, ordering = ?, visibility = ?, allow_comments =? , allow_ads =?
+                                            WHERE cat_id =?");
+                //if i used $_SESSION['userid'] instead if $_GET['userid'] = $userId
+                //fatal error update in current user only
+                $stmt->execute(array($name, $desc, $order, $visible, $comments, $ads, $catID ));
+                $count = $stmt->rowCount();
+
+                if ($count > 0) {
+                    // Successful updating Message
+                    $msg = "<strong>$count</strong> Record Have Been Updated";
+                    redirect2Home('success', $msg, 3, 'categories.php');
+                } else {
+                    // Error Updating Message - No Data Updated Yet!
+                    $msg = "No Data Updated Yet!";
+                    redirect2Home('info', $msg, 3, $_SERVER['HTTP_REFERER']);
+                }
+
+            }
+
+        } else {
+            // Error POST Request: You Can't Browse This Page Directly
+            $msg = "Error: You Can't Browse This Page Directly";
+            redirect2Home('danger', $msg, 6);
+
+        }
+        echo "</div>"; //end of container div
+
+
+        
+
+
+
+
+
+
     }elseif ($action == 'delete') {
         echo 'delete';
     }else {
