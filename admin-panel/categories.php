@@ -63,7 +63,7 @@ if (isset($_SESSION['username'])) {
                 echo "<td>" . $row['date'] . " </td>";
                 echo "<td>
                             <a href='categories.php?action=edit&catid=" . $row['cat_id'] . "' class='btn btn-success btn-sm' title='Edit Member'><i class='fas fa-edit'></i></a>
-                            <a href='categories.php?action=edit&catid=" . $row['cat_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Member'><i class='fas fa-trash-alt'></i></a>";
+                            <a href='categories.php?action=delete&catid=" . $row['cat_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Member'><i class='fas fa-trash-alt'></i></a>";
                 echo "</td>";
                 echo "</tr>";
             }
@@ -97,9 +97,8 @@ if (isset($_SESSION['username'])) {
                     placeholder="Category Name">
             </div>
             <div class="form-group col-md-6">
-                <label for="Order">Order</label>
-                <input type="text" name="order" class="form-control"
-                    placeholder="Arrange Categories by ordering">
+                <label for="order">Order</label>
+                <input type="text" name="order" class="form-control" placeholder="Arrange Categories by ordering">
             </div>
         </div>
         <!-- start description field -->
@@ -159,29 +158,28 @@ if (isset($_SESSION['username'])) {
 
         // check if user coming from http POST request to preven    t browseing page directly
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $order = 0;
 
             // get the vars from the form
             $name = $_POST['name'];
-            $order = $_POST['order'];
+            $order = intval($_POST['order']);  
+            //finaly solved an hard fatal error
+            /** solved using intval()
+             * Fatal error: Uncaught PDOException: SQLSTATE[HY000]: 
+             * General error: 1366 Incorrect integer value: '' for column 'ordering' 
+             */
             $desc = $_POST['desc'];
             $visible = $_POST['visible'];
             $comments = $_POST['comments'];
             $ads = $_POST['ads'];
 
-            // validate Form in server side
-            // declare empty errors array
-            $formErrors = array();
-            if (empty($name)) {
-                $formErrors[] = "Name Field Can't Be <strong>Empty!</strong>";
-            }
+            
             // if there is errors - print alert errors in update page
-            if (!empty($formErrors)) {
-                foreach ($formErrors as $error) {
-                    echo "<div class='alert alert-danger' role='alert'>" . $error . "</div>";
-                }
+            if (empty($name)) {
+                echo "<div class='alert alert-danger' role='alert'>Name Field Can't Be <strong>Empty!</strong></div>";
             }
             // check if there is no errors - insert in DB
-            if (empty($formErrors)) {
+            if (!empty($name)) {
                 // check if the category name that coming from Form exist in DB or Not
                 // like this " SELECT name FROM categories WHERE name = $name"
                 if (!isExist('name', 'categories', $name)) {
@@ -189,15 +187,15 @@ if (isset($_SESSION['username'])) {
                     // Insert user data into the DB
                     // registeration_status = 1 by default bacause the admin adding this users - so, approved
                     $stmt = $conn->prepare("INSERT INTO categories
-                                        (name, ordering, description, visibility ,allow_comments , allow_ads, date)
-                                        VALUES (:xname, :xorder, :xdesc, :xvisible , :xcomm , :xads , now())");
+                                        (name, description, ordering, visibility ,allow_comments , allow_ads, date)
+                                        VALUES (:xname, :xdesc, :xorder, :xvisible , :xcomm , :xads , now())");
                     $stmt->execute(array(
                         'xname' => $name,
-                        'xorder' => $order,
                         'xdesc' => $desc,
+                        'xorder' => $order,
                         'xvisible' => $visible,
                         'xcomm' => $comments,
-                        'xads' => $ads,
+                        'xads' => $ads
                     ));
 
                     $count = $stmt->rowCount();
@@ -227,7 +225,7 @@ if (isset($_SESSION['username'])) {
         
         echo "</div>"; //end of container div
 
-    }elseif ($action == 'edit') {
+    }elseif ($action == 'edit') { /**************Start cats-edit page */
 
         // check if get request user id is numeric & get the integer value of it.
         $catID = (isset($_GET['catid']) && is_numeric($_GET['catid'])) ? intval($_GET['catid']) : 0;
@@ -333,7 +331,13 @@ if (isset($_SESSION['username'])) {
             // get the vars from the form
             $catID = $_POST['catid'];
             $name = $_POST['name'];
-            $order = $_POST['order'];
+            $order = intval($_POST['order']); 
+            //finaly solved an hard fatal error
+            /** solved using intval()
+             * Fatal error: Uncaught PDOException: SQLSTATE[HY000]: 
+             * General error: 1366 Incorrect integer value: '' for column 'ordering' 
+             */
+            
             $desc = $_POST['desc'];
             $visible = $_POST['visible'];
             $comments = $_POST['comments'];
@@ -388,16 +392,31 @@ if (isset($_SESSION['username'])) {
         }
         echo "</div>"; //end of container div
 
-
-        
-
-
-
-
-
-
     }elseif ($action == 'delete') {
-        echo 'delete';
+        echo "<h1 class='text-center'>Delete Member</h1>";
+        echo "<div class='container' style='width: 70%;'>";
+        // check if get request user id is numeric & get the integer value of it.
+        $catID = (isset($_GET['catid']) && is_numeric($_GET['catid'])) ? intval($_GET['catid']) : false;
+
+        // if there is such ID - delete it
+        if ($catID != false && isExist('cat_id', 'categories', $catID)) {
+            // prepare Query
+            $stmt = $conn->prepare("DELETE FROM categories WHERE cat_id = :xid");
+            // bind params
+            $stmt->bindParam(':xid', $catID);
+            $stmt->execute();
+            $count = $stmt->rowCount();
+
+            // Successful deleting Message
+            $msg = "<strong>$count</strong> Record Have Been Deleted";
+            redirect2Home('success', $msg, 3, $_SERVER['HTTP_REFERER']);
+
+        } else {
+            // Error deleting Message - There Is No Such ID!
+            $msg = "There Is No Such ID!";
+            redirect2Home('danger', $msg, 3);
+        }
+        echo "</div>";
     }else {
         header('location: dashboard.php');
     }
