@@ -21,64 +21,51 @@ if (isset($_SESSION['username'])) {
             $stmt = $conn->prepare("SELECT * FROM categories");
             $stmt->execute();
             // fetch all data and asign in array
-            $rows = $stmt->fetchAll();?>
+            $cats = $stmt->fetchAll();?>
 
 <!-- start html componants -->
 <h1 class="text-center">Manage Categories</h1>
-<div class="container">
-    <div class="table-responsive">
-        <table class="table main-table table-bordered">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">#ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Registerd Date</th>
-                    <th scope="col">Controls</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-// loop on $rows array and print dynamic data
-            foreach ($rows as $row) {
-                $class = ($row['visibility'] != 1) ?  "class='table-secondary text-muted' title='Not Visible'" : '';
-                echo "<tr $class>"; 
-                echo "<th scope='row'>" . $row['cat_id'] . " </th>";
-                echo "<td>" . $row['name'] . "";
-                    if ($row['visibility'] == 1) {
-                        echo "<span class='badge badge-pill badge-success' title='Visible'><i class='far fa-eye'></i></span>";
-                    }else {
-                        echo "<span class='badge badge-pill badge-danger' title='Not Visible'><i class='far fa-eye-slash'></i></span>";
-
-                    }
-                    if ($row['allow_comments'] == 1) {
-                        echo "<span class='badge badge-pill badge-primary'  title='allow comments' > <i class='far fa-comments'></i></span>";
-                    }
-                    if ($row['allow_ads'] == 1) {
-                        echo "<span class='badge badge-pill badge-warning'  title='allow ads'><i class='fas fa-ad'></i></span>";
-                    }
-                    
-                echo "</td>";
-                echo "<td>" . $row['description'] . " </td>";
-                echo "<td>" . $row['date'] . " </td>";
-                echo "<td>
-                            <a href='categories.php?action=edit&catid=" . $row['cat_id'] . "' class='btn btn-success btn-sm' title='Edit Member'><i class='fas fa-edit'></i></a>
-                            <a href='categories.php?action=delete&catid=" . $row['cat_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Member'><i class='fas fa-trash-alt'></i></a>";
-                echo "</td>";
-                echo "</tr>";
-            }
+<div class="container categories">
+    <!--  CATEGORIES -->
+    <div class="card">
+        <div class="card-header border-transparent">
+            <i class="fas fa-tag"></i> Categories
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <?php
+                foreach ($cats as $cat) {
+                    echo "<div class='cat'>";
+                        echo "<div class='hidden-buttons'>";
+                            echo "<a href='categories.php?action=edit&catid=" . $cat['cat_id'] . "' class='btn btn-success btn-sm' title='Edit Category'><i class='fas fa-edit'></i></a>";
+                            echo "<a href='categories.php?action=delete&catid=" . $cat['cat_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Category'><i class='fas fa-trash-alt'></i></a>";
+                        echo "</div>";
+                        if($cat['visibility'] == 0){ echo "<span class='badge badge-pill badge-danger' title='Not Visible'><i class='far fa-eye-slash'></i> Hidden</span>";}
+                        if($cat['allow_comments'] == 0){ echo "<span class='badge badge-pill badge-primary' title='Comments Disabled'><i class='fas fa-comment-slash'></i> Comments Disabled</span>";}
+                        if($cat['allow_ads'] == 0){ echo "<span class='badge badge-pill badge-warning' title='Ads Disabled'><i class='fas fa-ad'></i> Ads Disabled</span>";}
+                        echo "<h3>" . $cat['name'] . "</h3>";
+                        if($cat['description'] != ''){ echo "<p>". $cat['description'] ."</p>"; }
+                       
+                    echo "</div>";
+                    echo "<hr>";
+                }
             ?>
-
-            </tbody>
-        </table>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer text-center">
+            <a href='?action=add' class="btn btn-primary"><i class="fas fa-plus"></i> New Category</a>
+        </div>
+        <!-- /.card-footer -->
     </div>
-    <a href='?action=add' class="btn btn-primary"><i class="fas fa-plus"></i> New Category</a>
-
+    <!-- /.card -->
 </div>
-
-
-
-
 <?php
     /***************End cat-manage page */
 
@@ -93,8 +80,7 @@ if (isset($_SESSION['username'])) {
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="name">Name</label>
-                <input type="text" name="name" class="form-control" required="required"
-                    placeholder="Category Name">
+                <input type="text" name="name" class="form-control" required="required" placeholder="Category Name">
             </div>
             <div class="form-group col-md-6">
                 <label for="order">Order</label>
@@ -167,6 +153,8 @@ if (isset($_SESSION['username'])) {
             /** solved using intval()
              * Fatal error: Uncaught PDOException: SQLSTATE[HY000]: 
              * General error: 1366 Incorrect integer value: '' for column 'ordering' 
+             * 
+             * bacause i'mtrying to insert an empty string into a column that is expecting an integer
              */
             $desc = $_POST['desc'];
             $visible = $_POST['visible'];
@@ -251,13 +239,12 @@ if (isset($_SESSION['username'])) {
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="name">Name</label>
-                <input type="text" name="name" class="form-control" required="required" 
+                <input type="text" name="name" class="form-control" required="required"
                     value="<?php echo $row['name']; ?>">
             </div>
             <div class="form-group col-md-6">
                 <label for="Order">Order</label>
-                <input type="text" name="order" class="form-control"
-                value="<?php echo $row['ordering']; ?>">
+                <input type="text" name="order" class="form-control" value="<?php echo $row['ordering']; ?>">
             </div>
         </div>
         <!-- start description field -->
@@ -270,39 +257,39 @@ if (isset($_SESSION['username'])) {
             <div class="form-group col-md-4">
                 <label class="col-form-label">Visibility</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="visible" id="vis-yes" value="1" 
-                            <?php echo $check = $row['visibility'] == 1 ? 'checked' : ''; ?> >
+                    <input class="form-check-input" type="radio" name="visible" id="vis-yes" value="1"
+                        <?php echo $check = $row['visibility'] == 1 ? 'checked' : ''; ?>>
                     <label class="form-check-label" for="vis-yes">Yes</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="visible" id="vis-no" value="0"
-                            <?php echo $check = $row['visibility'] == 0 ? 'checked' : ''; ?>>
+                        <?php echo $check = $row['visibility'] == 0 ? 'checked' : ''; ?>>
                     <label class="form-check-label" for="vis-no">No</label>
                 </div>
             </div>
             <div class="form-group col-md-4">
                 <label class="col-form-label">Comments</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="comments" id="com-yes" value="1" 
-                            <?php echo $check = $row['allow_comments'] == 1 ? 'checked' : ''; ?>>
+                    <input class="form-check-input" type="radio" name="comments" id="com-yes" value="1"
+                        <?php echo $check = $row['allow_comments'] == 1 ? 'checked' : ''; ?>>
                     <label class="form-check-label" for="com-yes">Yes</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="comments" id="com-no" value="0"
-                            <?php echo $check = $row['allow_comments'] == 0 ? 'checked' : ''; ?>>
+                        <?php echo $check = $row['allow_comments'] == 0 ? 'checked' : ''; ?>>
                     <label class="form-check-label" for="com-no">No</label>
                 </div>
             </div>
             <div class="form-group col-md-4">
                 <label class="col-form-label">Ads</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ads" id="ads-yes" value="1" 
-                            <?php echo $check = $row['allow_ads'] == 1 ? 'checked' : ''; ?>>
+                    <input class="form-check-input" type="radio" name="ads" id="ads-yes" value="1"
+                        <?php echo $check = $row['allow_ads'] == 1 ? 'checked' : ''; ?>>
                     <label class="form-check-label" for="ads-yes">Yes</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="ads" id="ads-no" value="0"
-                            <?php echo $check = $row['allow_ads'] == 0 ? 'checked' : ''; ?>>
+                        <?php echo $check = $row['allow_ads'] == 0 ? 'checked' : ''; ?>>
                     <label class="form-check-label" for="ads-no">No</label>
                 </div>
             </div>
@@ -336,6 +323,8 @@ if (isset($_SESSION['username'])) {
             /** solved using intval()
              * Fatal error: Uncaught PDOException: SQLSTATE[HY000]: 
              * General error: 1366 Incorrect integer value: '' for column 'ordering' 
+             * 
+             * bacause i'mtrying to insert an empty string into a column that is expecting an integer
              */
             
             $desc = $_POST['desc'];
