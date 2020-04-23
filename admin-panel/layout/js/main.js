@@ -38,7 +38,14 @@ $(function () {
     return confirm("Are You Sure?");
   });
 
-  $('.card').CardWidget();
+  // $('.card').CardWidget();
+
+  // // Add view option
+  // $('.cat h3').click(function () { 
+  //   $(this).next('.full-view').fadeToggle();
+   
+    
+  // });
 
 
 });

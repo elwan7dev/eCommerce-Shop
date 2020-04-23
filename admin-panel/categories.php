@@ -16,12 +16,22 @@ if (isset($_SESSION['username'])) {
     $action = isset($_GET['action']) ? $_GET['action'] : 'manage';
 
     if ($action == 'manage') {  //***************start cats-manage page */
+
+        // <!-- Dynamic order options  -->
+        // $sort = 'ASC'; //INIT VALUE 
+        $sortArr = array('ASC' , 'DESC');
+        // CHECK IF SORT REQ IN ARRAY OPT 
+        $sort = (isset($_GET['sort']) && in_array($_GET['sort'], $sortArr)) ? $_GET['sort'] : 'ASC';
         
-            // retreive all users from DB except admins
-            $stmt = $conn->prepare("SELECT * FROM categories");
-            $stmt->execute();
-            // fetch all data and asign in array
-            $cats = $stmt->fetchAll();?>
+        // more dynamic order var
+        $orderArr = array('ordering' , 'cat_id');
+        $colName = (isset($_GET['orderby']) && in_array($_GET['orderby'], $orderArr)) ? $_GET['orderby'] : 'ordering';
+        
+        // retreive all categories from DB  by ordering 
+        $stmt = $conn->prepare("SELECT * FROM categories ORDER BY $colName $sort");
+        $stmt->execute();
+        // fetch all data and asign in array
+        $cats = $stmt->fetchAll();                          ?>
 
 <!-- start html componants -->
 <h1 class="text-center">Manage Categories</h1>
@@ -30,13 +40,19 @@ if (isset($_SESSION['username'])) {
     <div class="card">
         <div class="card-header border-transparent">
             <i class="fas fa-tag"></i> Categories
-            <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                </button>
+            <div class="order float-right">
+                <!-- Dynamic order options  -->
+                Ordering:
+                <a class="<?php if($sort == 'ASC' && $colName == 'ordering') {echo 'active';} ?>"
+                    href="?sort=ASC">ASC</a> |
+                <a class="<?php if($sort == 'DESC' && $colName == 'ordering') {echo 'active';} ?>"
+                    href="?sort=DESC">DESC</a>
+
+                Cat-ID:
+                <a class="<?php if($sort == 'ASC' && $colName == 'cat_id' ) {echo 'active';} ?>"
+                    href="?sort=ASC&orderby=cat_id">ASC</a> |
+                <a class="<?php if($sort == 'DESC' && $colName == 'cat_id') {echo 'active';} ?>"
+                    href="?sort=DESC&orderby=cat_id">DESC</a>
             </div>
         </div>
         <div class="card-body p-0">
@@ -51,10 +67,12 @@ if (isset($_SESSION['username'])) {
                         if($cat['allow_comments'] == 0){ echo "<span class='badge badge-pill badge-primary' title='Comments Disabled'><i class='fas fa-comment-slash'></i> Comments Disabled</span>";}
                         if($cat['allow_ads'] == 0){ echo "<span class='badge badge-pill badge-warning' title='Ads Disabled'><i class='fas fa-ad'></i> Ads Disabled</span>";}
                         echo "<h3>" . $cat['name'] . "</h3>";
+                        echo "<h5> Order# " . $cat['ordering'] . "</h5>";
+                        echo "<h6> cat_id# " . $cat['cat_id'] . "</h6>";
                         if($cat['description'] != ''){ echo "<p>". $cat['description'] ."</p>"; }
                        
                     echo "</div>";
-                    echo "<hr>";
+                    echo "<hr>";    
                 }
             ?>
         </div>
@@ -215,13 +233,13 @@ if (isset($_SESSION['username'])) {
 
     }elseif ($action == 'edit') { /**************Start cats-edit page */
 
-        // check if get request user id is numeric & get the integer value of it.
+        // check if get request catid is numeric & get the integer value of it.
         $catID = (isset($_GET['catid']) && is_numeric($_GET['catid'])) ? intval($_GET['catid']) : 0;
 
         // Select all fields from record depend on this id
         $stmt = $conn->prepare("SELECT * FROM categories WHERE cat_id=? LIMIT 1");
         //execute Query
-        $stmt->execute(array($catID)); //if userid are equal- select
+        $stmt->execute(array($catID)); //if cat_id are equal- select
         $row = $stmt->fetch(); //fetch row data from DB
 
         // if there is such ID - show the form
@@ -258,12 +276,12 @@ if (isset($_SESSION['username'])) {
                 <label class="col-form-label">Visibility</label>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="visible" id="vis-yes" value="1"
-                        <?php echo $check = $row['visibility'] == 1 ? 'checked' : ''; ?>>
+                        <?php if ($row['visibility'] == 1){echo 'checked';}?>>
                     <label class="form-check-label" for="vis-yes">Yes</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="visible" id="vis-no" value="0"
-                        <?php echo $check = $row['visibility'] == 0 ? 'checked' : ''; ?>>
+                        <?php if ($row['visibility'] == 0){echo 'checked';}  ?>>
                     <label class="form-check-label" for="vis-no">No</label>
                 </div>
             </div>
@@ -271,12 +289,12 @@ if (isset($_SESSION['username'])) {
                 <label class="col-form-label">Comments</label>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="comments" id="com-yes" value="1"
-                        <?php echo $check = $row['allow_comments'] == 1 ? 'checked' : ''; ?>>
+                        <?php if ($row['allow_comments'] == 1){echo 'checked';} ?>>
                     <label class="form-check-label" for="com-yes">Yes</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="comments" id="com-no" value="0"
-                        <?php echo $check = $row['allow_comments'] == 0 ? 'checked' : ''; ?>>
+                        <?php if ($row['allow_comments'] == 0){echo 'checked';} ?>>
                     <label class="form-check-label" for="com-no">No</label>
                 </div>
             </div>
@@ -284,12 +302,12 @@ if (isset($_SESSION['username'])) {
                 <label class="col-form-label">Ads</label>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="ads" id="ads-yes" value="1"
-                        <?php echo $check = $row['allow_ads'] == 1 ? 'checked' : ''; ?>>
+                        <?php if ($row['allow_ads'] == 1){echo 'checked';} ?>>
                     <label class="form-check-label" for="ads-yes">Yes</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="ads" id="ads-no" value="0"
-                        <?php echo $check = $row['allow_ads'] == 0 ? 'checked' : ''; ?>>
+                        <?php if ($row['allow_ads'] == 0){echo 'checked';} ?>>
                     <label class="form-check-label" for="ads-no">No</label>
                 </div>
             </div>
