@@ -20,7 +20,10 @@ if (isset($_SESSION['username'])) {
         $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "WHERE approval = 0" : '';
 
         // retreive all users from DB except admins
-        $stmt = $conn->prepare("SELECT * FROM items $condition");
+        $stmt = $conn->prepare("SELECT items.* , categories.name AS cat_name , users.username FROM items $condition
+                                INNER JOIN categories ON  categories.cat_id =items.cat_id
+                                INNER JOIN users ON users.user_id = items.member_id");
+                                
         $stmt->execute();
         // fetch all data and asign in array
         $rows = $stmt->fetchAll();    ?>
@@ -37,6 +40,8 @@ if (isset($_SESSION['username'])) {
                     <th scope="col">Name</th>
                     <th scope="col">Description</th>
                     <th scope="col">Price</th>
+                    <th scope="col">Categroy</th>
+                    <th scope="col">Member</th>
                     <th scope="col">Adding at</th>
                     <th scope="col">Controls</th>
                 </tr>
@@ -53,6 +58,8 @@ if (isset($_SESSION['username'])) {
                     echo "<td>" . $row['name'] . " </td>";
                     echo "<td>" . $row['description'] . " </td>";
                     echo "<td>" . $row['price'] . " </td>";
+                    echo "<td>" . $row['cat_name'] . " </td>";
+                    echo "<td>" . $row['username'] . " </td>";
                     echo "<td>" . $row['created_at'] . " </td>";
                     echo "<td>
                                 <a href='items.php?action=edit&itemid=" . $row['item_id'] . "' class='btn btn-success btn-sm' title='Edit Item'><i class='fas fa-edit'></i></a>
