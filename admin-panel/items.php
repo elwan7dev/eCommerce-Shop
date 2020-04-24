@@ -75,8 +75,8 @@ if (isset($_SESSION['username'])) {
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="memeber">Member</label>
-                <select id="memeber" name="memeber" class="form-control" required>
+                <label for="member">Member</label>
+                <select id="member" name="member" class="form-control" required>
                     <option value="0" selected>Choose...</option>
                     <?php
                         $users = getRows('user_id , username' , 'users');
@@ -121,6 +121,8 @@ if (isset($_SESSION['username'])) {
             $desc = $_POST['desc'];
             $country = $_POST['country'];
             $status = $_POST['status'];
+            $memberID = $_POST['member'];
+            $categoryID = $_POST['category'];
 
             // validate Form in server side
             // declare empty errors array
@@ -143,6 +145,12 @@ if (isset($_SESSION['username'])) {
             if ($status == 0) {
                 $formErrors[] = "You Must choose the  <strong>Status</strong>";
             }
+            if ($memberID == 0) {
+                $formErrors[] = "You Must choose the  <strong>Member</strong>";
+            }
+            if ($categoryID == 0) {
+                $formErrors[] = "You Must choose the  <strong>Category</strong>";
+            }
             
             // if there is errors - print alert errors in update page
             if (!empty($formErrors)) {
@@ -156,14 +164,16 @@ if (isset($_SESSION['username'])) {
                 // Insert user data into the DB
                 // registeration_status = 1 by default bacause the admin adding this users - so, approved
                 $stmt = $conn->prepare("INSERT INTO items
-                                    (name, price, description, country_made, status , created_at)
-                                    VALUES (:xname, :xprice, :xdesc, :xcountry , :xstatus , now())");
+                                    (name, price, description, country_made, status , cat_id, member_id, created_at)
+                                    VALUES (:xname, :xprice, :xdesc, :xcountry , :xstatus, :xcat, :xmember , now())");
                 $stmt->execute(array(
                     'xname' => $name,
                     'xprice' => $price,
                     'xdesc' => $desc,
                     'xcountry' => $country,
                     'xstatus' => $status,
+                    'xcat' => $categoryID,
+                    'xmember' => $memberID,
                 ));
 
                 $count = $stmt->rowCount();
