@@ -32,7 +32,6 @@ body a:hover {
 
 /* end Bootstrap edits */
 
-
 /* start login-form */
 .login-form {
   width: 300px;
@@ -51,46 +50,39 @@ body a:hover {
 /* end login-form */
 
 /* Start dashboard page */
-.home-stats .stat{
+.home-stats .stat {
   font-size: 20px;
   padding: 10px;
   border-radius: 6px;
 }
-.home-stats span{
+.home-stats span {
   display: block;
   font-size: 40px;
 }
 
-.home-stats .stat a{
+.home-stats .stat a {
   color: #212529;
 }
-
 
 .latest {
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
-
 .card-header .card-tools {
   float: right;
-  margin-right: -.625rem;
+  margin-right: -0.625rem;
 }
 
-  .card-header .btn-tool {
-    background: 0 0;
-    color: #adb5bd;
-    font-size: .875rem;
-    margin: -.75rem 0;
-    padding: .25rem .5rem;
-  }
-
-
-
+.card-header .btn-tool {
+  background: 0 0;
+  color: #adb5bd;
+  font-size: 0.875rem;
+  margin: -0.75rem 0;
+  padding: 0.25rem 0.5rem;
+}
 
 /* End dashboard page */
-
-
 
 /* start members page */
 h1 {
@@ -106,12 +98,72 @@ h1 {
   color: #717171;
 }
 
-.main-table{
+.main-table {
   background-color: #f9f9f9;
   box-shadow: 0px 2px 5px #ccc;
+}
+
+.main-table span {
+  margin-left: 5px;
 }
 
 .activate {
   margin-left: 5px;
 }
 /* end members page */
+
+/* startt categories page */
+
+.categories .card {
+  margin-bottom: 50px;
+}
+.categories .options .active {
+  color: #f00;
+  font-weight: bold;
+}
+
+.categories .options span {
+  color: #007bff;
+  cursor: pointer;
+}
+.categories .cat {
+  position: relative;
+  overflow: hidden;
+  padding: 0.75rem 1.25rem;
+}
+.categories .cat h3 {
+  cursor: pointer;
+  margin-bottom: 0px;
+}
+.categories .cat .tags {
+  margin-bottom: 1rem;
+}
+.categories .cat span {
+  margin-right: 5px;
+  display: inline;
+}
+.categories .cat p {
+  margin: 0;
+}
+.categories hr {
+  margin: 0px;
+}
+.categories .cat:hover {
+  background-color: #eee;
+}
+.categories .cat:hover .hidden-buttons {
+  right: 40px;
+}
+.categories .cat .hidden-buttons {
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  position: absolute;
+  right: -100px;
+  top: 15px;
+}
+.categories .cat .hidden-buttons a {
+  margin-left: 5px;
+}
+
+/* End Categories page */

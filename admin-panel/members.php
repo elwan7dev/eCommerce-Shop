@@ -46,7 +46,7 @@ if (isset($_SESSION['username'])) {
 // loop on $rows array and print dynamic data
             foreach ($rows as $row) {
                 // trick to change style of pending user row
-                $class = ($row['reg_status'] == 0) ? "class='table-secondary text-muted'" : '';
+                $class = ($row['reg_status'] == 0) ? "class='table-secondary text-muted' title='Pending Member'" : '';
 
                 echo "<tr $class>"; 
                 echo "<th scope='row'>" . $row['user_id'] . " </th>";
