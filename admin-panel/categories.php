@@ -42,20 +42,20 @@ if (isset($_SESSION['username'])) {
             <i class="fas fa-tag"></i> Categories
             <div class="options float-right">
                 <!-- Dynamic order options  -->
-                Ordering:
+                <i class="fas fa-sort"></i> Ordering: [
                 <a class="<?php if($sort == 'ASC' && $colName == 'ordering') {echo 'active';} ?>"
                     href="?sort=ASC">ASC</a> |
                 <a class="<?php if($sort == 'DESC' && $colName == 'ordering') {echo 'active';} ?>"
-                    href="?sort=DESC">DESC</a> &nbsp; &nbsp;
-                Cat-ID:
+                    href="?sort=DESC">DESC</a>] &nbsp; &nbsp;
+                <i class="fas fa-sort"></i> Cat-ID: [
                 <a class="<?php if($sort == 'ASC' && $colName == 'cat_id' ) {echo 'active';} ?>"
                     href="?sort=ASC&orderby=cat_id">ASC</a> |
                 <a class="<?php if($sort == 'DESC' && $colName == 'cat_id') {echo 'active';} ?>"
-                    href="?sort=DESC&orderby=cat_id">DESC</a>&nbsp; &nbsp;
+                    href="?sort=DESC&orderby=cat_id">DESC</a>] &nbsp; &nbsp;
                     <!-- Accessed by jQuery -->
-                View:   
+                <i class="far fa-eye"></i> View: [   
                 <span class="active" data-view="full" >Full</span> |
-                <span data-view="classic">Classic</span>
+                <span data-view="classic">Classic</span>]
 
             </div>
         </div>
