@@ -17,12 +17,14 @@ if (isset($_SESSION['username'])) {
     if ($action == 'manage') { /********************** Start items-mamnge page */
         // (Smart way) to create items-pending page that depent on condition (reg_status = 0)
         // if there is GET req  'page' = pending =>>> add this condition to query
-        $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "WHERE approval = 0" : '';
+        $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "WHERE items.approval = 0" : '';
 
         // retreive all users from DB except admins
-        $stmt = $conn->prepare("SELECT items.* , categories.name AS cat_name , users.username FROM items $condition
+        $stmt = $conn->prepare("SELECT items.* , categories.name AS cat_name , users.username 
+                                FROM items
                                 INNER JOIN categories ON  categories.cat_id =items.cat_id
-                                INNER JOIN users ON users.user_id = items.member_id");
+                                INNER JOIN users ON users.user_id = items.member_id
+                                $condition     ");
                                 
         $stmt->execute();
         // fetch all data and asign in array
