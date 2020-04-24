@@ -21,28 +21,31 @@ if (isset($_SESSION['username'])) {
                 <div class="col-md-3">
                     <div class="stat bg-info">
                         Total Members
-                        <span>
-                            <a href="members.php">
+                        <a href="members.php">
+                            <span>
                                 <?php echo countItems('user_id' , 'users'); ?>
-                            </a>
-                        </span>
+                            </span>
+                        </a>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="stat bg-danger">
                         Pending Members
-                        <span>
-                            <a href="members.php?action=manage&page=pending">
+                        <a href="members.php?action=manage&page=pending">
+                            <span>
                                 <?php echo countItems('reg_status' , 'users', 'WHERE reg_status = 0'); ?>
-
-                            </a>
-                        </span>
+                            </span>
+                        </a>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="stat bg-success">
                         Total Items
-                        <span>300</span>
+                        <a href="items.php">
+                            <span>
+                                <?php echo countItems('item_id' , 'items') ?>
+                            </span>
+                        </a>
                     </div>
                 </div>
                 <div class="col-md-3 ">
@@ -135,7 +138,7 @@ if (isset($_SESSION['username'])) {
                             </div>
                         </div>
                         <div class="card-body">
-                           body
+                            body
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer text-center">

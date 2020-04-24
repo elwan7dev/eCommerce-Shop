@@ -14,9 +14,70 @@ if (isset($_SESSION['username'])) {
     // split page with GET request
     $action = isset($_GET['action']) ? $_GET['action'] : 'manage';
 
-    if ($action == 'manage') {
-        echo 'manage';
-        echo "<a href='?action=add' class='btn btn-primary btn-sm' > Add New Item</a>";
+    if ($action == 'manage') { /********************** Start items-mamnge page */
+        // (Smart way) to create items-pending page that depent on condition (reg_status = 0)
+        // if there is GET req  'page' = pending =>>> add this condition to query
+        $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "WHERE approval = 0" : '';
+
+        // retreive all users from DB except admins
+        $stmt = $conn->prepare("SELECT * FROM items $condition");
+        $stmt->execute();
+        // fetch all data and asign in array
+        $rows = $stmt->fetchAll();    ?>
+
+
+<!-- start html componants -->
+<h1 class="text-center">Manage Items</h1>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table main-table table-bordered  text-center">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">#ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Adding at</th>
+                    <th scope="col">Controls</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // loop on $rows array and print dynamic data
+                foreach ($rows as $row) {
+                    // trick to change style of pending user row
+                    $class = ($row['approval'] == 0) ? "class='table-secondary text-muted' title='Pending Item'" : '';
+
+                    echo "<tr $class >"; 
+                    echo "<th scope='row'>" . $row['item_id'] . " </th>";
+                    echo "<td>" . $row['name'] . " </td>";
+                    echo "<td>" . $row['description'] . " </td>";
+                    echo "<td>" . $row['price'] . " </td>";
+                    echo "<td>" . $row['created_at'] . " </td>";
+                    echo "<td>
+                                <a href='items.php?action=edit&itemid=" . $row['item_id'] . "' class='btn btn-success btn-sm' title='Edit Item'><i class='fas fa-edit'></i></a>
+                                <a href='items.php?action=delete&itemid=" . $row['item_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Item'><i class='fas fa-trash-alt'></i></a>";
+                    if ($row['approval'] == 0) {
+                        echo "<a href='members.php?action=approve&itemid=" . $row['item_id'] . "' class='btn btn-primary btn-sm activate confirm' title='Approve Item'><i class='fas fa-check'></i></a>";
+                    }
+                    echo "</td>";
+                    echo "</tr>";
+                }
+                ?>
+
+            </tbody>
+        </table>
+    </div>
+    <a href='?action=add' class="btn btn-primary"><i class="fas fa-plus"></i> New Item</a>
+
+</div>
+
+
+
+
+
+
+<?php
 
 
     }elseif ($action == 'add') { /***************** Start items-add page */
@@ -206,6 +267,8 @@ if (isset($_SESSION['username'])) {
         echo 'update';
     }elseif ($action == 'delete') {
         echo 'delete';
+    }elseif ($action == 'approve') {
+        echo 'approve';
     }else {
         header('location: index.php');
     }
