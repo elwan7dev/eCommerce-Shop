@@ -117,21 +117,36 @@ h1 {
 .categories .card {
   margin-bottom: 50px;
 }
-.categories .order .active {
+.categories .options .active {
   color: #f00;
   font-weight: bold;
 }
-.categories hr {
-  margin: 0px;
-}
 
+.categories .options span {
+  color: #007bff;
+  cursor: pointer;
+}
 .categories .cat {
   position: relative;
   overflow: hidden;
-  padding:  .75rem 1.25rem;
+  padding: 0.75rem 1.25rem;
 }
-.categories .cat h3{
+.categories .cat h3 {
   cursor: pointer;
+  margin-bottom: 0px;
+}
+.categories .cat .tags {
+  margin-bottom: 1rem;
+}
+.categories .cat span {
+  margin-right: 5px;
+  display: inline;
+}
+.categories .cat p {
+  margin: 0;
+}
+.categories hr {
+  margin: 0px;
 }
 .categories .cat:hover {
   background-color: #eee;
@@ -139,22 +154,16 @@ h1 {
 .categories .cat:hover .hidden-buttons {
   right: 40px;
 }
-
-.categories .cat span {
-  margin-right: 5px;
-  display: inline;
-}
 .categories .cat .hidden-buttons {
   -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
   position: absolute;
   right: -100px;
-  top: 33px;
+  top: 15px;
 }
 .categories .cat .hidden-buttons a {
   margin-left: 5px;
 }
-
 
 /* End Categories page */

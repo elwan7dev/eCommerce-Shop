@@ -40,12 +40,23 @@ $(function () {
 
   // $('.card').CardWidget();
 
-  // // Add view option
-  // $('.cat h3').click(function () { 
-  //   $(this).next('.full-view').fadeToggle();
-   
+  // Categories View option 
+  $('.cat h3').click(function () { 
+    $(this).next('.full-view').fadeToggle();
     
-  // });
+  });
+
+  $('.options span').click(function () { 
+
+    $(this).addClass('active').siblings('span').removeClass('active');
+
+    if ($(this).data('view') === 'full') {
+      $('.cat .full-view').fadeIn();
+    }else {
+      $('.cat .full-view').fadeOut();
+    }
+    
+  });
 
 
 });

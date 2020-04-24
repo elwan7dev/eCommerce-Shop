@@ -27,7 +27,7 @@ if (isset($_SESSION['username'])) {
         $orderArr = array('ordering' , 'cat_id');
         $colName = (isset($_GET['orderby']) && in_array($_GET['orderby'], $orderArr)) ? $_GET['orderby'] : 'ordering';
         
-        // retreive all categories from DB  by ordering 
+        // retreive all categories from DB  order by $colName 
         $stmt = $conn->prepare("SELECT * FROM categories ORDER BY $colName $sort");
         $stmt->execute();
         // fetch all data and asign in array
@@ -40,19 +40,23 @@ if (isset($_SESSION['username'])) {
     <div class="card">
         <div class="card-header border-transparent">
             <i class="fas fa-tag"></i> Categories
-            <div class="order float-right">
+            <div class="options float-right">
                 <!-- Dynamic order options  -->
                 Ordering:
                 <a class="<?php if($sort == 'ASC' && $colName == 'ordering') {echo 'active';} ?>"
                     href="?sort=ASC">ASC</a> |
                 <a class="<?php if($sort == 'DESC' && $colName == 'ordering') {echo 'active';} ?>"
-                    href="?sort=DESC">DESC</a>
-
+                    href="?sort=DESC">DESC</a> &nbsp; &nbsp;
                 Cat-ID:
                 <a class="<?php if($sort == 'ASC' && $colName == 'cat_id' ) {echo 'active';} ?>"
                     href="?sort=ASC&orderby=cat_id">ASC</a> |
                 <a class="<?php if($sort == 'DESC' && $colName == 'cat_id') {echo 'active';} ?>"
-                    href="?sort=DESC&orderby=cat_id">DESC</a>
+                    href="?sort=DESC&orderby=cat_id">DESC</a>&nbsp; &nbsp;
+                    <!-- Accessed by jQuery -->
+                View:   
+                <span class="active" data-view="full" >Full</span> |
+                <span data-view="classic">Classic</span>
+
             </div>
         </div>
         <div class="card-body p-0">
@@ -63,15 +67,18 @@ if (isset($_SESSION['username'])) {
                             echo "<a href='categories.php?action=edit&catid=" . $cat['cat_id'] . "' class='btn btn-success btn-sm' title='Edit Category'><i class='fas fa-edit'></i></a>";
                             echo "<a href='categories.php?action=delete&catid=" . $cat['cat_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Category'><i class='fas fa-trash-alt'></i></a>";
                         echo "</div>";
-                        if($cat['visibility'] == 0){ echo "<span class='badge badge-pill badge-danger' title='Not Visible'><i class='far fa-eye-slash'></i> Hidden</span>";}
-                        if($cat['allow_comments'] == 0){ echo "<span class='badge badge-pill badge-primary' title='Comments Disabled'><i class='fas fa-comment-slash'></i> Comments Disabled</span>";}
-                        if($cat['allow_ads'] == 0){ echo "<span class='badge badge-pill badge-warning' title='Ads Disabled'><i class='fas fa-ad'></i> Ads Disabled</span>";}
                         echo "<h3>" . $cat['name'] . "</h3>";
-                        echo "<h5> Order# " . $cat['ordering'] . "</h5>";
-                        echo "<h6> cat_id# " . $cat['cat_id'] . "</h6>";
-                        if($cat['description'] != ''){ echo "<p>". $cat['description'] ."</p>"; }
-                       
-                    echo "</div>";
+                        echo "<div class='full-view'>";
+                            echo "<div class='tags'>";
+                                if($cat['visibility'] == 0){ echo "<span class='badge badge-pill badge-danger' title='Not Visible'><i class='far fa-eye-slash'></i> Hidden</span>";}
+                                if($cat['allow_comments'] == 0){ echo "<span class='badge badge-pill badge-primary' title='Comments Disabled'><i class='fas fa-comment-slash'></i> Comments Disabled</span>";}
+                                if($cat['allow_ads'] == 0){ echo "<span class='badge badge-pill badge-warning' title='Ads Disabled'><i class='fas fa-ad'></i> Ads Disabled</span>";}
+                            echo "</div>";
+                            if($cat['description'] != ''){ echo "<p>". $cat['description'] ."</p>"; }
+                            echo "<h5> Order# " . $cat['ordering'] . "</h5>";
+                            echo "<h6> cat_id# " . $cat['cat_id'] . "</h6>";
+                        echo "</div>";
+                    echo "</div>"; 
                     echo "<hr>";    
                 }
             ?>
