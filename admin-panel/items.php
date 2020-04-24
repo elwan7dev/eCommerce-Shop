@@ -19,7 +19,7 @@ if (isset($_SESSION['username'])) {
         // if there is GET req  'page' = pending =>>> add this condition to query
         $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "WHERE items.approval = 0" : '';
 
-        // retreive all users from DB except admins
+        // retreive all items from DB - with inerr join  
         $stmt = $conn->prepare("SELECT items.* , categories.name AS cat_name , users.username 
                                 FROM items
                                 INNER JOIN categories ON  categories.cat_id =items.cat_id
@@ -52,7 +52,7 @@ if (isset($_SESSION['username'])) {
                 <?php
                 // loop on $rows array and print dynamic data
                 foreach ($rows as $row) {
-                    // trick to change style of pending user row
+                    // trick to change style of pending item row
                     $class = ($row['approval'] == 0) ? "class='table-secondary text-muted' title='Pending Item'" : '';
 
                     echo "<tr $class >"; 
@@ -270,9 +270,119 @@ if (isset($_SESSION['username'])) {
         /********* End items-insert page */
 
 
-    }elseif ($action == 'edit') {
-        echo 'edit';
-    }elseif ($action == 'update') {
+    }elseif ($action == 'edit') { /************** Start items-edit page */
+        // check if get request itemid is numeric & get the integer value of it.
+        $itemId = (isset($_GET['itemid']) && is_numeric($_GET['itemid'])) ? intval($_GET['itemid']) : 0;
+
+        // Select all fields from record depend on this id
+        $stmt = $conn->prepare("SELECT * FROM items WHERE item_id=? LIMIT 1");
+        //execute Query
+        $stmt->execute(array($itemId)); //if cat_id are equal- select
+        $row = $stmt->fetch(); //fetch row data from DB
+
+        // if there is such ID - show the form
+        if ($stmt->rowCount() > 0) {   ?>
+
+<!-- start html componants -->
+<h1 class="text-center">Edit Item</h1>
+<div class="container" style="width: 70%;">
+    <form action="?action=update" method="POST">
+        <!-- start Name & Price , Image in same row field -->
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="name">Name</label>
+                <input type="text" name="name" class="form-control" required="required"
+                    value="<?php echo $row['name']; ?>">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="price">Price</label>
+                <input type="tetx" name="price" class="form-control" required="required"
+                    value="<?php echo $row['price']; ?>">
+            </div>
+
+        </div>
+        <!-- start Description field -->
+        <div class="form-group">
+            <label for="desc">Description</label>
+            <input type="text" name="desc" class="form-control" required="required"
+                value="<?php echo $row['description']; ?>">
+        </div>
+        <!-- start Full Name field -->
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="country">Country Made</label>
+                <input type="text" name="country" class="form-control" required="required"
+                    value="<?php echo $row['country_made']; ?>">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="status">Status</label>
+                <select id="status" name="status" class="form-control" required>
+                    <option value="0">Choose...</option>
+                    <option value="1" <?php if($row['status'] == 1){echo 'selected';} ?>>new</option>
+                    <option value="2" <?php if($row['status'] == 2){echo 'selected';} ?>>old</option>
+                    <option value="3" <?php if($row['status'] == 3){echo 'selected';} ?>>like new</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label for="name">Image</label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="image" aria-describedby="inputGroupFileAddon01">
+                    <label class="custom-file-label" for="inputGroupFileAddon01">Choose file</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="member">Member</label>
+                <select id="member" name="member" class="form-control" required>
+                    <option value="0" selected>Choose...</option>
+                    <?php
+                        $users = getRows('user_id , username' , 'users');
+                        foreach ($users as $user) {
+                            echo "<option value='". $user['user_id']."'";
+                                if($row['member_id'] == $user['user_id']) {echo 'selected';}  //to type selected dynamic
+                            echo " >" .$user['username'] . "</option> ";
+                        }
+                    ?>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="category">Category</label>
+                <select id="category" name="category" class="form-control" required>
+                    <option value="0">Choose...</option>
+                    <?php
+                        $cats = getRows('cat_id , name' , 'categories');
+                        foreach ($cats as $cat) {
+                            echo "<option value='". $cat['cat_id']."'";
+                                if($row['cat_id'] == $cat['cat_id']) {echo 'selected';} //to type selected dynamic
+                            echo " >" .$cat['name'] . "</option> ";
+                        }
+                    ?>
+                </select>
+            </div>
+
+        </div>
+
+        <!-- start button field -->
+        <input type="submit" value="Save" class="btn btn-primary">
+    </form>
+</div>
+<?php
+
+        }else {
+            // Error:There Is No Such ID
+            echo "<div class='container' style='width: 70%; margin-top: 50px;'>";
+            redirect2Home('danger', 'Error: There Is No Such ID', 3);
+            echo "</div>";
+        } /*****************End items-edit page */
+
+    }elseif ($action == 'update') { /************* Start items-update  page */
         echo 'update';
     }elseif ($action == 'delete') {
         echo 'delete';
