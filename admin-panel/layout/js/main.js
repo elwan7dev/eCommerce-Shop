@@ -2,23 +2,23 @@ $(function () {
   "use strict";
 
   // Calls the selectBoxIt method on your HTML select box
-  $("select").selectBoxIt({
+  // $("select").selectBoxIt({
 
-    // Uses the Twitter Bootstrap theme for the drop down
+  //   // Uses the Twitter Bootstrap theme for the drop down
     
-    // Uses the jQueryUI 'shake' effect when opening the drop down
-    showEffect: "shake",
+  //   // Uses the jQueryUI 'shake' effect when opening the drop down
+  //   showEffect: "shake",
 
-    // Sets the animation speed to 'slow'
-    showEffectSpeed: 'slow',
+  //   // Sets the animation speed to 'slow'
+  //   showEffectSpeed: 'slow',
 
-    // Sets jQueryUI options to shake 1 time when opening the drop down
-    showEffectOptions: { times: 1 },
+  //   // Sets jQueryUI options to shake 1 time when opening the drop down
+  //   showEffectOptions: { times: 1 },
 
-    // Uses the jQueryUI 'explode' effect when closing the drop down
-    hideEffect: "explode"
+  //   // Uses the jQueryUI 'explode' effect when closing the drop down
+  //   hideEffect: "explode"
 
-  });
+  // });
 
   // hide placeholder on form focus
   $("[placeholder]")
