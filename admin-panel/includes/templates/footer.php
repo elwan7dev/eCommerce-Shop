@@ -3,7 +3,11 @@
 </div>
 <!-- JS - jquery-3.5.0  cause errors in toggler button so, I back to jquery-3.4.1 -->
 <script src="<?php echo $js ?>jquery-3.4.1.min.js"></script>
-<!-- JS - bootstrap -->
+<!-- jQuery UI - v1.12.1  -->
+<script src="<?php echo $js ?>jquery-ui.min.js"></script>
+<!-- jQuery SelectBoxIt Plugins -->
+<script src="<?php echo $js ?>jquery.selectBoxIt.min.js"></script>
+<!-- JS - bootstrap -->  
 <script src="<?php echo $js ?>bootstrap.min.js"></script>
 <!-- JS - font awesome -->
 <script src="<?php echo $js ?>all.min.js"></script>
