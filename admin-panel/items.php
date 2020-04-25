@@ -287,6 +287,8 @@ if (isset($_SESSION['username'])) {
 <h1 class="text-center">Edit Item</h1>
 <div class="container" style="width: 70%;">
     <form action="?action=update" method="POST">
+        <!-- add itemid input here to post it in form add  to get it in update page   -->
+        <input type="hidden" name="itemid" value="<?php echo $itemId; ?>">
         <!-- start Name & Price , Image in same row field -->
         <div class="form-row">
             <div class="form-group col-md-6">
@@ -383,7 +385,103 @@ if (isset($_SESSION['username'])) {
         } /*****************End items-edit page */
 
     }elseif ($action == 'update') { /************* Start items-update  page */
-        echo 'update';
+
+        echo "<h1 class='text-center'>Update Item</h1>";
+        echo "<div class='container' style='width: 70%;'>";
+
+        // check if user coming from http POST request to prevent browseing page directly
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+
+            // get the vars from the form
+            $itemId = $_POST['itemid'];
+            $name = $_POST['name'];
+            $price = $_POST['price'];  
+            $desc = $_POST['desc'];
+            $country = $_POST['country'];
+            $status = $_POST['status'];
+            $memberID = $_POST['member'];
+            $catID = $_POST['category'];
+            
+
+            // validate Form in server side
+            // declare empty errors array
+            $formErrors = array();
+            if (empty($name)) {
+                $formErrors[] = "Username Field Can't Be <strong>Empty!</strong>";
+            }
+            if (strlen($name) < 4) {
+                $formErrors[] = "Username Can't Be Less Than <strong> 4 Character</strong>";
+            }
+            if (empty($price)) {
+                $formErrors[] = "Price Field Can't Be <strong>Empty!</strong>";
+            }
+            if (empty($desc)) {
+                $formErrors[] = "Description Field Can't Be <strong>Empty!</strong>";
+            }
+            if (empty($country)) {
+                $formErrors[] = "Country Field Can't Be <strong>Empty!</strong>";
+            }
+            if ($status == 0) {
+                $formErrors[] = "You Must choose the  <strong>Status</strong>";
+            }
+            if ($memberID == 0) {
+                $formErrors[] = "You Must choose the  <strong>Member</strong>";
+            }
+            if ($catID == 0) {
+                $formErrors[] = "You Must choose the  <strong>Category</strong>";
+            }
+           
+            // if there is errors - print alert errors in update page
+            if (!empty($formErrors)) {
+                foreach ($formErrors as $error) {
+                    echo "<div class='alert alert-danger' role='alert'>" . $error . "</div>";
+                }
+            }
+
+            // if there is no errors - update in DB
+            if (empty($formErrors)) {
+
+                // Update the DB record with this info
+                $stmt = $conn->prepare("UPDATE items 
+                                        SET name =? , price =? , description =? , country_made =? , status =? ,
+                                            member_id =? , cat_id =?
+
+                                        WHERE item_id =?");
+                //if i used $_SESSION['userid'] instead if $_GET['userid'] = $userId
+                //fatal error update in current user only
+                $stmt->execute(array(
+                    $name, $price, $desc , $country, $status , $memberID , $catID , $itemId));
+                $count = $stmt->rowCount();
+
+                if ($count > 0) {
+                    // Successful updating Message
+                    $msg = "<strong>$count</strong> Record Have Been Updated";
+                    redirect2Home('success', $msg, 3, 'items.php');
+                } else {
+                    // Error Updating Message - No Data Updated Yet!
+                    $msg = "No Data Updated Yet!";
+                    redirect2Home('info', $msg, 3, $_SERVER['HTTP_REFERER']);
+                }
+
+            }
+
+        } else {
+            // Error POST Request: You Can't Browse This Page Directly
+            $msg = "Error: You Can't Browse This Page Directly";
+            redirect2Home('danger', $msg, 6);
+
+        }
+        echo "</div>"; //end of container div
+
+
+
+
+
+
+
+
+
+
     }elseif ($action == 'delete') {
         echo 'delete';
     }elseif ($action == 'approve') {
