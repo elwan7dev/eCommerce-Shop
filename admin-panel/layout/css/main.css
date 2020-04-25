@@ -58,6 +58,7 @@ body a:hover {
 .home-stats span {
   display: block;
   font-size: 40px;
+  cursor: pointer;
 }
 
 .home-stats .stat a {

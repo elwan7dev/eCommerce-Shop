@@ -76,7 +76,7 @@ function countItems($item, $tblName , $condition ='')
     global $conn;
     $countStmt = $conn->prepare("SELECT COUNT($item) FROM $tblName $condition");
     $countStmt ->execute();
-    // nubers of col retreived
+    // numbers of col retreived
     return $countStmt ->fetchColumn();
 
 }
@@ -96,4 +96,20 @@ function getLatest($select, $tblName , $order , $limit = 5)
     $latestStmt->execute();
     $rows = $latestStmt->fetchAll();
     return $rows;
-} 
+}
+
+
+/**
+ * get all rows fucntion v1.0
+ * get all rows of selected colname without any condition 
+ * $select = col to selected 
+ * $tblName = table [EX: users , items , categories]
+ */
+function getRows($select, $tblName)
+{
+    global $conn;
+    $rowStmt = $conn->prepare("SELECT $select FROM $tblName");
+    $rowStmt->execute();
+    $rows = $rowStmt->fetchAll();
+    return $rows;
+}
