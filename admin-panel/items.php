@@ -483,7 +483,30 @@ if (isset($_SESSION['username'])) {
 
 
     }elseif ($action == 'delete') {
-        echo 'delete';
+        echo "<h1 class='text-center'>Delete Item</h1>";
+        echo "<div class='container' style='width: 70%;'>";
+        // check if get request user id is numeric & get the integer value of it.
+        $itemId = (isset($_GET['itemid']) && is_numeric($_GET['itemid'])) ? intval($_GET['itemid']) : false;
+
+        // if there is such ID - delete it
+        if ($itemId != false && isExist('item_id', 'items', $itemId)) {
+            // prepare Query
+            $stmt = $conn->prepare("DELETE FROM items WHERE item_id = :xid");
+            // bind params
+            $stmt->bindParam(':xid', $itemId);
+            $stmt->execute();
+            $count = $stmt->rowCount();
+
+            // Successful deleting Message
+            $msg = "<strong>$count</strong> Record Have Been Deleted";
+            redirect2Home('success', $msg, 3, $_SERVER['HTTP_REFERER']);
+
+        } else {
+            // Error deleting Message - There Is No Such ID!
+            $msg = "There Is No Such ID!";
+            redirect2Home('danger', $msg, 3);
+        }
+        echo "</div>";
     }elseif ($action == 'approve') {
         echo 'approve';
     }else {
