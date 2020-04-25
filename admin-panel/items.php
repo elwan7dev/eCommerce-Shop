@@ -67,7 +67,7 @@ if (isset($_SESSION['username'])) {
                                 <a href='items.php?action=edit&itemid=" . $row['item_id'] . "' class='btn btn-success btn-sm' title='Edit Item'><i class='fas fa-edit'></i></a>
                                 <a href='items.php?action=delete&itemid=" . $row['item_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Item'><i class='fas fa-trash-alt'></i></a>";
                     if ($row['approval'] == 0) {
-                        echo "<a href='members.php?action=approve&itemid=" . $row['item_id'] . "' class='btn btn-primary btn-sm activate confirm' title='Approve Item'><i class='fas fa-check'></i></a>";
+                        echo "<a href='items.php?action=approve&itemid=" . $row['item_id'] . "' class='btn btn-primary btn-sm activate confirm' title='Approve Item'><i class='fas fa-check'></i></a>";
                     }
                     echo "</td>";
                     echo "</tr>";
@@ -81,13 +81,7 @@ if (isset($_SESSION['username'])) {
 
 </div>
 
-
-
-
-
-
 <?php
-
 
     }elseif ($action == 'add') { /***************** Start items-add page */
         ?>
@@ -482,7 +476,7 @@ if (isset($_SESSION['username'])) {
 
 
 
-    }elseif ($action == 'delete') {
+    }elseif ($action == 'delete') { /*************** Start items-delete page */
         echo "<h1 class='text-center'>Delete Item</h1>";
         echo "<div class='container' style='width: 70%;'>";
         // check if get request user id is numeric & get the integer value of it.
@@ -508,7 +502,30 @@ if (isset($_SESSION['username'])) {
         }
         echo "</div>";
     }elseif ($action == 'approve') {
-        echo 'approve';
+        echo "<h1 class='text-center'>Approved Item</h1>";
+        echo "<div class='container' style='width: 70%;'>";
+        // check if get request user id is numeric & get the integer value of it.
+        $itemId = (isset($_GET['itemid']) && is_numeric($_GET['itemid'])) ? intval($_GET['itemid']) : false;
+
+        // if there is such ID - Approved it
+        if ($itemId != false && isExist('item_id', 'items', $itemId)) {
+            // prepare Query
+            $stmt = $conn->prepare("UPDATE items SET approval = 1 WHERE item_id = :xid");
+            // bind params
+            $stmt->bindParam(':xid', $itemId);
+            $stmt->execute();
+            $count = $stmt->rowCount();
+
+            // Successful deleting Message
+            $msg = "<strong>$count</strong> Item Approved ";
+            redirect2Home('success', $msg, 0, $_SERVER['HTTP_REFERER']);
+
+        } else {
+            // Error deleting Message - There Is No Such ID!
+            $msg = "There Is No Such ID!";
+            redirect2Home('danger', $msg, 3);
+        }
+        echo "</div>";
     }else {
         header('location: index.php');
     }
