@@ -57,7 +57,7 @@ $(function () {
     return confirm("Are You Sure?");
   });
 
-  // $('.card').CardWidget();
+  // $('#my-card').CardWidget(collapseTrigger , removeTrigger);
 
   // Categories View option 
   $('.cat h3').click(function () { 
