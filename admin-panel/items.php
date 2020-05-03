@@ -64,8 +64,8 @@ if (isset($_SESSION['username'])) {
                     echo "<td>" . $row['username'] . " </td>";
                     echo "<td>" . $row['created_at'] . " </td>";
                     echo "<td>
-                                <a href='items.php?action=edit&itemid=" . $row['item_id'] . "' class='btn btn-success btn-sm' title='Edit Item'><i class='fas fa-edit'></i></a>
-                                <a href='items.php?action=delete&itemid=" . $row['item_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Item'><i class='fas fa-trash-alt'></i></a>";
+                                <a href='items.php?action=edit&itemid=" . $row['item_id'] . "' class='btn btn-success btn-sm mb-2' title='Edit Item'><i class='fas fa-edit'></i></a>
+                                <a href='items.php?action=delete&itemid=" . $row['item_id'] . "' class='btn btn-danger btn-sm mb-2 confirm' title='Delete Item'><i class='fas fa-trash-alt'></i></a>";
                     if ($row['approval'] == 0) {
                         echo "<a href='items.php?action=approve&itemid=" . $row['item_id'] . "' class='btn btn-primary btn-sm activate confirm' title='Approve Item'><i class='fas fa-check'></i></a>";
                     }

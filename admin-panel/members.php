@@ -55,8 +55,8 @@ if (isset($_SESSION['username'])) {
                 echo "<td>" . $row['full_name'] . " </td>";
                 echo "<td>" . $row['date'] . " </td>";
                 echo "<td>
-                            <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm' title='Edit Member'><i class='fas fa-edit'></i></a>
-                            <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm confirm' title='Delete Member'><i class='fas fa-trash-alt'></i></a>";
+                            <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm mb-2' title='Edit Member'><i class='fas fa-edit'></i></a>
+                            <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm mb-2 confirm' title='Delete Member'><i class='fas fa-trash-alt'></i></a>";
                 if ($row['reg_status'] == 0) {
                     echo "<a href='members.php?action=activate&userid=" . $row['user_id'] . "' class='btn btn-primary btn-sm activate confirm' title='Activate Member'><i class='fas fa-check'></i></a>";
                 }

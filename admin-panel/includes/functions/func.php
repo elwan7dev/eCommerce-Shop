@@ -113,3 +113,34 @@ function getRows($select, $tblName)
     $rows = $rowStmt->fetchAll();
     return $rows;
 }
+
+/**
+ * getRandomColor function v1.0
+ * return random bootstrap calss based on param value
+ */
+function getRandomColor($value)
+{
+    // Extrect integer from string
+    preg_match_all('!\d+!', $value, $matches);
+    foreach ($matches as $m) {
+        $value = $m[0];
+    }
+    $value = intval($value);
+    if ($value >= 1 && $value < 100) {
+        return 'primary';
+    }elseif ($value >= 100 && $value < 500) {
+        return 'warning';
+    }elseif ($value >= 500 && $value < 1000) {
+        return 'success';
+    }elseif ($value >= 1000 && $value < 1500) {
+        return 'secondary';
+    }elseif ($value >= 1500 && $value < 2000) {
+        return 'danger';
+    }elseif ($value >= 2000 && $value < 2500) {
+        return 'info';
+    }elseif ($value >= 2500 && $value < 3000) {
+        return 'dark';
+    }else {
+        return 'light';
+    }
+}

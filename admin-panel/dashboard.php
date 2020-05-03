@@ -9,6 +9,7 @@ if (isset($_SESSION['username'])) {
 
     // get the latest registered members and assign in array 
     $latestMembers = getLatest('*' , 'users', 'user_id');
+    $latestItems = getLatest('*' , 'items', 'item_id');
    
     ?>
 <!-- HTML Components -->
@@ -137,12 +138,32 @@ if (isset($_SESSION['username'])) {
                                 </button>
                             </div>
                         </div>
-                        <div class="card-body">
-                            body
+                        <div class="card-body p-0">
+                            <ul class="products-list product-list-in-card pl-2 pr-2">
+                                <?php
+                                    foreach ($latestItems as $item) {
+                                        echo "<li class='item'>";
+                                            echo "<div class='product-img'>
+                                                    <img src='layout/images/default-150x150.png' alt='Product Image' class='img-size-50'>
+                                                </div>";
+                                            echo "<div class='product-info'>";
+                                                echo "<a href='#' class='product-title'> " .$item['name'] ."
+                                                        <span class='badge badge-";
+                                                        echo getRandomColor($item['price']);
+                                                        echo " float-right'>". $item['price'] ."</span>
+                                                    </a>";
+                                                echo "<span class='product-description'>
+                                                            ". $item['description'] ."
+                                                    </span>";
+                                            echo "</div>";
+                                        echo "</li>";
+                                    }
+                                ?>
+                            </ul>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer text-center">
-                            <a href="#" class="uppercase">View All Products</a>
+                            <a href="items.php" class="uppercase">View All Products</a>
                         </div>
                         <!-- /.card-footer -->
                     </div>
