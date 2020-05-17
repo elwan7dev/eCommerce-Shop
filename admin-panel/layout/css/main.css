@@ -22,9 +22,9 @@ body a:hover {
   margin-right: 70px;
 }
 
-.navbar-brand {
+/* .navbar-brand {
   margin-right: 5rem;
-}
+} */
 /* 
 .form-control {
   position: relative;
@@ -102,7 +102,16 @@ body a:hover {
   border-radius: 0;
   border-bottom: 1px solid rgba(0,0,0,.125);
 }
+.latest .product-list-in-card .item:last-child {
+  border-bottom: none;
+}
+.latest .card .card-footer {
+  border-top:none;
+}
 
+#users-card .card-header{
+  border-bottom: none;
+}
 .latest .products-list .product-img {
   float: left;
 }
@@ -129,6 +138,8 @@ body a:hover {
 
 .products-list:last-child {
   border-radius: 0 0 calc(.25rem - 0) calc(.25rem - 0);
+  border-bottom: none;
+
 }
 
 
@@ -166,6 +177,9 @@ h1 {
 
 .categories .card {
   margin-bottom: 50px;
+}
+.categories .card-footer{
+  border-top: none;
 }
 .categories .options .active {
   color: #f00;

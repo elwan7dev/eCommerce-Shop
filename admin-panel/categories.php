@@ -36,6 +36,7 @@ if (isset($_SESSION['username'])) {
 <!-- start html componants -->
 <h1 class="text-center">Manage Categories</h1>
 <div class="container categories">
+    <?php  if (count($cats) > 0) { ?>
     <!--  CATEGORIES -->
     <div class="card">
         <div class="card-header border-transparent">
@@ -90,6 +91,12 @@ if (isset($_SESSION['username'])) {
         <!-- /.card-footer -->
     </div>
     <!-- /.card -->
+        <?php
+            }else {
+                echo "<div class='alert alert-warning'> No Data Found</div>";
+                echo "<a href='?action=add' class='btn btn-primary'><i class='fas fa-plus'></i> New Category</a>";
+            }
+        ?>
 </div>
 <?php
     /***************End cat-manage page */
