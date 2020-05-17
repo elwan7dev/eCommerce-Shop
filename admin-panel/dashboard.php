@@ -64,7 +64,7 @@ if (isset($_SESSION['username'])) {
             <div class="row">
                 <div class="col-sm-6">
                     <!-- TABLE: LATEST USERS -->
-                    <div class="card" id="my-card">
+                    <div class="card" id="users-card">
                         <div class="card-header border-transparent">
                             <i class="fas fa-users"></i> Latest Members
                             <div class="card-tools">
