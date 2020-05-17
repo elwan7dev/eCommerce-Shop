@@ -34,6 +34,7 @@ if (isset($_SESSION['username'])) {
 <!-- start html componants -->
 <h1 class="text-center">Manage Items</h1>
 <div class="container">
+    <?php  if (count($rows) > 0) { ?>
     <div class="table-responsive">
         <table class="table main-table table-bordered  text-center">
             <thead class="thead-light">
@@ -77,6 +78,11 @@ if (isset($_SESSION['username'])) {
             </tbody>
         </table>
     </div>
+        <?php
+            }else {
+                echo "<div class='alert alert-warning'> No Data Found</div>";
+            }
+        ?>
     <a href='?action=add' class="btn btn-primary"><i class="fas fa-plus"></i> New Item</a>
 
 </div>

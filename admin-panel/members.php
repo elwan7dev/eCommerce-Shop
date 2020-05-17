@@ -24,11 +24,14 @@ if (isset($_SESSION['username'])) {
             $stmt = $conn->prepare("SELECT * FROM users WHERE group_id != 1 $condition");
             $stmt->execute();
             // fetch all data and asign in array
-            $rows = $stmt->fetchAll();?>
+            $rows = $stmt->fetchAll();
+                # code...
+            ?>
 
 <!-- start html componants -->
 <h1 class="text-center">Manage Members</h1>
 <div class="container">
+    <?php  if (count($rows) > 0) { ?>
     <div class="table-responsive">
         <table class="table main-table table-bordered  text-center">
             <thead class="thead-light">
@@ -68,11 +71,17 @@ if (isset($_SESSION['username'])) {
             </tbody>
         </table>
     </div>
+        <?php
+            }else {
+                echo "<div class='alert alert-warning'> No Data Found</div>";
+            }
+        ?>
     <a href='?action=add' class="btn btn-primary"><i class="fas fa-plus"></i> New Member</a>
 
 </div>
 
 <?php
+            
 break; // ********* End Member Manage page [Members page] ************
 
         case 'activate': // ************* start Member activate page ***************
