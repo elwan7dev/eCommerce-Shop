@@ -65,9 +65,9 @@ function isExist($colName, $tblName, $value)
 /**
  * count number of items function v2.0
  * count # of items row in specific [table , condition] 
- * $item = colname 
- * $tblName = table name
- * $condition [optional] 
+ * @param $item = colname 
+ * @param $tblName = table name
+ * @param $condition [optional] 
  * 
  * @return  fetchColumn Numbers
  */

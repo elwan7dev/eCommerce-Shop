@@ -52,7 +52,11 @@ if (isset($_SESSION['username'])) {
                 <div class="col-md-3 ">
                     <div class="stat bg-warning">
                         Total Comments
-                        <span>300</span>
+                        <a href="comments.php">
+                            <span>
+                                <?php echo countItems('comment_id' , 'comments') ?>
+                            </span>
+                        </a>
                     </div>
                 </div>
             </div>
