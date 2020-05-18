@@ -22,7 +22,7 @@ if (isset($_SESSION['username'])) {
         // retreive all items from DB - with inerr join  
         $stmt = $conn->prepare("SELECT items.* , categories.name AS cat_name , users.username 
                                 FROM items
-                                INNER JOIN categories ON  categories.cat_id =items.cat_id
+                                INNER JOIN categories ON  categories.cat_id = items.cat_id
                                 INNER JOIN users ON users.user_id = items.member_id
                                 $condition     ");
                                 

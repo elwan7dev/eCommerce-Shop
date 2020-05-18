@@ -14,10 +14,10 @@ function getTitle()
 /**
  * Home Redirect function V2.0
  * [have params]
- * $alertType = bootstrap alert type
- * $msg= Echo the error msg
- * $seconds = seconds before redirecting
- * $url = url that redirect to it
+ * @param $alertType = bootstrap alert type
+ * @param $msg= Echo the error msg
+ * @param $seconds = seconds before redirecting
+ * @param $url = url that redirect to it
  */
 function redirect2Home($alertType, $msg, $seconds = 3, $url = 'dashboard.php')
 {
