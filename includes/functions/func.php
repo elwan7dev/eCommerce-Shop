@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * get categories records function v1.0
+ * @return rows
+ */
+function getCats()
+{
+    global $conn;
+    $getCat = $conn->prepare("SELECT * FROM categories ORDER BY created_at");
+    $getCat->execute();
+    $cats = $getCat->fetchAll();
+    return $cats;
+}
+
+
+
+
+
+
+/** back-end funcs */
 function getTitle()
 {
     global $pageTitle; // VIP: before this line func doesn't work

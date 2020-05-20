@@ -48,6 +48,9 @@
                     <a class="dropdown-item" href="logout.php"><?php echo lang('LOGOUT'); ?></a>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/eCommerce" target="_blank">Visit Shop</a>
+            </li>
         </ul>
     </div>
     </div>
