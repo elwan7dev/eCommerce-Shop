@@ -14,10 +14,10 @@ function getTitle()
 /**
  * Home Redirect function V2.0
  * [have params]
- * $alertType = bootstrap alert type
- * $msg= Echo the error msg
- * $seconds = seconds before redirecting
- * $url = url that redirect to it
+ * @param $alertType = bootstrap alert type
+ * @param $msg= Echo the error msg
+ * @param $seconds = seconds before redirecting
+ * @param $url = url that redirect to it
  */
 function redirect2Home($alertType, $msg, $seconds = 3, $url = 'dashboard.php')
 {
@@ -65,9 +65,9 @@ function isExist($colName, $tblName, $value)
 /**
  * count number of items function v2.0
  * count # of items row in specific [table , condition] 
- * $item = colname 
- * $tblName = table name
- * $condition [optional] 
+ * @param $item = colname 
+ * @param $tblName = table name
+ * @param $condition [optional] 
  * 
  * @return  fetchColumn Numbers
  */
