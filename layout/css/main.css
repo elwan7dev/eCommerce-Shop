@@ -1,0 +1,240 @@
+/* start main rules */
+body {
+  font-size: 16px;
+  background-color: #f4f4f4;
+}
+body a:hover {
+  text-decoration: none;
+}
+
+/* .astrisk{
+    font-size: 21px;
+    color: #e02121;
+    position: absolute;
+    right: 31px;
+    top: 38px;
+} */
+
+/* end main rules */
+
+/* start Bootstrap edits */
+.mr-px {
+  margin-right: 70px;
+}
+
+/* .navbar-brand {
+  margin-right: 5rem;
+} */
+/* 
+.form-control {
+  position: relative;
+} */
+
+/* end Bootstrap edits */
+
+/* start login-form */
+.login-form {
+  width: 300px;
+  margin: 100px auto;
+}
+
+.login-form h4 {
+  color: #737373;
+}
+.login-form input {
+  margin-bottom: 5px;
+}
+.login-form .form-control {
+  background-color: #eaeaea;
+}
+/* end login-form */
+
+/* Start dashboard page */
+.home-stats .stat {
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 6px;
+}
+.home-stats span {
+  display: block;
+  font-size: 40px;
+  cursor: pointer;
+}
+
+.home-stats .stat a {
+  color: #212529;
+}
+
+.latest {
+  margin-top: 20px;
+}
+.card {
+  box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 2px rgba(0,0,0,.2);
+  margin-bottom: 1rem;
+}
+
+.card-header .card-tools {
+  float: right;
+  margin-right: -0.625rem;
+}
+
+.card-header .btn-tool {
+  background: 0 0;
+  color: #adb5bd;
+  font-size: 0.875rem;
+  margin: -0.75rem 0;
+  padding: 0.25rem 0.5rem;
+}
+
+table .admin{
+  margin-left: 5px;
+}
+table .admin .fa-award  {
+  color: #DAA520;
+}
+
+.latest .card .products-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+}
+.latest .products-list .item {
+  border-radius: .25rem;
+  background: #fff;
+  padding: 10px 0;
+}
+
+.latest .product-list-in-card .item {
+  border-radius: 0;
+  border-bottom: 1px solid rgba(0,0,0,.125);
+}
+.latest .product-list-in-card .item:last-child {
+  border-bottom: none;
+}
+.latest .card .card-footer {
+  border-top:none;
+}
+
+#users-card .card-header{
+  border-bottom: none;
+}
+.latest .products-list .product-img {
+  float: left;
+}
+.latest .products-list .product-img img {
+  height: 50px;
+  width: 50px;
+}
+
+.latest .products-list .product-info {
+  margin-left: 60px;
+}
+
+.latest .products-list .product-title {
+  font-weight: 600;
+}
+
+.latest .products-list .product-description {
+  color: #6c757d;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.products-list:last-child {
+  border-radius: 0 0 calc(.25rem - 0) calc(.25rem - 0);
+  border-bottom: none;
+
+}
+
+
+/* End dashboard page */
+
+/* start members page */
+h1 {
+  margin: 22px 0px;
+  font-size: 50px;
+  color: #5d5b5b;
+}
+
+.show-pass {
+  position: absolute;
+  top: 43px;
+  right: 25px;
+  color: #717171;
+}
+
+.main-table {
+  background-color: #f9f9f9;
+  box-shadow: 0px 2px 5px #ccc;
+}
+
+.main-table span {
+  margin-left: 5px;
+}
+
+.activate {
+  margin-left: 5px;
+}
+/* end members page */
+
+/* startt categories page */
+
+.categories .card {
+  margin-bottom: 50px;
+}
+.categories .card-footer{
+  border-top: none;
+}
+.categories .options .active {
+  color: #f00;
+  font-weight: bold;
+}
+
+.categories .options span {
+  color: #007bff;
+  cursor: pointer;
+}
+.categories .cat {
+  position: relative;
+  overflow: hidden;
+  padding: 0.75rem 1.25rem;
+}
+.categories .cat h3 {
+  cursor: pointer;
+  margin-bottom: 0px;
+}
+.categories .cat .tags {
+  margin-bottom: 1rem;
+}
+.categories .cat span {
+  margin-right: 5px;
+  display: inline;
+}
+.categories .cat p {
+  margin: 0;
+}
+.categories hr {
+  margin: 0px;
+}
+.categories .cat:hover {
+  background-color: #eee;
+}
+.categories .cat:hover .hidden-buttons {
+  right: 40px;
+}
+.categories .cat .hidden-buttons {
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  position: absolute;
+  right: -100px;
+  top: 15px;
+}
+.categories .cat .hidden-buttons a {
+  margin-left: 5px;
+}
+
+/* End Categories page */
