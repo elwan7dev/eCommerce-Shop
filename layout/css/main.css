@@ -11,6 +11,9 @@ h1 {
   font-size: 50px;
   color: #5d5b5b;
 }
+.upper-bar {
+  padding: 5px;
+}
 
 /* .astrisk{
     font-size: 21px;

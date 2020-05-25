@@ -24,11 +24,25 @@
 </head>
 
 <body>
-    <div class="upper-header">
+    <div class="upper-bar">
         <div class="container">
-            <a href="login.php">Login</a> |
-            <a href="#">Signup</a>
+            <?php 
+                if (isset($_SESSION['username'])) {
+                    echo "<span>Welcome <a href='logout.php'> ".
+                        $_SESSION['username'] . 
+                        "</a></span>"; 
+                    echo '<a href="profile.php"> | Profile</a>';   
+                }else {                          
             
+            ?>
+                <a href="login.php" >
+                <span>Login</span> |
+                </a> 
+                <a href="register.php" >
+                <span > Signup</span>
+                </a> 
+
+            <?php } ?>
         </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">

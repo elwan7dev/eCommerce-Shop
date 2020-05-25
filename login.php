@@ -1,11 +1,10 @@
 <?php
 // start session
 session_start();
-$noNavBar = ''; // this page has no navbar
 $pageTitle = 'Login';
 
 if (isset($_SESSION['username'])) {
-    header('location: index.php'); // redirect to  dashboard page
+    header('location: index.php'); // redirect to  homepage page
 }
 
 // initialize php file
@@ -15,33 +14,26 @@ include 'init.php';
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $username = $_POST['username'];
     $hashedPass = sha1($_POST['pass']);
-    echo "$username <br> $hashedPass" ;
     
     // check if the user exist in database
     $stmt = $conn->prepare("SELECT 
-                                user_id, username, password
+                               username, password
                             FROM 
                                 users
                             WHERE 
                                 username=?
                             AND 
                                 password=?
-                            AND 
-                                group_id = 0  
                             LIMIT 1");
                             //group = 1 - retreive admins only
     $stmt->execute(array($username, $hashedPass));
-    $row = $stmt->fetch(); //fetch row data from DB - to get userid
 
     // if (count > 0) this mean that the database contain record about this username
     $count = $stmt->rowCount();
     if ($count > 0) {
         $_SESSION['username'] = $username; // regiter username in session
-        $_SESSION['userid'] = $row['user_id']; // register userid in session
         header('location: index.php'); // redirect to  dashboard page
         exit();
-        
-        
     }
 }
 
@@ -51,13 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div class="card">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
-
                 <form class="login-form" action="<?php $_SERVER['PHP_SELF']?>" method="POST">
                     <div class="input-group mb-3">
                         <input type="text" name="username" class="form-control" placeholder="Username" autocomplete="off" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
+                                <span class="fas fa-user"></span>
                             </div>
                         </div>
                     </div>
