@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="<?php echo $css ?>jquery-ui.css">
     <!-- jQuery SelectBoxIt Plugins -->
     <link rel="stylesheet" href="<?php echo $css ?>jquery.selectBoxIt.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="<?php echo $css ?>icheck-bootstrap.min.css">
     <!-- font awesome -->
     <link rel="stylesheet" href="<?php echo $css ?>all.min.css">
     <link rel="stylesheet" href="<?php echo $css ?>fontawesome.min.css">
@@ -22,8 +24,12 @@
 </head>
 
 <body>
-    <div class="upper">
-        upper
+    <div class="upper-header">
+        <div class="container">
+            <a href="login.php">Login</a> |
+            <a href="#">Signup</a>
+            
+        </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
@@ -41,8 +47,9 @@
             <ul class="navbar-nav ml-auto">
                 <?php 
                     foreach (getCats() as $cat) {
+                        $pageName = str_replace(' ', '-' , $cat['name']);
                         echo "<li class='nav-item'>
-                                    <a class='nav-link' href='categories.php?page=".$cat['cat_id'] ." '> " . $cat['name'] ."</a>
+                                    <a class='nav-link' href='categories.php?page=".$cat['cat_id']."&pagename=".$pageName ."'> ". $cat['name'] ."</a>
                               </li>";
                     }
                 
