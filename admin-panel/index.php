@@ -4,7 +4,7 @@ session_start();
 $noNavBar = ''; // this page has no navbar
 $pageTitle = 'Login';
 
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['admin'])) {
     header('location: dashboard.php'); // redirect to  dashboard page
 }
 
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     // if (count > 0) this mean that the database contain record about this username
     $count = $stmt->rowCount();
     if ($count > 0) {
-        $_SESSION['username'] = $username; // regiter username in session
+        $_SESSION['admin'] = $username; // regiter username in session
         $_SESSION['userid'] = $row['user_id']; // register userid in session
         header('location: dashboard.php'); // redirect to  dashboard page
         exit();
