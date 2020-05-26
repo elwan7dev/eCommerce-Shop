@@ -6,6 +6,18 @@ body {
 body a:hover {
   text-decoration: none;
 }
+h1 {
+  margin: 22px 0px;
+  font-size: 50px;
+  color: #5d5b5b;
+}
+.upper-bar nav {
+  height: 25px;
+}
+.upper-bar nav a {
+  font-size: 14px;
+  font-weight: 600;
+}
 
 /* .astrisk{
     font-size: 21px;
@@ -32,209 +44,127 @@ body a:hover {
 
 /* end Bootstrap edits */
 
-/* start login-form */
-.login-form {
-  width: 300px;
-  margin: 100px auto;
+/* Start Front-Categories */
+.container .ads .card {
+  box-shadow: none;
+  border-radius: 0px;
+  width: 18rem;
 }
 
-.login-form h4 {
-  color: #737373;
-}
-.login-form input {
-  margin-bottom: 5px;
-}
-.login-form .form-control {
-  background-color: #eaeaea;
-}
-/* end login-form */
+/* End Front-Categories */
 
-/* Start dashboard page */
-.home-stats .stat {
-  font-size: 20px;
-  padding: 10px;
-  border-radius: 6px;
-}
-.home-stats span {
-  display: block;
-  font-size: 40px;
-  cursor: pointer;
+/* Start Login/register  Page */
+
+.login-page,
+.register-page {
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
-.home-stats .stat a {
-  color: #212529;
+.login-box,
+.register-box {
+  width: 360px;
+  margin-top: 50px;
 }
 
-.latest {
-  margin-top: 20px;
+@media (max-width: 576px) {
+  .login-box,
+  .register-box {
+    margin-top: 0.5rem;
+    width: 90%;
+  }
 }
-.card {
-  box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 2px rgba(0,0,0,.2);
-  margin-bottom: 1rem;
+.login-box .card {
+  box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+    margin-bottom: 1rem;
 }
-
-.card-header .card-tools {
-  float: right;
-  margin-right: -0.625rem;
-}
-
-.card-header .btn-tool {
-  background: 0 0;
-  color: #adb5bd;
-  font-size: 0.875rem;
-  margin: -0.75rem 0;
-  padding: 0.25rem 0.5rem;
+.login-card-body,
+.register-card-body {
+  background: #ffffff;
+  border-top: 0;
+  color: #666;
+  padding: 20px;
 }
 
-table .admin{
-  margin-left: 5px;
-}
-table .admin .fa-award  {
-  color: #DAA520;
+.login-card-body .input-group .form-control,
+.register-card-body .input-group .form-control {
+  border-right: 0;
 }
 
-.latest .card .products-list {
-  list-style: none;
+.login-card-body .input-group .form-control:focus,
+.register-card-body .input-group .form-control:focus {
+  box-shadow: none;
+}
+
+.login-card-body
+  .input-group
+  .form-control:focus
+  ~ .input-group-append
+  .input-group-text,
+.register-card-body
+  .input-group
+  .form-control:focus
+  ~ .input-group-append
+  .input-group-text {
+  border-color: #80bdff;
+}
+
+.login-card-body .input-group .form-control.is-valid:focus,
+.register-card-body .input-group .form-control.is-valid:focus {
+  box-shadow: none;
+}
+
+.login-card-body
+  .input-group
+  .form-control.is-valid
+  ~ .input-group-append
+  .input-group-text,
+.register-card-body
+  .input-group
+  .form-control.is-valid
+  ~ .input-group-append
+  .input-group-text {
+  border-color: #28a745;
+}
+
+.login-card-body .input-group .form-control.is-invalid:focus,
+.register-card-body .input-group .form-control.is-invalid:focus {
+  box-shadow: none;
+}
+
+.login-card-body
+  .input-group
+  .form-control.is-invalid
+  ~ .input-group-append
+  .input-group-text,
+.register-card-body
+  .input-group
+  .form-control.is-invalid
+  ~ .input-group-append
+  .input-group-text {
+  border-color: #dc3545;
+}
+
+.login-card-body .input-group .input-group-text,
+.register-card-body .input-group .input-group-text {
+  background-color: transparent;
+  border-bottom-right-radius: 0.25rem;
+  border-left: 0;
+  border-top-right-radius: 0.25rem;
+  color: #777;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.login-box-msg,
+.register-box-msg {
   margin: 0;
-  padding: 0;
-
-}
-.latest .products-list .item {
-  border-radius: .25rem;
-  background: #fff;
-  padding: 10px 0;
+  padding: 0 20px 20px;
+  text-align: center;
 }
 
-.latest .product-list-in-card .item {
-  border-radius: 0;
-  border-bottom: 1px solid rgba(0,0,0,.125);
-}
-.latest .product-list-in-card .item:last-child {
-  border-bottom: none;
-}
-.latest .card .card-footer {
-  border-top:none;
+.social-auth-links {
+  margin: 10px 0;
 }
 
-#users-card .card-header{
-  border-bottom: none;
-}
-.latest .products-list .product-img {
-  float: left;
-}
-.latest .products-list .product-img img {
-  height: 50px;
-  width: 50px;
-}
-
-.latest .products-list .product-info {
-  margin-left: 60px;
-}
-
-.latest .products-list .product-title {
-  font-weight: 600;
-}
-
-.latest .products-list .product-description {
-  color: #6c757d;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.products-list:last-child {
-  border-radius: 0 0 calc(.25rem - 0) calc(.25rem - 0);
-  border-bottom: none;
-
-}
-
-
-/* End dashboard page */
-
-/* start members page */
-h1 {
-  margin: 22px 0px;
-  font-size: 50px;
-  color: #5d5b5b;
-}
-
-.show-pass {
-  position: absolute;
-  top: 43px;
-  right: 25px;
-  color: #717171;
-}
-
-.main-table {
-  background-color: #f9f9f9;
-  box-shadow: 0px 2px 5px #ccc;
-}
-
-.main-table span {
-  margin-left: 5px;
-}
-
-.activate {
-  margin-left: 5px;
-}
-/* end members page */
-
-/* startt categories page */
-
-.categories .card {
-  margin-bottom: 50px;
-}
-.categories .card-footer{
-  border-top: none;
-}
-.categories .options .active {
-  color: #f00;
-  font-weight: bold;
-}
-
-.categories .options span {
-  color: #007bff;
-  cursor: pointer;
-}
-.categories .cat {
-  position: relative;
-  overflow: hidden;
-  padding: 0.75rem 1.25rem;
-}
-.categories .cat h3 {
-  cursor: pointer;
-  margin-bottom: 0px;
-}
-.categories .cat .tags {
-  margin-bottom: 1rem;
-}
-.categories .cat span {
-  margin-right: 5px;
-  display: inline;
-}
-.categories .cat p {
-  margin: 0;
-}
-.categories hr {
-  margin: 0px;
-}
-.categories .cat:hover {
-  background-color: #eee;
-}
-.categories .cat:hover .hidden-buttons {
-  right: 40px;
-}
-.categories .cat .hidden-buttons {
-  -webkit-transition: all 0.5s ease-in-out;
-  -moz-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
-  position: absolute;
-  right: -100px;
-  top: 15px;
-}
-.categories .cat .hidden-buttons a {
-  margin-left: 5px;
-}
-
-/* End Categories page */
+/* End Login/registert Page */
