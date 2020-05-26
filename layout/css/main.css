@@ -11,8 +11,12 @@ h1 {
   font-size: 50px;
   color: #5d5b5b;
 }
-.upper-bar {
-  padding: 5px;
+.upper-bar nav {
+  height: 25px;
+}
+.upper-bar nav a {
+  font-size: 14px;
+  font-weight: 600;
 }
 
 /* .astrisk{
