@@ -6,7 +6,7 @@
 
 session_start();
 
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['admin'])) {
     $pageTitle = 'Categories'; //page title to check it for title tag
     include 'init.php'; // initialize php file
     // Page Code here

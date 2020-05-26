@@ -5,7 +5,7 @@
 
 session_start();
 
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['admin'])) {
     $pageTitle = 'Items'; //page title to check it for title tag
     include 'init.php'; // initialize php file
     // Page Code here
@@ -24,7 +24,7 @@ if (isset($_SESSION['username'])) {
                                 FROM items
                                 INNER JOIN categories ON  categories.cat_id = items.cat_id
                                 INNER JOIN users ON users.user_id = items.member_id
-                                $condition     ");
+                                $condition ORDER BY created_at DESC");
                                 
         $stmt->execute();
         // fetch all data and asign in array
@@ -33,8 +33,8 @@ if (isset($_SESSION['username'])) {
 
 <!-- start html componants -->
 <h1 class="text-center">Manage Items</h1>
-<div class="container">
-    <?php  if (count($rows) > 0) { ?>
+<div class="container mb-5">
+    <?php  if (! empty($rows)){ ?>
     <div class="table-responsive">
         <table class="table main-table table-bordered  text-center">
             <thead class="thead-light">

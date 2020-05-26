@@ -13,6 +13,20 @@ function getCats()
     return $cats;
 }
 
+/**
+ * get items records function v1.0
+ * @return rows
+ */
+function getItems($cat_id)
+{
+    global $conn;
+    $getItems = $conn->prepare("SELECT * FROM items WHERE cat_id = ? AND approval = 1 ORDER BY created_at DESC");
+    $getItems->execute(array($cat_id));
+    $items = $getItems->fetchAll();
+    return $items;
+}
+
+
 
 
 
