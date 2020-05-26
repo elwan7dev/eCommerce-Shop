@@ -21,17 +21,17 @@ if (isset($_SESSION['username'])) {
         // $sort = 'ASC'; //INIT VALUE 
         $sortArr = array('ASC' , 'DESC');
         // CHECK IF SORT REQ IN ARRAY OPT 
-        $sort = (isset($_GET['sort']) && in_array($_GET['sort'], $sortArr)) ? $_GET['sort'] : 'ASC';
+        $sort = (isset($_GET['sort']) && in_array($_GET['sort'], $sortArr)) ? $_GET['sort'] : 'DESC';
         
         // more dynamic order var
-        $orderArr = array('ordering' , 'cat_id');
-        $colName = (isset($_GET['orderby']) && in_array($_GET['orderby'], $orderArr)) ? $_GET['orderby'] : 'ordering';
+        $orderArr = array('ordering' , 'created_at');
+        $colName = (isset($_GET['orderby']) && in_array($_GET['orderby'], $orderArr)) ? $_GET['orderby'] : 'created_at';
         
         // retreive all categories from DB  order by $colName 
         $stmt = $conn->prepare("SELECT * FROM categories ORDER BY $colName $sort");
         $stmt->execute();
         // fetch all data and asign in array
-        $cats = $stmt->fetchAll();                          ?>
+        $cats = $stmt->fetchAll();   ?>
 
 <!-- start html componants -->
 <h1 class="text-center">Manage Categories</h1>
@@ -43,16 +43,17 @@ if (isset($_SESSION['username'])) {
             <i class="fas fa-tag"></i> Categories
             <div class="options float-right">
                 <!-- Dynamic order options  -->
+                <i class="fas fa-sort"></i> Date: [
+                    <a class="<?php if($sort == 'ASC' && $colName == 'created_at' ) {echo 'active';} ?>"
+                        href="?sort=ASC&orderby=created_at">ASC</a> |
+                    <a class="<?php if($sort == 'DESC' && $colName == 'created_at') {echo 'active';} ?>"
+                        href="?sort=DESC&orderby=created_at">DESC</a>] &nbsp; &nbsp;
                 <i class="fas fa-sort"></i> Ordering: [
-                <a class="<?php if($sort == 'ASC' && $colName == 'ordering') {echo 'active';} ?>"
-                    href="?sort=ASC">ASC</a> |
-                <a class="<?php if($sort == 'DESC' && $colName == 'ordering') {echo 'active';} ?>"
-                    href="?sort=DESC">DESC</a>] &nbsp; &nbsp;
-                <i class="fas fa-sort"></i> Cat-ID: [
-                <a class="<?php if($sort == 'ASC' && $colName == 'cat_id' ) {echo 'active';} ?>"
-                    href="?sort=ASC&orderby=cat_id">ASC</a> |
-                <a class="<?php if($sort == 'DESC' && $colName == 'cat_id') {echo 'active';} ?>"
-                    href="?sort=DESC&orderby=cat_id">DESC</a>] &nbsp; &nbsp;
+                    <a class="<?php if($sort == 'ASC' && $colName == 'ordering') {echo 'active';} ?>"
+                        href="?sort=ASC&orderby=ordering">ASC</a> |
+                    <a class="<?php if($sort == 'DESC' && $colName == 'ordering') {echo 'active';} ?>"
+                        href="?sort=DESC&orderby=ordering">DESC</a>] &nbsp; &nbsp;
+               
                     <!-- Accessed by jQuery -->
                 <i class="far fa-eye"></i> View: [   
                 <span class="active" data-view="full" >Full</span> |
@@ -207,7 +208,7 @@ if (isset($_SESSION['username'])) {
                     // Insert user data into the DB
                     // registeration_status = 1 by default bacause the admin adding this users - so, approved
                     $stmt = $conn->prepare("INSERT INTO categories
-                                        (name, description, ordering, visibility ,allow_comments , allow_ads, date)
+                                        (name, description, ordering, visibility ,allow_comments , allow_ads, created_at)
                                         VALUES (:xname, :xdesc, :xorder, :xvisible , :xcomm , :xads , now())");
                     $stmt->execute(array(
                         'xname' => $name,
