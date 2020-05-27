@@ -14,18 +14,152 @@ function getCats()
 }
 
 /**
- * get items records function v1.0
+ * get items records function v2.0
  * @return rows
  */
-function getItems($cat_id)
+function getItems($where , $value)
 {
     global $conn;
-    $getItems = $conn->prepare("SELECT * FROM items WHERE cat_id = ? AND approval = 1 ORDER BY created_at DESC");
-    $getItems->execute(array($cat_id));
+    $getItems = $conn->prepare("SELECT * FROM items WHERE $where = ? AND approval = 1 ORDER BY created_at DESC");
+    $getItems->execute(array($value));
     $items = $getItems->fetchAll();
     return $items;
 }
+/**
+ * get items records function v1.0
+ * @return rows
+ */
+function getComments($user_id)
+{
+    global $conn;
+    $getComments = $conn->prepare("SELECT * FROM comments WHERE user_id = ? ORDER BY created_at DESC");
+    $getComments->execute(array($user_id));
+    $comments = $getComments->fetchAll();
+    return $comments;
+}
 
+
+/* function time_elapsed_string($datetime, $full = false) {
+    $now = new DateTime;
+    $ago = new DateTime($datetime);
+    $diff = $now->diff($ago);
+
+    $diff->w = floor($diff->d / 7);
+    $diff->d -= $diff->w * 7;
+
+    $string = array(
+        'y' => 'year',
+        'm' => 'month',
+        'w' => 'week',
+        'd' => 'day',
+        'h' => 'hour',
+        'i' => 'minute',
+        's' => 'second',
+    );
+    foreach ($string as $k => &$v) {
+        if ($diff->$k) {
+            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+        } else {
+            unset($string[$k]);
+        }
+    }
+
+    if (!$full) $string = array_slice($string, 0, 1);
+    return $string ? implode(', ', $string) . ' ago' : 'just now';
+} */
+
+function time_Ago($time) { 
+  
+    // Calculate difference between current 
+    // time and given timestamp in seconds 
+    $diff     = time() - $time; 
+      
+    // Time difference in seconds 
+    $sec     = $diff; 
+      
+    // Convert time difference in minutes 
+    $min     = round($diff / 60 ); 
+      
+    // Convert time difference in hours 
+    $hrs     = round($diff / 3600); 
+      
+    // Convert time difference in days 
+    $days     = round($diff / 86400 ); 
+      
+    // Convert time difference in weeks 
+    $weeks     = round($diff / 604800); 
+      
+    // Convert time difference in months 
+    $mnths     = round($diff / 2600640 ); 
+      
+    // Convert time difference in years 
+    $yrs     = round($diff / 31207680 ); 
+      
+    // Check for seconds 
+    if($sec <= 60) { 
+        echo "$sec seconds ago"; 
+    } 
+      
+    // Check for minutes 
+    else if($min <= 60) { 
+        if($min==1) { 
+            echo "one minute ago"; 
+        } 
+        else { 
+            echo "$min minutes ago"; 
+        } 
+    } 
+      
+    // Check for hours 
+    else if($hrs <= 24) { 
+        if($hrs == 1) {  
+            echo "an hour ago"; 
+        } 
+        else { 
+            echo "$hrs hours ago"; 
+        } 
+    } 
+      
+    // Check for days 
+    else if($days <= 7) { 
+        if($days == 1) { 
+            echo "Yesterday"; 
+        } 
+        else { 
+            echo "$days days ago"; 
+        } 
+    } 
+      
+    // Check for weeks 
+    else if($weeks <= 4.3) { 
+        if($weeks == 1) { 
+            echo "a week ago"; 
+        } 
+        else { 
+            echo "$weeks weeks ago"; 
+        } 
+    } 
+      
+    // Check for months 
+    else if($mnths <= 12) { 
+        if($mnths == 1) { 
+            echo "a month ago"; 
+        } 
+        else { 
+            echo "$mnths months ago"; 
+        } 
+    } 
+      
+    // Check for years 
+    else { 
+        if($yrs == 1) { 
+            echo "one year ago"; 
+        } 
+        else { 
+            echo "$yrs years ago"; 
+        } 
+    } 
+} 
 
 
 

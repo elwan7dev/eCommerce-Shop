@@ -7,7 +7,7 @@ $pageTitle = "Categories | $catName";
 // initialize php file
 include 'init.php'; 
 
-$items = getItems($catId);
+$items = getItems('cat_id' , $catId);
 ?>
 
 <div class="container">
@@ -28,10 +28,6 @@ $items = getItems($catId);
                                 </div>
                             </div>
                         </div>
-
-
-
-
                     <?php
                     }
                 }else {
