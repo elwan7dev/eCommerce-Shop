@@ -621,6 +621,10 @@ label:not(.form-check-label):not(.custom-file-label) {
   border-bottom-color: #dee2e6;
 }
 
+.tab-pane .card {
+  box-shadow: none;
+  border-radius: 0px;
+}
 
 /* End Profile page */
 

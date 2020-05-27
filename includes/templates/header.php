@@ -28,10 +28,12 @@
         <nav class="navbar navbar-expand-sm p-0">
             <div class="container">
                 <?php 
-                if (isset($_SESSION['username'])) { ?>
+                if (isset($_SESSION['username']) || isset($_SESSION['admin'])) { 
+                    $profileName = isset($_SESSION['username']) ?  $_SESSION['username'] : $_SESSION['admin'] 
+                    ?>
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item nav-link">
-                            Welcome Mr/ <?php echo $_SESSION['username'] ?>
+                            Welcome Mr/ <?php echo $profileName ?>
                         </li>
                         <li class="nav-item">
                             <a href="profile.php" class="nav-link">Profile</a>
