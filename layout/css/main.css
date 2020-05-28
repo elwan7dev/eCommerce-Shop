@@ -236,10 +236,10 @@ label:not(.form-check-label):not(.custom-file-label) {
     width: 90%;
   }
 }
-.login-box .card {
+/* .login-box .card {
   box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
     margin-bottom: 1rem;
-}
+} */
 .login-card-body,
 .register-card-body {
   background: #ffffff;

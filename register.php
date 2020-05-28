@@ -1,6 +1,7 @@
 <?php
 // start session
 session_start();
+$noNavBar= '';
 $pageTitle = 'Register';
 
 if (isset($_SESSION['username'])) {
@@ -14,6 +15,16 @@ include 'init.php';
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $username = $_POST['username'];
     $hashedPass = sha1($_POST['pass']);
+
+    // Validation
+    
+
+
+
+
+
+
+
     
     // check if the user exist in database
    /*  $stmt = $conn->prepare("SELECT 
@@ -44,16 +55,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 }
 
 ?>
-<div class="container login-page">
-    <div class="login-box">
+<div class="container register-page">
+    <div class="register-box">
         <div class="card">
-            <div class="card-body login-card-body">
-                <p class="login-box-msg">Register a new membership</p>
+            <div class="card-body register-card-body">
+                <p class="register-box-msg">Register a new membership</p>
 
-                <form class="login-form" action="<?php $_SERVER['PHP_SELF']?>" method="POST">
+                <form class="register-form" action="<?php $_SERVER['PHP_SELF']?>" method="POST">
                     <div class="input-group mb-3">
                         <input type="text" name="username" class="form-control" placeholder="Username"
-                            autocomplete="off" required>
+                            autocomplete="off" >
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -70,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     </div>
                     <div class="input-group mb-3">
                         <input type="password" name="pass" class="form-control" placeholder="Password"
-                            autocomplete="new-password" required>
+                            autocomplete="new-password" >
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -117,10 +128,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
                 <a href="login.php" class="text-center">I already have a membership</a>
             </div>
-            <!-- /.login-card-body -->
+            <!-- /.register-card-body -->
         </div>
     </div>
-    <!-- /.login-box -->
+    <!-- /.register-box -->
 </div>
 
 
