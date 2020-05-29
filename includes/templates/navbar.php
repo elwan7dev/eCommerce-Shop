@@ -5,17 +5,17 @@
                 if (isset($_SESSION['username']) || isset($_SESSION['admin'])) { 
                     $profileName = isset($_SESSION['username']) ?  $_SESSION['username'] : $_SESSION['admin'] 
                     ?>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item nav-link">
-                    Welcome Mr/ <?php echo $profileName ?>
-                </li>
-                <li class="nav-item">
-                    <a href="profile.php" class="nav-link">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a href="logout.php" class="nav-link">Logout</a>
-                </li>
-            </ul>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item nav-link">
+                            Welcome Mr/ <?php echo $profileName ?>
+                        </li>
+                        <li class="nav-item">
+                            <a href="profile.php" class="nav-link">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="logout.php" class="nav-link">Logout</a>
+                        </li>
+                    </ul>
             <?php
                 }else {                          
             

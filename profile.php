@@ -41,7 +41,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
     <section class="content">
         <div class="container">
             <div class="row info">
-                <!-- <div class="info"> -->
+                <!-- col - usre info -->
                 <div class="col-md-3">
                     <!-- Profile Image -->
                     <div class="card card-primary card-outline">
@@ -58,6 +58,9 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">
                                     <b>Ads</b> <a class="float-right">1,322</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Orders</b> <a class="float-right">322</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b>Comments</b> <a class="float-right">543</a>
@@ -88,13 +91,13 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
 
                             <hr>
 
-                            <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
+                            <strong><i class="far fa-envelope mr-1"></i> Email</strong>
 
                             <p class="text-muted"><?php echo $row['email'] ?></p>
 
                             <hr>
 
-                            <strong><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
+                            <strong><i class="fas fa-tags mr-1"></i> Fav. Categories</strong>
 
                             <p class="text-muted">
                                 <span class="tag tag-danger">UI Design</span>
@@ -116,8 +119,6 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                     <!-- /.card -->
                 </div>
                 <!-- /.col -->
-                <!-- </div> -->
-
 
                 <div class="col-md-9">
                     <div class="card">
@@ -136,54 +137,59 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                         <div class="card-body">
                             <div class="tab-content">
                                 <div class="active tab-pane" id="ads">
-                                    <div class="row">
-                                        <?php
-                                            $items = getItems('member_id' , $row['user_id']);
-                                            if (! empty($items)) {
-                                                foreach ($items as $item) { ?>
-                                        <div class="col-sm-6 col-md-3">
-                                            <div class="card">
-                                                <img src="layout/images/image.jpg" class="card-img-top" alt="AD Image">
-                                                <div class="card-body">
-                                                    <h5 class="card-title"><?php echo $item['name'] ?> </h5>
-                                                    <p class="card-text"><?php echo $item['price'] ?> </p>
-                                                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                                    <?php 
+                                        $items = getItems('member_id' , $row['user_id']);
+                                        if (! empty($items)) {  
+                                            echo '<div class="row">';
+                                            foreach ($items as $item) { ?>
+                                                <div class="col-sm-6 col-md-3">
+                                                    <div class="card">
+                                                        <img src="layout/images/image.jpg" class="card-img-top" alt="AD Image">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title"><?php echo $item['name'] ?> </h5>
+                                                            <p class="card-text"><?php echo $item['price'] ?> </p>
+                                                            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <?php
-                                                }
-                                            }else {
-                                                echo "No Items Found in this cat";
+                                    <?php
                                             }
-                                        ?>
-                                    </div>
+                                            echo '</div>';
+                                            // ./row
+                                        }else {
+                                            echo "<div class='alert alert-warning'> No Ads Found</div>";
+                                        }
+                                    ?>
                                 </div>
                                 <!-- /.tab-pane -->
 
                                 <div class="tab-pane" id="comments">
-                                    <!-- The timeline -->
-                                    <div class="timeline timeline-inverse">
-                                        <!-- timeline time label -->
-                                        <div class="time-label">
-                                            <span class="bg-danger">
-                                                10 Feb. 2014
-                                            </span>
-                                        </div>
-                                        <!-- /.timeline-label -->
-                                       
-                                        <!-- timeline item -->
-                                        <?php
-                                            $comments = getComments($row['user_id']);
-                                            if (! empty($comments)) {
+                                    <?php
+                                    $comments = getComments($row['user_id']);
+                                    if (! empty($comments)) {
+                                    
+                                    ?>
+                                        <!-- The timeline -->
+                                        <div class="timeline timeline-inverse">
+                                            <!-- timeline time label -->
+                                            <div class="time-label">
+                                                <span class="bg-danger">
+                                                    10 Feb. 2014
+                                                </span>
+                                            </div>
+                                            <!-- /.timeline-label -->
+                                        
+                                            <!-- timeline item -->
+                                            <?php
+                                                
                                                 foreach ($comments as $comment) { ?>
                                                     <!-- timeline item -->
                                                     <div>
                                                         <div class="timeline-item">
                                                             <span class="time"><i class="far fa-clock"></i> <?php echo time_Ago(strtotime($comment['created_at']) ); ?> </span>
-    
+
                                                             <h3 class="timeline-header">Your Comment On<a href="#"> Post#</a> </h3>
-    
+
                                                             <div class="timeline-body">
                                                                 <?php echo $comment['comment'] ?>
                                                             </div>
@@ -193,43 +199,43 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                                         </div>
                                                     </div>
                                                     <!-- END timeline item -->
-                                                <?php }
-                                                
-                                            }else {
-                                                echo "No Comments Found";
-                                            }
-                                        ?>
+                                            <?php }  ?>
+                                            <!-- timeline time label -->
+                                            <div class="time-label">
+                                                <span class="bg-success">
+                                                    3 Jan. 2014
+                                                </span>
+                                            </div>
+                                            <!-- /.timeline-label -->
+                                            <!-- timeline item -->
+                                            <div>
+                                                <i class="fas fa-camera bg-purple"></i>
 
-                                        <!-- timeline time label -->
-                                        <div class="time-label">
-                                            <span class="bg-success">
-                                                3 Jan. 2014
-                                            </span>
-                                        </div>
-                                        <!-- /.timeline-label -->
-                                        <!-- timeline item -->
-                                        <div>
-                                            <i class="fas fa-camera bg-purple"></i>
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="far fa-clock"></i> 2 days ago</span>
 
-                                            <div class="timeline-item">
-                                                <span class="time"><i class="far fa-clock"></i> 2 days ago</span>
+                                                    <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos
+                                                    </h3>
 
-                                                <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos
-                                                </h3>
-
-                                                <div class="timeline-body">
-                                                    <img src="http://placehold.it/150x100" alt="...">
-                                                    <img src="http://placehold.it/150x100" alt="...">
-                                                    <img src="http://placehold.it/150x100" alt="...">
-                                                    <img src="http://placehold.it/150x100" alt="...">
+                                                    <div class="timeline-body">
+                                                        <img src="http://placehold.it/150x100" alt="...">
+                                                        <img src="http://placehold.it/150x100" alt="...">
+                                                        <img src="http://placehold.it/150x100" alt="...">
+                                                        <img src="http://placehold.it/150x100" alt="...">
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <!-- END timeline item -->
+                                            <div>
+                                                <i class="far fa-clock bg-gray"></i>
+                                            </div>
                                         </div>
-                                        <!-- END timeline item -->
-                                        <div>
-                                            <i class="far fa-clock bg-gray"></i>
-                                        </div>
-                                    </div>
+
+                                    <?php 
+                                        }else {
+                                            echo "<div class='alert alert-warning'> No Comments Found</div>";
+                                        }
+                                    ?>
                                 </div>
                                 <!-- /.tab-pane -->
 

@@ -162,47 +162,6 @@ function time_Ago($time) {
 } 
 
 
-
-
-
-
-/** back-end funcs */
-function getTitle()
-{
-    global $pageTitle; // VIP: before this line func doesn't work
-
-    if (isset($pageTitle)) {
-        echo $pageTitle;
-    } else {
-        echo 'title';
-    }
-}
-
-/**
- * Home Redirect function V2.0
- * [have params]
- * @param $alertType = bootstrap alert type
- * @param $msg= Echo the error msg
- * @param $seconds = seconds before redirecting
- * @param $url = url that redirect to it
- */
-function redirect2Home($alertType, $msg, $seconds = 3, $url = 'dashboard.php')
-{
-    $link = '';
-    if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] !== '' && $url == $_SERVER['HTTP_REFERER']) {
-        $link = 'Prevoius ';
-
-    } else {
-        $pageName = str_replace('.php', '', $url);
-        $link = $pageName;
-    }
-    echo "<div class='alert alert-$alertType' role='alert'>$msg</div>";
-    echo "<div class='alert alert-info' text-center>You Will Redirect To <strong>$link</strong> Page In <strong>$seconds</strong> Seconds</div>";
-    //  link to redirect url
-    header("refresh:$seconds;url=$url");
-    exit();
-}
-
 /**
  * (Dynamic SELECT query)
  * isExist fuction v1.0
@@ -228,6 +187,62 @@ function isExist($colName, $tblName, $value)
         return false;
     }
 }
+
+
+/**
+ * Home Redirect function V2.0
+ * [have params]
+ * @param $alertType = bootstrap alert type
+ * @param $msg= Echo the error msg
+ * @param $seconds = seconds before redirecting
+ * @param $url = url that redirect to it
+ */
+function redirect2Home($alertType, $msg, $seconds = 3, $url = 'index.php')
+{
+    $link = '';
+    if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] !== '' && $url == $_SERVER['HTTP_REFERER']) {
+        $link = 'Prevoius ';
+
+    } else {
+        $pageName = str_replace('.php', '', $url);
+        $link = $pageName;
+    }
+    echo "<div class='alert alert-$alertType' role='alert'>$msg</div>";
+    echo "<div class='alert alert-info' text-center>You Will Redirect To <strong>$link</strong> Page In <strong>$seconds</strong> Seconds</div>";
+    //  link to redirect url
+    header("refresh:$seconds;url=$url");
+    exit();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/** back-end funcs */
+function getTitle()
+{
+    global $pageTitle; // VIP: before this line func doesn't work
+
+    if (isset($pageTitle)) {
+        echo $pageTitle;
+    } else {
+        echo 'title';
+    }
+}
+
+
+
 
 /**
  * count number of items function v2.0

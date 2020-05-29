@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <p class="login-box-msg">Sign in to start your session</p>
                 <form class="login-form" action="<?php $_SERVER['PHP_SELF']?>" method="POST">
                     <div class="input-group mb-3">
-                        <input type="text" name="username" class="form-control" placeholder="Username" autocomplete="off" required>
+                        <input type="text" name="username" class="form-control" placeholder="Username" autocomplete="off" autofocus required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
