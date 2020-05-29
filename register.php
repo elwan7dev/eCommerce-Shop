@@ -15,6 +15,11 @@ include 'init.php';
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     $formErrors = array();
+    // form inputs
+    $username = $_POST['username'];
+    $password = $_POST['pass'];
+    $email = $_POST['email'];
+
 
     // ******************** Validate form inputs ***************
     // username
@@ -29,10 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             if (strlen($filteredUser) > 1 && strlen($filteredUser) < 4 ) {
                 // The Username must be at least 4 characters.
                 $formErrors[] = 'username-less';
-            }
-            if (isExist('username', 'users', $_POST['username'])) {
+            }else if (isExist('username', 'users', $_POST['username'])) {
                 // This username has already been taken.
                 $formErrors[] = 'username-unique';
+            }else {
+                $username = $filteredUser;
             }
         }
     }
@@ -47,6 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
             if (filter_var($filteredEmail , FILTER_VALIDATE_EMAIL) != true ) {
                 $formErrors[] = 'email-notValid';
+            }else {
+                $email = $filteredEmail;
             }
         }
     }
@@ -54,37 +62,44 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_POST['pass']) && isset($_POST['pass2'])) {
         if (empty($_POST['pass'])) {
             $formErrors[] = 'pass-empty';
+
         }else {
             if (sha1($_POST['pass'])  !== sha1($_POST['pass2'])) {
                 // The password confirmation does not match.
                 $formErrors[] = 'pass-notMatch';
+            }else {
+                $password = sha1($_POST['pass']);
             }
         }
     }
-    
-   /*  // if inputs valid -> insert new user in DB
-    $stmt = $conn->prepare("INSERT INTO users 
-                            (username , email, password, created_at) 
-                            VALUES (:xname , xemail, xpass, now() )
-                         ");
-    $stmt->execute(array(
-        'xname' => $name,
-        'xprice' => $price,
-        'xdesc' => $desc,
-        
-    ));
-    $row = $stmt->fetch(); //fetch row data from DB - to get userid
+    // check if there is no errors - insert in DB
+    if (empty($formErrors)) {
+        $stmtInsert = $conn->prepare("INSERT INTO users 
+                                     (username, password, email, created_at)
+                                     VALUES (:xuser, :xpass, :xemail, now())");
 
-    // if (count > 0) this mean that the database contain record about this username
-    $count = $stmt->rowCount();
-    if ($count > 0) {
-        $_SESSION['username'] = $username; // regiter username in session
-        $_SESSION['userid'] = $row['user_id']; // register userid in session
-        header('location: index.php'); // redirect to  dashboard page
-        exit();
-        
-        
-    } */
+        $stmtInsert->execute(array(
+            'xuser' => $username,
+            'xpass' => $password,
+            'xemail' => $email
+        ));
+
+        $count = $stmtInsert->rowCount();
+        if ($count > 0) {
+            // Successful Inserted Message
+            echo "<div class='container'>";
+                $msg = "<strong>$count</strong> Congrats, Now You Are Register User";
+                redirect2Home('success', $msg, 3 , 'login.php');
+            echo "</div>";
+        } else {
+            // Error Inserted Message - No Data Inserted Yet!
+            $msg = "No Data Inserted Yet!";
+            redirect2Home('danger', $msg, 3, $_SERVER['HTTP_REFERER']);
+        }
+    }
+   
+
+   
 }
 
 ?>
@@ -163,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         <input type="password" name="pass" class="form-control
                                 <?php if(in_array('pass-empty' , $formErrors) ||
                                             in_array('pass-notMatch' , $formErrors)){echo 'is-invalid'; }?>"
-                            placeholder="Password" autocomplete="new-password" minlength="3" required>
+                            placeholder="At least 8 characters" autocomplete="new-password" minlength="3" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
