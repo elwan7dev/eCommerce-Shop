@@ -628,3 +628,16 @@ label:not(.form-check-label):not(.custom-file-label) {
 
 /* End Profile page */
 
+
+/* Start register page */
+.invalid-feedback {
+  display: block; 
+}
+
+.is-invalid,
+.is-valid{
+  background-image: none !important
+}
+
+
+/* End register page */

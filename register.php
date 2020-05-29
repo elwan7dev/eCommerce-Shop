@@ -61,24 +61,18 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             }
         }
     }
-
-    print_r($formErrors);
-
     
-    // check if the user exist in database
-   /*  $stmt = $conn->prepare("SELECT 
-                                user_id, username, password
-                            FROM 
-                                users
-                            WHERE 
-                                username=?
-                            AND 
-                                password=?
-                            AND 
-                                group_id = 0  
-                            LIMIT 1");
-                            //group = 1 - retreive admins only
-    $stmt->execute(array($username, $hashedPass));
+   /*  // if inputs valid -> insert new user in DB
+    $stmt = $conn->prepare("INSERT INTO users 
+                            (username , email, password, created_at) 
+                            VALUES (:xname , xemail, xpass, now() )
+                         ");
+    $stmt->execute(array(
+        'xname' => $name,
+        'xprice' => $price,
+        'xdesc' => $desc,
+        
+    ));
     $row = $stmt->fetch(); //fetch row data from DB - to get userid
 
     // if (count > 0) this mean that the database contain record about this username
@@ -108,7 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                     if(in_array('user-empty' , $formErrors) ||
                                         in_array('username-less' , $formErrors) ||
                                         in_array('username-unique' , $formErrors) ){echo 'is-invalid'; }?>"
-                            placeholder="Username" autocomplete="off" autofocus>
+                            placeholder="Username" autocomplete="off" pattern=".{4,}" 
+                            title="The Username must be at least 4 characters" autofocus required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -138,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     </div>
 
                     <div class="input-group mb-3">
-                        <input type="text" name="email" class="form-control 
+                        <input type="email" name="email" class="form-control 
                             <?php if(in_array('email-empty' , $formErrors) ||
                                         in_array('email-notValid' , $formErrors)){echo 'is-invalid'; }?>"
                             placeholder="Email">
@@ -165,10 +160,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         ?>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" name="pass" class="form-control 
+                        <input type="password" name="pass" class="form-control
                                 <?php if(in_array('pass-empty' , $formErrors) ||
                                             in_array('pass-notMatch' , $formErrors)){echo 'is-invalid'; }?>"
-                            placeholder="Password" autocomplete="new-password">
+                            placeholder="Password" autocomplete="new-password" minlength="3" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -193,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         ?>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" name="pass2" class="form-control" placeholder="Retype password">
+                        <input type="password"name="pass2" class="form-control" minlength="3" required placeholder="Retype password">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
