@@ -210,11 +210,15 @@ label:not(.form-check-label):not(.custom-file-label) {
 /* End Bootstrap edits */
 
 
-/* Start Front-Categories */
+/* Start Front-categories */
+.cat-header h1 {
+  float: left;
+  margin-right: 5px !important
+}
 .container .ads .card {
   box-shadow: none;
   border-radius: 0px;
-  width: 18rem;
+  width: 17.5rem;
 }
 
 /* End Front-Categories */
