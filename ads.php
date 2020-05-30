@@ -52,21 +52,21 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
                                                 <label for="name">Name</label>
-                                                <input type="text" name="name" class="form-control live-name" required="required"
-                                                    placeholder="Item's Name">
+                                                <input type="text" name="name" class="form-control live" 
+                                                    data-class=".live-name" placeholder="Item's Name" required>
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="price">Price</label>
-                                                <input type="tetx" name="price" class="form-control live-price" required="required"
-                                                    placeholder="Item's Price">
+                                                <input type="tetx" name="price" class="form-control live" required
+                                                    data-class=".live-price" placeholder="Item's Price">
                                             </div>
 
                                         </div>
                                         <!-- start Description field -->
                                         <div class="form-group">
                                             <label for="desc">Description</label>
-                                            <textarea name="desc" class="form-control live-desc" required
-                                                placeholder="Item's Description"></textarea>
+                                            <textarea name="desc" class="form-control live" required
+                                                data-class=".live-desc" placeholder="Item's Description"></textarea>
                                         </div>
                                         <!-- start Full Name field -->
                                         <div class="form-row">
@@ -127,11 +127,13 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                         </div>
                         <div class="col-md-4">
                             <div class="card item-box live-preview">
-                                <span class="price-tag">$0</span>
+                                <span class="price-tag ">
+                                    $<span class="live-price"></span>
+                                </span>
                                 <img src="layout/images/image.jpg" class="card-img-top" alt="AD Image">
                                     <div class="card-body">
-                                        <h3 class="card-title" >Title</h3>
-                                        <p class="card-text">desc</p>
+                                        <h3 class="card-title live-name" >Title</h3>
+                                        <p class="card-text live-desc">desc</p>
                                     </div>
                                     
                                     <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->

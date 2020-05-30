@@ -2,18 +2,22 @@ $(function () {
   "use strict";
 
   // Front-end Funcs
-  // in ads page - to live prefview form 
-  $('.live-name').keyup(function (e) { 
-    $('.live-preview .card-title').text($(this).val());
+
+  /**
+   * Live Func - V2.0 - instead of 3 selectors
+   * in ads page - to live prefview form 
+   */
+  $('.live').keyup(function (e) { 
+    $($(this).data('class')).text($(this).val());
   });
 
-  $('.live-desc').keyup(function (e) { 
+/*   $('.live-desc').keyup(function (e) { 
     $('.live-preview .card-text').text($(this).val());
   });
 
   $('.live-price').keyup(function (e) { 
     $('.live-preview .price-tag').text('$' + $(this).val());
-  });
+  }); */
 
 
 
