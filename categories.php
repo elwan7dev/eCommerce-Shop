@@ -19,7 +19,7 @@ $catItems = countItems('item_id', 'items', "WHERE cat_id="."$catId"." " );
         <div class="container">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1><?php echo $catName  ?> </h1> 
+                    <h1><?php echo $catName; ?>     </h1> 
                     <span class="badge badge-primary"><?php echo $catItems ?> Items Found</span>
                 </div>
                 <!-- breadcrumb -->

@@ -213,7 +213,11 @@ label:not(.form-check-label):not(.custom-file-label) {
 /* Start Front-categories */
 .cat-header h1 {
   float: left;
-  margin-right: 5px !important
+  margin-right: 8px !important
+}
+.cat-header span {
+  position: absolute;
+  top: 10px;
 }
 .container .ads .card {
   box-shadow: none;
@@ -221,6 +225,9 @@ label:not(.form-check-label):not(.custom-file-label) {
   width: 17.5rem;
 }
 
+.item-box img:hover {
+  background-color: #adb5bd;
+}
 /* End Front-Categories */
 
 /* Start Login/register  Page */
