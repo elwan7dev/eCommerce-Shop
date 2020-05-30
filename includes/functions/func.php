@@ -14,13 +14,13 @@ function getCats()
 }
 
 /**
- * get items records function v2.0
+ * get items records function v3.0
  * @return rows
  */
 function getItems($where , $value)
 {
     global $conn;
-    $getItems = $conn->prepare("SELECT * FROM items WHERE $where = ? AND approval = 1 ORDER BY created_at DESC");
+    $getItems = $conn->prepare("SELECT * FROM items WHERE $where = ? ORDER BY created_at DESC");
     $getItems->execute(array($value));
     $items = $getItems->fetchAll();
     return $items;
@@ -214,6 +214,26 @@ function redirect2Home($alertType, $msg, $seconds = 3, $url = 'index.php')
     exit();
 }
 
+/**
+ * count number of items function v2.0
+ * count # of items row in specific [table , condition] 
+ * @param $item = colname 
+ * @param $tblName = table name
+ * @param $condition [optional] 
+ * 
+ * @return  fetchColumn Numbers
+ */
+function countItems($item, $tblName , $condition ='')
+{
+    global $conn;
+    $countStmt = $conn->prepare("SELECT COUNT($item) FROM $tblName $condition");
+    $countStmt ->execute();
+    // numbers of col retreived
+    return $countStmt ->fetchColumn();
+
+}
+
+
 
 
 
@@ -244,24 +264,6 @@ function getTitle()
 
 
 
-/**
- * count number of items function v2.0
- * count # of items row in specific [table , condition] 
- * @param $item = colname 
- * @param $tblName = table name
- * @param $condition [optional] 
- * 
- * @return  fetchColumn Numbers
- */
-function countItems($item, $tblName , $condition ='')
-{
-    global $conn;
-    $countStmt = $conn->prepare("SELECT COUNT($item) FROM $tblName $condition");
-    $countStmt ->execute();
-    // numbers of col retreived
-    return $countStmt ->fetchColumn();
-
-}
 /**
  * get latest record function v1.0
  * $select = col to selected 

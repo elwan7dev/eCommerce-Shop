@@ -7,6 +7,7 @@ include 'init.php';
 
 if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
     $profileName = isset($_SESSION['username']) ?  $_SESSION['username'] : $_SESSION['admin']; 
+    print_r($_SESSION);
 
     // fetch user record from DB
     $userStmt = $conn->prepare("SELECT * FROM users WHERE username =? ");
@@ -57,7 +58,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
 
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">
-                                    <b>Ads</b> <a class="float-right">1,322</a>
+                                    <b>Ads</b> <a class="float-right"><?php echo countItems('item_id', 'items', "WHERE member_id =".$row['user_id']." ") ;?></a>
                                 </li>
                                 <li class="list-group-item">
                                     <b>Orders</b> <a class="float-right">322</a>
@@ -143,16 +144,16 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                         if (! empty($items)) {  
                                             echo '<div class="row">';
                                             foreach ($items as $item) { ?>
-                                    <div class="col-sm-6 col-md-3">
-                                        <div class="card">
-                                            <img src="layout/images/image.jpg" class="card-img-top" alt="AD Image">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><?php echo $item['name'] ?> </h5>
-                                                <p class="card-text"><?php echo $item['price'] ?> </p>
-                                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                                            <div class="col-sm-6 col-md-3">
+                                                <div class="card">
+                                                    <img src="layout/images/image.jpg" class="card-img-top" alt="AD Image">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title"><?php echo $item['name'] ?> </h5>
+                                                        <p class="card-text"><?php echo $item['price'] ?> </p>
+                                                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
                                     <?php
                                             }
                                             echo '</div>';
