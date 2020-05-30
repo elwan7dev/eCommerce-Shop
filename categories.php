@@ -20,7 +20,7 @@ $catItems = countItems('item_id', 'items', "WHERE cat_id="."$catId"." " );
             <div class="row">
                 <div class="col-sm-6">
                     <h1><?php echo $catName  ?> </h1> 
-                    <span class="badge badge-primary align-middle">( <?php echo $catItems ?> Items Found )</span>
+                    <span class="badge badge-primary"><?php echo $catItems ?> Items Found</span>
                 </div>
                 <!-- breadcrumb -->
                 <div class="col-sm-6">
@@ -39,9 +39,9 @@ $catItems = countItems('item_id', 'items', "WHERE cat_id="."$catId"." " );
     <section class="content">
         <div class="container">
             <div class="ads">
-                <div class="row">
-                    <?php
-                        if (! empty($items)) {
+                <?php
+                    if (! empty($items)) {
+                        echo '<div class="row">';
                             foreach ($items as $item) { ?>
                                 <div class="col-sm-6 col-md-3">
                                     <div class="card item-box">
@@ -56,18 +56,15 @@ $catItems = countItems('item_id', 'items', "WHERE cat_id="."$catId"." " );
                                 </div>
                             <?php
                             }
-                        }else {
-                            echo "No Items Found in this cat";
-                        }
-
-                    
-                    ?>
-                </div>
+                        echo '</div>';
+                    }else {
+                        echo "<div class='alert alert-danger' role='alert'>No Items Found in this cat</div>";
+                    }
+                ?>
             </div>
-            
-        
-
+            <!-- /. ads div -->
         </div>
+        <!-- ./container -->
     </section>
 </div>
 
