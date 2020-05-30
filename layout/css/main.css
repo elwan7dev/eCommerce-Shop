@@ -22,6 +22,11 @@ label:not(.form-check-label):not(.custom-file-label) {
   background-color: transparent;
   position: relative;
 }
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin: 0;
+}
 
 
 .upper-bar nav {
@@ -407,7 +412,7 @@ label:not(.form-check-label):not(.custom-file-label) {
   padding-left: 0;
   padding-right: 0;
 }
-.card-title {
+.personal-data .card-title {
   float: left;
   font-size: 1.1rem;
   font-weight: 400;
@@ -638,6 +643,35 @@ label:not(.form-check-label):not(.custom-file-label) {
 .is-valid{
   background-image: none !important
 }
-
-
 /* End register page */
+
+
+
+/* Start Ads Page */
+.new-ad .card {
+  box-shadow:none;
+}
+
+.new-ad .col-md-8 {
+  padding-right: 7.5px;
+}
+.new-ad .col-md-4{
+  padding-left: 7.5px;
+}
+.item-box .card-title{
+  margin-bottom: .75rem;
+  font-weight: 600;
+}
+
+.item-box{
+  position: relative;
+}
+.item-box .price-tag{
+  background-color: #808080;
+  position: absolute;
+  padding: 2px 10px;
+  top: 10px;
+  color: #ffffff;
+}
+
+/* End Ads Page */

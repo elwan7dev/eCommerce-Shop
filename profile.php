@@ -42,7 +42,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
         <div class="container">
             <div class="row info">
                 <!-- col - usre info -->
-                <div class="col-md-3">
+                <div class="col-md-3 personal-data">
                     <!-- Profile Image -->
                     <div class="card card-primary card-outline">
                         <div class="card-body box-profile">
@@ -117,10 +117,11 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                         <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
+
                 </div>
                 <!-- /.col -->
 
-                <div class="col-md-9">
+                <div class="col-md-9 activity-data">
                     <div class="card">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
@@ -142,22 +143,23 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                         if (! empty($items)) {  
                                             echo '<div class="row">';
                                             foreach ($items as $item) { ?>
-                                                <div class="col-sm-6 col-md-3">
-                                                    <div class="card">
-                                                        <img src="layout/images/image.jpg" class="card-img-top" alt="AD Image">
-                                                        <div class="card-body">
-                                                            <h5 class="card-title"><?php echo $item['name'] ?> </h5>
-                                                            <p class="card-text"><?php echo $item['price'] ?> </p>
-                                                            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <div class="card">
+                                            <img src="layout/images/image.jpg" class="card-img-top" alt="AD Image">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><?php echo $item['name'] ?> </h5>
+                                                <p class="card-text"><?php echo $item['price'] ?> </p>
+                                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                                            </div>
+                                        </div>
+                                    </div>
                                     <?php
                                             }
                                             echo '</div>';
                                             // ./row
                                         }else {
                                             echo "<div class='alert alert-warning'> No Ads Found</div>";
+                                            echo "<a href='ads.php' class='btn btn-primary btn-sm' target='_blank'><i class='fas fa-plus'></i> New Ad</a>";
                                         }
                                     ?>
                                 </div>
@@ -169,67 +171,68 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                     if (! empty($comments)) {
                                     
                                     ?>
-                                        <!-- The timeline -->
-                                        <div class="timeline timeline-inverse">
-                                            <!-- timeline time label -->
-                                            <div class="time-label">
-                                                <span class="bg-danger">
-                                                    10 Feb. 2014
-                                                </span>
-                                            </div>
-                                            <!-- /.timeline-label -->
-                                        
-                                            <!-- timeline item -->
-                                            <?php
+                                    <!-- The timeline -->
+                                    <div class="timeline timeline-inverse">
+                                        <!-- timeline time label -->
+                                        <div class="time-label">
+                                            <span class="bg-danger">
+                                                10 Feb. 2014
+                                            </span>
+                                        </div>
+                                        <!-- /.timeline-label -->
+
+                                        <!-- timeline item -->
+                                        <?php
                                                 
                                                 foreach ($comments as $comment) { ?>
-                                                    <!-- timeline item -->
-                                                    <div>
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="far fa-clock"></i> <?php echo time_Ago(strtotime($comment['created_at']) ); ?> </span>
+                                        <!-- timeline item -->
+                                        <div>
+                                            <div class="timeline-item">
+                                                <span class="time"><i class="far fa-clock"></i>
+                                                    <?php echo time_Ago(strtotime($comment['created_at']) ); ?> </span>
 
-                                                            <h3 class="timeline-header">Your Comment On<a href="#"> Post#</a> </h3>
+                                                <h3 class="timeline-header">Your Comment On<a href="#"> Post#</a> </h3>
 
-                                                            <div class="timeline-body">
-                                                                <?php echo $comment['comment'] ?>
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a href="#" class="btn btn-warning btn-flat btn-sm">View comment</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- END timeline item -->
-                                            <?php }  ?>
-                                            <!-- timeline time label -->
-                                            <div class="time-label">
-                                                <span class="bg-success">
-                                                    3 Jan. 2014
-                                                </span>
-                                            </div>
-                                            <!-- /.timeline-label -->
-                                            <!-- timeline item -->
-                                            <div>
-                                                <i class="fas fa-camera bg-purple"></i>
-
-                                                <div class="timeline-item">
-                                                    <span class="time"><i class="far fa-clock"></i> 2 days ago</span>
-
-                                                    <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos
-                                                    </h3>
-
-                                                    <div class="timeline-body">
-                                                        <img src="http://placehold.it/150x100" alt="...">
-                                                        <img src="http://placehold.it/150x100" alt="...">
-                                                        <img src="http://placehold.it/150x100" alt="...">
-                                                        <img src="http://placehold.it/150x100" alt="...">
-                                                    </div>
+                                                <div class="timeline-body">
+                                                    <?php echo $comment['comment'] ?>
+                                                </div>
+                                                <div class="timeline-footer">
+                                                    <a href="#" class="btn btn-warning btn-flat btn-sm">View comment</a>
                                                 </div>
                                             </div>
-                                            <!-- END timeline item -->
-                                            <div>
-                                                <i class="far fa-clock bg-gray"></i>
+                                        </div>
+                                        <!-- END timeline item -->
+                                        <?php }  ?>
+                                        <!-- timeline time label -->
+                                        <div class="time-label">
+                                            <span class="bg-success">
+                                                3 Jan. 2014
+                                            </span>
+                                        </div>
+                                        <!-- /.timeline-label -->
+                                        <!-- timeline item -->
+                                        <div>
+                                            <i class="fas fa-camera bg-purple"></i>
+
+                                            <div class="timeline-item">
+                                                <span class="time"><i class="far fa-clock"></i> 2 days ago</span>
+
+                                                <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos
+                                                </h3>
+
+                                                <div class="timeline-body">
+                                                    <img src="http://placehold.it/150x100" alt="...">
+                                                    <img src="http://placehold.it/150x100" alt="...">
+                                                    <img src="http://placehold.it/150x100" alt="...">
+                                                    <img src="http://placehold.it/150x100" alt="...">
+                                                </div>
                                             </div>
                                         </div>
+                                        <!-- END timeline item -->
+                                        <div>
+                                            <i class="far fa-clock bg-gray"></i>
+                                        </div>
+                                    </div>
 
                                     <?php 
                                         }else {
@@ -409,9 +412,6 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
         <!-- /.container -->
     </section>
     <!-- /.content -->
-
-
-
 </div>
 <!-- /.content-wrapper -->
 
