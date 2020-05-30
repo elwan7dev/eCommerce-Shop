@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $count = $stmt->rowCount();
     if ($count > 0) {
         $_SESSION['admin'] = $username; // regiter username in session
-        $_SESSION['userid'] = $row['user_id']; // register userid in session
+        $_SESSION['adminid'] = $row['user_id']; // register userid in session
         header('location: dashboard.php'); // redirect to  dashboard page
         exit();
         

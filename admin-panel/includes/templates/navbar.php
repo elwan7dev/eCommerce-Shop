@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
     <div class="container">
     <a class="navbar-brand" href="dashboard.php">
         <img src="layout/images/bootstrap.svg" width="30" height="30" class="d-inline-block align-top" alt="logo">
@@ -42,7 +42,7 @@
                     <?php echo $_SESSION['admin']; ?>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="members.php?action=edit&userid=<?php echo $_SESSION['userid'];?>"><?php echo lang('PROFILE'); ?></a>
+                    <a class="dropdown-item" href="members.php?action=edit&userid=<?php echo $_SESSION['adminid'];?>"><?php echo lang('PROFILE'); ?></a>
                     <a class="dropdown-item" href="#"><?php echo lang('SETTING'); ?></a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="logout.php"><?php echo lang('LOGOUT'); ?></a>
