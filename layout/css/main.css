@@ -635,12 +635,9 @@ label:not(.form-check-label):not(.custom-file-label) {
 
 
 /* Start register page */
-.invalid-feedback {
-  display: block; 
-}
 
-.is-invalid,
-.is-valid{
+.register-box .is-invalid,
+.register-box .is-valid{
   background-image: none !important
 }
 /* End register page */
@@ -673,5 +670,6 @@ label:not(.form-check-label):not(.custom-file-label) {
   top: 10px;
   color: #ffffff;
 }
+
 
 /* End Ads Page */

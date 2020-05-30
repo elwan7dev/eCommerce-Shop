@@ -13,6 +13,9 @@
                             <a href="profile.php" class="nav-link">Profile</a>
                         </li>
                         <li class="nav-item">
+                            <a href="ads.php" target="_blank" class="nav-link">New-Ad</a>
+                        </li>
+                        <li class="nav-item">
                             <a href="logout.php" class="nav-link">Logout</a>
                         </li>
                     </ul>

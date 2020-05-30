@@ -4,7 +4,7 @@ $(function () {
   // Front-end Funcs
 
   /**
-   * Live Func - V2.0 - instead of 3 selectors
+   * Live-preview Func - V2.0 - instead of 3 selectors
    * in ads page - to live prefview form 
    */
   $('.live').keyup(function (e) { 
