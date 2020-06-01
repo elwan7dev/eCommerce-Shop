@@ -147,9 +147,13 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                             <div class="col-sm-6 col-md-3">
                                                 <div class="card item-box">
                                                     <span class="price-tag"><?php echo '$' . $item['price'];?></span>
-                                                    <img src="layout/images/image.jpg" class="card-img-top" alt="AD Image">
+                                                    <a href="product.php?id=<?php echo $item['item_id'] ?>">
+                                                        <img src="layout/images/image.jpg" class="card-img-top" alt="AD Image">
+                                                    </a>
                                                     <div class="card-body">
-                                                        <h5 class="card-title"><?php echo $item['name']; ?> </h5>
+                                                        <a href="product.php?id=<?php echo $item['item_id'] ?>" >
+                                                            <h5 class="card-title"><?php echo $item['name']; ?> </h5>
+                                                        </a>
                                                         <p class="card-text"><?php echo $item['description']; ?> </p>
                                                         <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                                                     </div>
@@ -169,7 +173,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
 
                                 <div class="tab-pane" id="comments">
                                     <?php
-                                    $comments = getComments($row['user_id']);
+                                    $comments = getComments('user_id' , $row['user_id']);
                                     if (! empty($comments)) {
                                     
                                     ?>
