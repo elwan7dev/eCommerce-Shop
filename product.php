@@ -41,26 +41,28 @@ if ($stmtItem->rowCount() > 0) {
     <!-- Main content -->
     <section class="content">
         <div class="container">
-            <div class="row">
+            <div class="row e-commerce">
                 <!-- Default box -->
                 <div class="col-md-10">
                     <div class="card card-solid ">
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row product-box">
                                 <!-- col image -->
                                 <div class="col-12 col-sm-6">
                                     <h3 class="d-inline-block d-sm-none"><?php echo $item['name']; ?></h3>
                                     <div class="col-12">
-                                        <img src="layout/images/pro1.jpg" class="product-image" alt="Product Image">
+                                        <img src="layout/images/prod-1.jpg" class="product-image" alt="Product Image">
                                     </div>
                                     <div class="col-12 product-image-thumbs">
-                                        <div class="product-image-thumb active"><img src="layout/images/pro1.jpg"
+                                        <div class="product-image-thumb active"><img src="layout/images/prod-1.jpg"
                                                 alt="Product Image"></div>
-                                        <div class="product-image-thumb"><img src="layout/images/pro2.jpg"
+                                        <div class="product-image-thumb"><img src="layout/images/prod-2.jpg"
                                                 alt="Product Image"></div>
-                                        <div class="product-image-thumb"><img src="layout/images/pro3.jpg"
+                                        <div class="product-image-thumb"><img src="layout/images/prod-3.jpg"
                                                 alt="Product Image"></div>
-                                        <div class="product-image-thumb"><img src="layout/images/pro4.jpg"
+                                        <div class="product-image-thumb"><img src="layout/images/prod-4.jpg"
+                                                alt="Product Image"></div>.
+                                        <div class="product-image-thumb"><img src="layout/images/prod-5.jpg"
                                                 alt="Product Image"></div>
                                     </div>
                                 </div>
@@ -143,10 +145,10 @@ if ($stmtItem->rowCount() > 0) {
 
                                     <div class="bg-gray py-2 px-3 mt-4">
                                         <h2 class="mb-0">
-                                            $80.00
+                                            <?php echo '$' . $item['price']; ?>
                                         </h2>
                                         <h4 class="mt-0">
-                                            <small>Ex Tax: $80.00 </small>
+                                            <small>Ex Tax: <?php echo '$' . $item['price']; ?> </small>
                                         </h4>
                                     </div>
 
@@ -195,53 +197,28 @@ if ($stmtItem->rowCount() > 0) {
                                 </nav>
                                 <div class="tab-content p-3" id="nav-tabContent">
                                     <div class="tab-pane fade show active" id="product-desc" role="tabpanel"
-                                        aria-labelledby="product-desc-tab"> Lorem ipsum dolor sit amet, consectetur
-                                        adipiscing
-                                        elit. Morbi vitae condimentum erat. Vestibulum ante ipsum primis in faucibus
-                                        orci
-                                        luctus
-                                        et ultrices posuere cubilia Curae; Sed posuere, purus at efficitur hendrerit,
-                                        augue
-                                        elit
-                                        lacinia arcu, a eleifend sem elit et nunc. Sed rutrum vestibulum est, sit amet
-                                        cursus
-                                        dolor fermentum vel. Suspendisse mi nibh, congue et ante et, commodo mattis
-                                        lacus.
-                                        Duis
-                                        varius finibus purus sed venenatis. Vivamus varius metus quam, id dapibus velit
-                                        mattis
-                                        eu. Praesent et semper risus. Vestibulum erat erat, condimentum at elit at,
-                                        bibendum
-                                        placerat orci. Nullam gravida velit mauris, in pellentesque urna pellentesque
-                                        viverra.
-                                        Nullam non pellentesque justo, et ultricies neque. Praesent vel metus rutrum,
-                                        tempus
-                                        erat a, rutrum ante. Quisque interdum efficitur nunc vitae consectetur.
-                                        Suspendisse
-                                        venenatis, tortor non convallis interdum, urna mi molestie eros, vel tempor
-                                        justo
-                                        lacus
-                                        ac justo. Fusce id enim a erat fringilla sollicitudin ultrices vel metus. </div>
+                                        aria-labelledby="product-desc-tab"> <?php echo $item['description'] ?></div>
                                     <div class="tab-pane fade" id="product-comments" role="tabpanel"
-                                        aria-labelledby="product-comments-tab"> Vivamus rhoncus nisl sed venenatis
-                                        luctus.
-                                        Sed
-                                        condimentum risus ut tortor feugiat laoreet. Suspendisse potenti. Donec et
-                                        finibus
-                                        sem,
-                                        ut commodo lectus. Cras eget neque dignissim, placerat orci interdum, venenatis
-                                        odio.
-                                        Nulla turpis elit, consequat eu eros ac, consectetur fringilla urna. Duis
-                                        gravida ex
-                                        pulvinar mauris ornare, eget porttitor enim vulputate. Mauris hendrerit, massa
-                                        nec
-                                        aliquam cursus, ex elit euismod lorem, vehicula rhoncus nisl dui sit amet eros.
-                                        Nulla
-                                        turpis lorem, dignissim a sapien eget, ultrices venenatis dolor. Curabitur vel
-                                        turpis at
-                                        magna elementum hendrerit vel id dui. Curabitur a ex ullamcorper, ornare velit
-                                        vel,
-                                        tincidunt ipsum. </div>
+                                        aria-labelledby="product-comments-tab">
+                                        <?php
+                                            $comments = getComments('item_id' , $item['item_id']);
+                                            if (!empty($comments)) {
+                                                echo "<ul>";
+                                                    foreach ($comments as $comment) {
+                                                        $createdAt = date('D, d M Y' , strtotime($comment['created_at']));
+
+                                                        echo "<li> by ".$comment['comment'] . "
+                                                            <small class='text-muted ml-2'>".$createdAt."</small>
+                                                        </li>";
+                                                    }
+                                                echo "</ul>";
+                                            }else {
+                                                echo "<div class='alert alert-warning' role='alert'>No Comments Found</div>";
+                                            }
+                                           
+                                        ?>
+                                    
+                                    </div>
                                     <div class="tab-pane fade" id="product-rating" role="tabpanel"
                                         aria-labelledby="product-rating-tab"> Cras ut ipsum ornare, aliquam ipsum non,
                                         posuere
@@ -266,6 +243,7 @@ if ($stmtItem->rowCount() > 0) {
                                         vitae vehicula placerat. </div>
                                 </div>
                             </div>
+                            <!-- /.row -->
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -273,10 +251,10 @@ if ($stmtItem->rowCount() > 0) {
                 </div>
                 <!-- /.Default box -->
 
-                <!-- Similar-product box -->
+                <!-- similar-product box -->
                 <div class="col-md-2">
                     <div class="card card-primary card-outline similar-products">
-                        <div class="card-header">
+                        <div class="card-header text-center">
                             Similar Products
                         </div>
                         <div class="card-body">
@@ -285,7 +263,7 @@ if ($stmtItem->rowCount() > 0) {
 
                     </div>
                 </div>
-                <!-- /.Similar-product box -->
+                <!-- /.similar-product box -->
             </div>
         </div>
         <!-- /.container -->
@@ -299,9 +277,9 @@ if ($stmtItem->rowCount() > 0) {
 else {
   // Error:There Is No Such ID
   echo "<div class='container' style='width: 70%; margin-top: 50px;'>";
-  redirect2Home('danger', 'Error: There Is No Such ID', 3 , 'index.php');
+    redirect2Home('danger', 'Error: There Is No Such ID', 3 , 'index.php');
   echo "</div>";
 }
 
-include $tpl . 'footer.php'
+include $tpl . 'footer.php';
 ?>

@@ -26,14 +26,14 @@ function getItems($where , $value)
     return $items;
 }
 /**
- * get items records function v1.0
+ * get items records function v2.0
  * @return rows
  */
-function getComments($user_id)
+function getComments($where , $value)
 {
     global $conn;
-    $getComments = $conn->prepare("SELECT * FROM comments WHERE user_id = ? ORDER BY created_at DESC");
-    $getComments->execute(array($user_id));
+    $getComments = $conn->prepare("SELECT * FROM comments WHERE $where = ? ORDER BY created_at DESC");
+    $getComments->execute(array($value));
     $comments = $getComments->fetchAll();
     return $comments;
 }
