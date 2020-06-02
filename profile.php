@@ -64,7 +64,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                     <b>Orders</b> <a class="float-right">322</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Comments</b> <a class="float-right">543</a>
+                                    <b>Comments</b> <a class="float-right"><?php echo countItems('comment_id', 'comments', "WHERE user_id =".$row['user_id']." ") ;?></a>
                                 </li>
                                 <li class="list-group-item">
                                     <b>Friends</b> <a class="float-right">13,287</a>
@@ -173,7 +173,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
 
                                 <div class="tab-pane" id="comments">
                                     <?php
-                                    $comments = getComments('user_id' , $row['user_id']);
+                                    $comments = getComments('comments.user_id' , $row['user_id']);
                                     if (! empty($comments)) {
                                     
                                     ?>
@@ -197,7 +197,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                                 <span class="time"><i class="far fa-clock"></i>
                                                     <?php echo time_Ago(strtotime($comment['created_at']) ); ?> </span>
 
-                                                <h3 class="timeline-header">Your Comment On<a href="#"> Post#</a> </h3>
+                                                <h3 class="timeline-header">Your Comment On <a href="product.php?id=<?php echo $comment['item_id'];?>"> <?php echo $comment['item_name']; ?></a> </h3>
 
                                                 <div class="timeline-body">
                                                     <?php echo $comment['comment'] ?>
