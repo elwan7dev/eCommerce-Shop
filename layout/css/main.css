@@ -836,4 +836,12 @@ label:not(.form-check-label):not(.custom-file-label) {
   box-shadow: none;
 }
 
+.product-box h3 small {
+  display: block;
+  font-size: 57%;
+}
+.product-box h3 .date {
+  font-size: 50%;
+}
+
 /* End product page */

@@ -1,7 +1,6 @@
 <?php
 session_start();
-$pageTitle = 'Profile';
-
+$pageTitle ='Prodcut';
 // initialize php file
 include 'init.php';
 
@@ -9,10 +8,24 @@ include 'init.php';
 $itemId = (isset($_GET['id']) && is_numeric($_GET['id'])) ? intval($_GET['id']) : 0;
 
 // Select all fields from record depend on this id
-$stmtItem = $conn->prepare("SELECT * FROM items WHERE item_id=? LIMIT 1");
+$stmtItem = $conn->prepare("SELECT items.* , categories.name AS cat_name , users.username
+                            FROM items
+                            INNER JOIN categories ON categories.cat_id = items.cat_id
+                            INNER JOIN users ON users.user_id = items.member_id
+                            WHERE item_id=? LIMIT 1");
 //execute Query
 $stmtItem->execute(array($itemId)); //if cat_id are equal- select
 $item = $stmtItem->fetch(); //fetch row data from DB
+
+
+
+// Category link actions 
+$pageName = str_replace(' ', '-' , $item['cat_name']);
+$page = $item['cat_id'];
+
+// Format item created-at
+$createdAt = date('D, d M Y' , strtotime($item['created_at']));
+
 
 // if there is such ID - show the form
 if ($stmtItem->rowCount() > 0) {
@@ -68,7 +81,18 @@ if ($stmtItem->rowCount() > 0) {
                                 </div>
                                 <!-- col desc -->
                                 <div class="col-12 col-sm-6">
-                                    <h3 class="my-3"><?php echo $item['name']; ?></h3>
+                                    <h3 class="my-3"><?php echo $item['name']; ?>
+                                        <small>by
+                                            <?php
+                                                echo "<a href='#'> ".$item['username']."</a>" . ', '; 
+                                                echo "<a href='categories.php?page=".$page."&pagename=".$pageName."'>"
+                                                    . $item['cat_name']."</a>"; 
+                                            ?>
+                                        </small>
+                                        <!-- <div class="date"></div> -->
+                                        <small class='date text-muted'><?php echo $createdAt; ?></small>
+                                    </h3>
+
                                     <p><?php echo $item['description'] ?></p>
 
                                     <hr>
@@ -201,24 +225,26 @@ if ($stmtItem->rowCount() > 0) {
                                     <div class="tab-pane fade" id="product-comments" role="tabpanel"
                                         aria-labelledby="product-comments-tab">
                                         <?php
-                                            $comments = getComments('item_id' , $item['item_id']);
+                                            $comments = getComments('comments.item_id' , $item['item_id']);
                                             if (!empty($comments)) {
-                                                echo "<ul>";
+                                                echo "<ul class=''>";
                                                     foreach ($comments as $comment) {
                                                         $createdAt = date('D, d M Y' , strtotime($comment['created_at']));
-
-                                                        echo "<li> by ".$comment['comment'] . "
-                                                            <small class='text-muted ml-2'>".$createdAt."</small>
-                                                        </li>";
+                                                        ?>
+                                                        <li>
+                                                            by <a href="#"><strong><?php echo $comment['username']; ?></strong></a>  
+                                                                <?php echo $comment['comment']; ?>  
+                                                            <small class='text-muted ml-2'><?php echo $createdAt; ?></small>
+                                                        </li>
+                                                        <hr>
+                                                        <?php
                                                     }
                                                 echo "</ul>";
                                             }else {
                                                 echo "<div class='alert alert-warning' role='alert'>No Comments Found</div>";
                                             }
                                            
-                                        ?>
-                                    
-                                    </div>
+                                        ?></div>
                                     <div class="tab-pane fade" id="product-rating" role="tabpanel"
                                         aria-labelledby="product-rating-tab"> Cras ut ipsum ornare, aliquam ipsum non,
                                         posuere
