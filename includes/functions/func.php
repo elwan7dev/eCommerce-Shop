@@ -26,13 +26,22 @@ function getItems($where , $value)
     return $items;
 }
 /**
- * get items records function v2.0
+ * get comments records function v3.0
+ * v3.0 update:-
+ *  - add inner join to display comment (category , username)
+ *  - when calling method you must path $where attr (colName) with table (Ex: comments.user_id )
+ *   to avoid fatal error (colname ambugios) 
  * @return rows
  */
 function getComments($where , $value)
 {
     global $conn;
-    $getComments = $conn->prepare("SELECT * FROM comments WHERE $where = ? ORDER BY created_at DESC");
+    $getComments = $conn->prepare("SELECT comments.* , users.username, items.name AS item_name 
+                                    FROM comments
+                                    INNER JOIN users ON users.user_id = comments.user_id 
+                                    INNER JOIN items ON items.item_id = comments.item_id 
+                                    WHERE $where = ?
+                                    ORDER BY created_at DESC");
     $getComments->execute(array($value));
     $comments = $getComments->fetchAll();
     return $comments;
