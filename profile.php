@@ -190,25 +190,32 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                         <!-- timeline item -->
                                         <?php
                                                 
-                                                foreach ($comments as $comment) { ?>
-                                        <!-- timeline item -->
-                                        <div>
-                                            <div class="timeline-item">
-                                                <span class="time"><i class="far fa-clock"></i>
-                                                    <?php echo time_Ago(strtotime($comment['created_at']) ); ?> </span>
+                                                foreach ($comments as $comment) { 
+                                                    // trick to change style of pending item row
+                                                    $class = ($comment['approval'] == 0) ? "bg-secondary" : '';
+                                                    $title = ($comment['approval'] == 0) ? "title='Hidden Comment'" : '';
+                                                    
+                                                    ?>
+                                                    <!-- timeline item -->
+                                                    <div>
+                                                        <div class="timeline-item <?php echo $class; ?>" <?php echo $title ?>>
+                                                            <span class="time"><i class="far fa-clock"></i>
+                                                                <?php echo time_Ago(strtotime($comment['created_at']) ); ?> </span>
 
-                                                <h3 class="timeline-header">Your Comment On <a href="product.php?id=<?php echo $comment['item_id'];?>"> <?php echo $comment['item_name']; ?></a> </h3>
+                                                            <h3 class="timeline-header">Your Comment On <a href="product.php?id=<?php echo $comment['item_id'];?>"> <?php echo $comment['item_name']; ?></a> </h3>
 
-                                                <div class="timeline-body">
-                                                    <?php echo $comment['comment'] ?>
-                                                </div>
-                                                <div class="timeline-footer">
-                                                    <a href="#" class="btn btn-warning btn-flat btn-sm">View comment</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- END timeline item -->
-                                        <?php }  ?>
+                                                            <div class="timeline-body">
+                                                                <?php echo $comment['comment'] ?>
+                                                            </div>
+                                                            <div class="timeline-footer">
+                                                                <a href="#" class="btn btn-primary btn-sm">View comment</a>
+                                                                <a href="#" class="btn btn-danger btn-sm">Delete</a>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- END timeline item -->
+                                                <?php }  ?>
                                         <!-- timeline time label -->
                                         <div class="time-label">
                                             <span class="bg-success">
