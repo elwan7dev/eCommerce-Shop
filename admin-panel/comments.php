@@ -19,7 +19,8 @@ if (isset($_SESSION['admin'])) {
         $stmt = $conn->prepare("SELECT comments.* , items.name , users.username 
                                 FROM comments
                                 INNER JOIN items ON items.item_id = comments.item_id
-                                INNER JOIN users ON users.user_id  = comments.user_id ");
+                                INNER JOIN users ON users.user_id  = comments.user_id 
+                                ORDER BY created_at DESC");
                                 
         $stmt->execute();
         // fetch all data and asign in array
