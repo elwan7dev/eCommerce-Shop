@@ -59,7 +59,7 @@ if ($stmtItem->rowCount() > 0) {
                 <div class="col-md-10">
                     <div class="card card-solid ">
                         <div class="card-body">
-                            <div class="row product-box">
+                            <div class="row product-box mb-4">
                                 <!-- col image -->
                                 <div class="col-12 col-sm-6">
                                     <h3 class="d-inline-block d-sm-none"><?php echo $item['name']; ?></h3>
@@ -205,7 +205,82 @@ if ($stmtItem->rowCount() > 0) {
 
                                 </div>
                             </div>
-                            <div class="row mt-4">
+                            <hr>
+
+                            <!-- comment row -->
+                            <div class="row mb-4" id="comment">
+                                <div class="col w-100 ">
+                                    <?php if (isset($_SESSION['username'])) { 
+                    
+                                    
+                                    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                                        $comment = filter_var($_POST['comment'] , FILTER_SANITIZE_STRING);
+                                        $userId = $_SESSION['userid'];
+                                        $itemId = $item['item_id'];
+
+                                        // Validate 
+                                        if (!empty($comment)) {
+                                            // insert 
+                                            $stmtComment = $conn->prepare("INSERT INTO comments
+                                                                        (comment, created_at, user_id, item_id)
+                                                                VALUES  (:xcomment , now() , :xuser , :xitem ) ");
+                                            $stmtComment->execute(array(
+                                                'xcomment' => $comment,
+                                                'xuser' => $userId,
+                                                'xitem' =>$itemId,
+                                            ));
+                                            if ($stmtComment) {
+                                                // Successful Inserted Message
+                                                echo '<div class="alert alert-success"> 
+                                                        Comment Added
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>';
+                                            } else {
+                                                // Error Inserted Message - No Data Inserted Yet!
+                                                $msg = "No Data Inserted Yet!";
+                                                redirect2Home('info', $msg, 3, $_SERVER['HTTP_REFERER']);
+                                            }
+                                            
+                                        }else {
+                                            echo '<div class="alert alert-danger"> 
+                                                    The comment field is required.
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>';
+                                        }
+                                    }
+
+                                        
+                                    ?>
+                                    <div class="add-comment w-50" id="add-comment">
+                                        <form
+                                            action="<?php echo $_SERVER['PHP_SELF'].'?id='. $item['item_id'].'#comment' ?>"
+                                            method="post">
+                                            <label>Add Your Review</label>
+                                            <textarea class="form-control" name="comment" required></textarea>
+                                            <input class="btn btn-danger btn-sm mt-2 " type="submit" value="Submit">
+                                        </form>
+
+                                    </div>
+                                    <?php }else {
+                                        echo '<a href="login.php">Login</a> or <a href="register.php">Register</a> to add your review.';
+                                    
+                                    } ?>
+
+
+
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+
+                            <!-- description, comments row  -->
+                            <div class="row">
+
+
                                 <nav class="w-100">
                                     <div class="nav nav-tabs" id="product-tab" role="tablist">
                                         <a class="nav-item nav-link active" id="product-desc-tab" data-toggle="tab"
@@ -219,24 +294,25 @@ if ($stmtItem->rowCount() > 0) {
                                             aria-selected="false">Rating</a>
                                     </div>
                                 </nav>
-                                <div class="tab-content p-3" id="nav-tabContent">
+                                <div class="tab-content p-3 w-100" id="nav-tabContent">
                                     <div class="tab-pane fade show active" id="product-desc" role="tabpanel"
                                         aria-labelledby="product-desc-tab"> <?php echo $item['description'] ?></div>
                                     <div class="tab-pane fade" id="product-comments" role="tabpanel"
                                         aria-labelledby="product-comments-tab">
                                         <?php
-                                            $comments = getComments('comments.item_id' , $item['item_id']);
+                                            $comments = getComments('comments.item_id' , $item['item_id'] , 'AND comments.approval = 1');
                                             if (!empty($comments)) {
-                                                echo "<ul class=''>";
+                                                echo "<ul class='product-comments'>";
                                                     foreach ($comments as $comment) {
                                                         $createdAt = date('D, d M Y' , strtotime($comment['created_at']));
                                                         ?>
-                                                        <li>
-                                                            by <a href="#"><strong><?php echo $comment['username']; ?></strong></a>  
-                                                                <?php echo $comment['comment']; ?>  
-                                                            <small class='text-muted ml-2'><?php echo $createdAt; ?></small>
+                                                        <li class="item">
+                                                            By <a href="#"><strong><?php echo $comment['username']; ?></strong></a>
+
+                                                            on<small class='text-muted ml-2'><?php echo $createdAt; ?></small>
+                                                            <p> <?php echo $comment['comment']; ?></p>
+
                                                         </li>
-                                                        <hr>
                                                         <?php
                                                     }
                                                 echo "</ul>";
@@ -244,7 +320,8 @@ if ($stmtItem->rowCount() > 0) {
                                                 echo "<div class='alert alert-warning' role='alert'>No Comments Found</div>";
                                             }
                                            
-                                        ?></div>
+                                        ?>
+                                    </div>
                                     <div class="tab-pane fade" id="product-rating" role="tabpanel"
                                         aria-labelledby="product-rating-tab"> Cras ut ipsum ornare, aliquam ipsum non,
                                         posuere
