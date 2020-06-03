@@ -7,9 +7,9 @@ $pageTitle = "Categories | $catName";
 // initialize php file
 include 'init.php'; 
 
-$items = getItems('cat_id' , $catId);
-// Numbers of items in specific category
-$catItems = countItems('item_id', 'items', "WHERE cat_id="."$catId"." " );
+$items = getItems('cat_id' , $catId, 1);
+// Numbers of approved items in specific category
+$catItems = countItems('item_id', 'items', "WHERE cat_id=$catId AND approval = 1" );
 
 ?>
 <!-- Content Wrapper. Contains page content -->

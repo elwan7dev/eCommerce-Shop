@@ -1,5 +1,16 @@
 <?php
 
+function getTitle()
+{
+    global $pageTitle; // VIP: before this line func doesn't work
+
+    if (isset($pageTitle)) {
+        echo $pageTitle;
+    } else {
+        echo 'title';
+    }
+}
+
 /**
  * get categories records function v1.0
  * @return rows
@@ -14,13 +25,16 @@ function getCats()
 }
 
 /**
- * get items records function v3.0
+ * get items records function v4.0
  * @return rows
  */
-function getItems($where , $value)
+function getItems($where , $value, $approval = NULL)
 {
+    $condition = ($approval == NULL) ? '' : 'AND approval = 1';
+
     global $conn;
-    $getItems = $conn->prepare("SELECT * FROM items WHERE $where = ? ORDER BY created_at DESC");
+    $getItems = $conn->prepare("SELECT * FROM items 
+                                WHERE $where = ? $condition ORDER BY created_at DESC");
     $getItems->execute(array($value));
     $items = $getItems->fetchAll();
     return $items;
@@ -232,7 +246,7 @@ function redirect2Home($alertType, $msg, $seconds = 3, $url = 'index.php')
  * 
  * @return  fetchColumn Numbers
  */
-function countItems($item, $tblName , $condition ='')
+function countItems($item, $tblName , $condition = '')
 {
     global $conn;
     $countStmt = $conn->prepare("SELECT COUNT($item) FROM $tblName $condition");
@@ -259,17 +273,6 @@ function countItems($item, $tblName , $condition ='')
 
 
 /** back-end funcs */
-function getTitle()
-{
-    global $pageTitle; // VIP: before this line func doesn't work
-
-    if (isset($pageTitle)) {
-        echo $pageTitle;
-    } else {
-        echo 'title';
-    }
-}
-
 
 
 
