@@ -140,22 +140,28 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                             <div class="tab-content">
                                 <div class="active tab-pane" id="ads">
                                     <?php 
+                                        // retrieve all ads approved or not 
                                         $items = getItems('member_id' , $row['user_id']);
                                         if (! empty($items)) {  
                                             echo '<div class="row">';
                                             foreach ($items as $item) { ?>
                                             <div class="col-sm-6 col-md-3">
                                                 <div class="card item-box">
+                                                    <?php
+                                                        if ($item['approval'] == 0) {
+                                                            echo '<span class="approval-status">Wating Approval</span>';
+                                                        }
+
+                                                    ?>
                                                     <span class="price-tag"><?php echo '$' . $item['price'];?></span>
                                                     <a href="product.php?id=<?php echo $item['item_id'] ?>">
                                                         <img src="layout/images/image.jpg" class="card-img-top" alt="AD Image">
                                                     </a>
                                                     <div class="card-body">
                                                         <a href="product.php?id=<?php echo $item['item_id'] ?>" >
-                                                            <h5 class="card-title"><?php echo $item['name']; ?> </h5>
+                                                            <h5 class="card-title"><?php echo subProdTitle($item['name']); ?> </h5>
                                                         </a>
-                                                        <p class="card-text"><?php echo $item['description']; ?> </p>
-                                                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                                                        <p class="card-text"><?php echo subDescription($item['description']); ?> </p>
                                                     </div>
                                                 </div>
                                             </div>
