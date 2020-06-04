@@ -12,7 +12,8 @@ $stmtItem = $conn->prepare("SELECT items.* , categories.name AS cat_name , users
                             FROM items
                             INNER JOIN categories ON categories.cat_id = items.cat_id
                             INNER JOIN users ON users.user_id = items.member_id
-                            WHERE item_id=? LIMIT 1");
+                            WHERE items.item_id=? AND items.approval = 1 
+                            LIMIT 1");
 //execute Query
 $stmtItem->execute(array($itemId)); //if cat_id are equal- select
 $item = $stmtItem->fetch(); //fetch row data from DB
@@ -269,9 +270,6 @@ if ($stmtItem->rowCount() > 0) {
                                         echo '<a href="login.php">Login</a> or <a href="register.php">Register</a> to add your review.';
                                     
                                     } ?>
-
-
-
                                 </div>
                                 <!-- /.col -->
                             </div>
@@ -279,8 +277,6 @@ if ($stmtItem->rowCount() > 0) {
 
                             <!-- description, comments row  -->
                             <div class="row">
-
-
                                 <nav class="w-100">
                                     <div class="nav nav-tabs" id="product-tab" role="tablist">
                                         <a class="nav-item nav-link active" id="product-desc-tab" data-toggle="tab"
@@ -380,7 +376,8 @@ if ($stmtItem->rowCount() > 0) {
 else {
   // Error:There Is No Such ID
   echo "<div class='container' style='width: 70%; margin-top: 50px;'>";
-    redirect2Home('danger', 'Error: There Is No Such ID', 3 , 'index.php');
+    $msg = 'Error: there is no such id or this product not activated yet!';
+    redirect2Home('danger', $msg, 5 , $_SERVER['HTTP_REFERER']);
   echo "</div>";
 }
 
