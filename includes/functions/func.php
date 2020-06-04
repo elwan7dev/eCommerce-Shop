@@ -257,6 +257,42 @@ function countItems($item, $tblName , $condition = '')
 }
 
 
+/**
+ * subDescription() fucn v1.0
+ * @param string
+ * @return substring
+ * 
+ * 
+ */
+
+function subDescription($string)
+ {
+   
+    if (strlen($string) > 66) {
+        // truncate string
+        $stringCut = substr($string, 0, 66);
+        $endPoint = strrpos($stringCut, ' ');
+    
+        //if the string doesn't contain any space then it will cut without word basis.
+        $string = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+        $string .= '... <a href="#">Read More</a>';
+    }
+    return $string;
+ }
+
+ function subProdTitle($string)
+ {
+    if (strlen($string) > 40) {
+        // truncate string
+        $stringCut = substr($string, 0, 40);
+        $endPoint = strrpos($stringCut, ' ');
+    
+        //if the string doesn't contain any space then it will cut without word basis.
+        $string = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+        $string .= '...';
+    }
+    return $string;
+ }
 
 
 
