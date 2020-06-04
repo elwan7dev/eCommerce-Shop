@@ -121,7 +121,8 @@ if (isset($_SESSION['username'])) {
                                                     <?php 
                                                         if(in_array('name-empty' , $formErrors) ||
                                                             in_array('name-less' , $formErrors)){echo 'is-invalid'; }?>" 
-                                                    data-class=".live-name" placeholder="Item's Name">
+                                                    data-class=".live-name" placeholder="Item's Name" required pattern=".{8,}"
+                                                    title="The Name Field Must be 8 chracters at least.">
                                                 <!-- Print form-errors -->
                                                 <?php
                                                     if(!empty($formErrors)){
@@ -142,10 +143,10 @@ if (isset($_SESSION['username'])) {
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="price">Price</label>
-                                                <input type="tetx" name="price" class="form-control live
+                                                <input type="number" name="price" class="form-control live
                                                     <?php 
                                                         if(in_array('price-empty' , $formErrors)){echo 'is-invalid'; }?>"
-                                                    data-class=".live-price" placeholder="Item's Price">
+                                                    data-class=".live-price" placeholder="Item's Price" required>
                                                 <!-- Print form-errors -->
                                                 <?php
                                                     if(!empty($formErrors)){
@@ -164,7 +165,8 @@ if (isset($_SESSION['username'])) {
                                             <textarea name="desc" class="form-control live
                                                 <?php 
                                                     if(in_array('desc-empty' , $formErrors)){echo 'is-invalid'; }?>" 
-                                                data-class=".live-desc" placeholder="Item's Description"></textarea>
+                                                data-class=".live-desc" placeholder="Item's Description" required
+                                                pattern=".{20,}" title="The Description Field must be 20 characters at least."></textarea>
                                             <!-- Print form-errors -->
                                             <?php
                                                 if(!empty($formErrors)){
@@ -183,7 +185,7 @@ if (isset($_SESSION['username'])) {
                                                 <input type="text" name="country" class="form-control 
                                                     <?php 
                                                         if(in_array('country-empty' , $formErrors)){echo 'is-invalid'; }?>"
-                                                    placeholder="Country Made In">
+                                                    placeholder="Country Made In" required>
                                                 <!-- Print form-errors -->
                                                 <?php
                                                     if(!empty($formErrors)){
@@ -199,7 +201,7 @@ if (isset($_SESSION['username'])) {
                                                 <label for="status">Status</label>
                                                 <select id="status" name="status" class="form-control 
                                                     <?php 
-                                                        if(in_array('status-empty' , $formErrors)){echo 'is-invalid'; }?>">
+                                                        if(in_array('status-empty' , $formErrors)){echo 'is-invalid'; }?>" required>
                                                     <option value="" selected>Choose...</option>
                                                     <option value="1">new</option>
                                                     <option value="2">old</option>
@@ -240,7 +242,7 @@ if (isset($_SESSION['username'])) {
                                                 <label for="category">Category</label>
                                                 <select id="category" name="category" class="form-control 
                                                     <?php 
-                                                        if(in_array('cat-empty' , $formErrors)){echo 'is-invalid'; }?>">
+                                                        if(in_array('cat-empty' , $formErrors)){echo 'is-invalid'; }?>" required>
                                                     <option value="" selected>Choose...</option>
                                                     <?php
                                                         $cats = getRows('cat_id , name' , 'categories');
