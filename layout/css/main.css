@@ -753,12 +753,12 @@ label:not(.form-check-label):not(.custom-file-label) {
 .new-ad .col-md-4{
   padding-left: 7.5px;
 }
-.item-box .card-title{
+/* .item-box .card-title{
   margin-bottom: .75rem;
   font-weight: 600;
   height: 41px;
   max-height: 41px;
-}
+} */
 
 .item-box{
   position: relative;
@@ -776,12 +776,28 @@ label:not(.form-check-label):not(.custom-file-label) {
   border-radius: 1px;
 }
 
-.item-box .card-body .card-text {
+/* .item-box .card-body .card-text {
   height: 70px;
   max-height: 70px;
   margin-bottom: 5px;
 }
+ */
 
+.item-box .product-title{
+  /* height: 41px; */
+  max-height: 41px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+} 
+
+.item-box .product-description {
+  color: #6c757d;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+} 
 
 /* End Ads Page */
 
