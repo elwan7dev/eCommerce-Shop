@@ -34,25 +34,43 @@ function getAllRows($select, $tblName, $where = NULL , $and = NULL , $orderFeild
 }
 
 /**
- * get comments records function v4.0
+ * get comments records function v4.1
  * v3.0 update:-
  *  - add inner join to display comment (category , username)
  *  - when calling method you must path $where attr (colName) with table (Ex: comments.user_id )
  *   to avoid fatal error (colname ambugios) 
  * @return rows
  */
-function getComments($where , $value, $condition = '')
+function getComments($where , $value, $and = NULL)
 {
     global $conn;
     $getComments = $conn->prepare("SELECT comments.* , users.username, items.name AS item_name 
                                     FROM comments
                                     INNER JOIN users ON users.user_id = comments.user_id 
                                     INNER JOIN items ON items.item_id = comments.item_id 
-                                    WHERE $where = ? $condition
+                                    WHERE $where = ? $and
                                     ORDER BY created_at DESC");
     $getComments->execute(array($value));
     $comments = $getComments->fetchAll();
     return $comments;
+}
+/**
+ * count number of items function v2.1
+ * count # of items row in specific [table , condition] 
+ * @param $item = colname   
+ * @param $tblName = table name
+ * @param $condition [optional] 
+ * 
+ * @return  fetchColumn Numbers
+ */
+function countItems($select, $tblName ,$where = NULL , $and = NULL)
+{
+    global $conn;
+    $countStmt = $conn->prepare("SELECT COUNT($select) FROM $tblName $where $and");
+    $countStmt ->execute();
+    // numbers of col retreived
+    return $countStmt ->fetchColumn();
+
 }
 
 
@@ -231,24 +249,6 @@ function redirect2Home($alertType, $msg, $seconds = 3, $url = 'index.php')
     exit();
 }
 
-/**
- * count number of items function v2.0
- * count # of items row in specific [table , condition] 
- * @param $item = colname 
- * @param $tblName = table name
- * @param $condition [optional] 
- * 
- * @return  fetchColumn Numbers
- */
-function countItems($item, $tblName , $condition = '')
-{
-    global $conn;
-    $countStmt = $conn->prepare("SELECT COUNT($item) FROM $tblName $condition");
-    $countStmt ->execute();
-    // numbers of col retreived
-    return $countStmt ->fetchColumn();
-
-}
 
 
 /**

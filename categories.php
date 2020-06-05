@@ -10,7 +10,7 @@ include 'init.php';
 // get all approved items in specific category 
 $items = getAllRows("*", "items" , "WHERE cat_id = $catId" , "AND approval=1");
 // Numbers of approved items in specific category
-$catItems = countItems('item_id', 'items', "WHERE cat_id=$catId AND approval = 1" );
+$catItems = countItems('item_id', 'items', "WHERE cat_id=$catId" , "AND approval = 1" );
 
 ?>
 <!-- Content Wrapper. Contains page content -->
