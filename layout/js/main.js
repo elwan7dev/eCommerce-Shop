@@ -1,25 +1,27 @@
 $(function () {
   "use strict";
 
-  // Calls the selectBoxIt method on your HTML select box
-  // $("select").selectBoxIt({
+  // Front-end Funcs
 
-  //   // Uses the Twitter Bootstrap theme for the drop down
-    
-  //   // Uses the jQueryUI 'shake' effect when opening the drop down
-  //   showEffect: "shake",
+  /**
+   * Live-preview Func - V2.0 - instead of 3 selectors
+   * in ads page - to live prefview form 
+   */
+  $('.live').keyup(function (e) { 
+    $($(this).data('class')).text($(this).val());
+  });
 
-  //   // Sets the animation speed to 'slow'
-  //   showEffectSpeed: 'slow',
+/*   $('.live-desc').keyup(function (e) { 
+    $('.live-preview .card-text').text($(this).val());
+  });
 
-  //   // Sets jQueryUI options to shake 1 time when opening the drop down
-  //   showEffectOptions: { times: 1 },
+  $('.live-price').keyup(function (e) { 
+    $('.live-preview .price-tag').text('$' + $(this).val());
+  }); */
 
-  //   // Uses the jQueryUI 'explode' effect when closing the drop down
-  //   hideEffect: "explode"
 
-  // });
 
+  // Back-end
   // hide placeholder on form focus
   $("[placeholder]")
     .focus(function () {

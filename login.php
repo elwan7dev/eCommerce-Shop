@@ -1,6 +1,7 @@
 <?php
 // start session
 session_start();
+$noNavBar= '';
 $pageTitle = 'Login';
 
 if (isset($_SESSION['username'])) {
@@ -17,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     
     // check if the user exist in database
     $stmt = $conn->prepare("SELECT 
-                               username, password
+                               user_id, username, password
                             FROM 
                                 users
                             WHERE 
@@ -27,12 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             LIMIT 1");
                             //group = 1 - retreive admins only
     $stmt->execute(array($username, $hashedPass));
+    $row = $stmt->fetch(); //fetch row data from DB - to get userid
 
     // if (count > 0) this mean that the database contain record about this username
     $count = $stmt->rowCount();
     if ($count > 0) {
         $_SESSION['username'] = $username; // regiter username in session
-        header('location: index.php'); // redirect to  dashboard page
+        $_SESSION['userid'] = $row['user_id']; // register userid in session
+        header('location: index.php'); // redirect to  home-page website
         exit();
     }
 }
@@ -45,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <p class="login-box-msg">Sign in to start your session</p>
                 <form class="login-form" action="<?php $_SERVER['PHP_SELF']?>" method="POST">
                     <div class="input-group mb-3">
-                        <input type="text" name="username" class="form-control" placeholder="Username" autocomplete="off" required>
+                        <input type="text" name="username" class="form-control" placeholder="Username" autocomplete="off" autofocus required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>

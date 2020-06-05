@@ -1,38 +1,5 @@
 <?php
 
-/**
- * get categories records function v1.0
- * @return rows
- */
-function getCats()
-{
-    global $conn;
-    $getCat = $conn->prepare("SELECT * FROM categories ORDER BY created_at");
-    $getCat->execute();
-    $cats = $getCat->fetchAll();
-    return $cats;
-}
-
-/**
- * get items records function v1.0
- * @return rows
- */
-function getItems($cat_id)
-{
-    global $conn;
-    $getItems = $conn->prepare("SELECT * FROM items WHERE cat_id = ? AND approval = 1 ORDER BY created_at DESC");
-    $getItems->execute(array($cat_id));
-    $items = $getItems->fetchAll();
-    return $items;
-}
-
-
-
-
-
-
-
-/** back-end funcs */
 function getTitle()
 {
     global $pageTitle; // VIP: before this line func doesn't work
@@ -45,29 +12,190 @@ function getTitle()
 }
 
 /**
- * Home Redirect function V2.0
- * [have params]
- * @param $alertType = bootstrap alert type
- * @param $msg= Echo the error msg
- * @param $seconds = seconds before redirecting
- * @param $url = url that redirect to it
+ * getAllRows() function v2.0 - 
+ * get ultimate function without INNER JOIN
+ * @param selectCols  $select = col to selected
+ * @param tableName  $tblName = table [EX: users , items , categories]
+ * @param where [optional default value = null] 
+ * @param and [and condition in query - optional default value = null] 
+ * @param orderFeild  
+ * @param ordering
+ *  
+ * @return allTableRows 
  */
-function redirect2Home($alertType, $msg, $seconds = 3, $url = 'dashboard.php')
+function getAllRows($select, $tblName, $where = NULL , $and = NULL , $orderFeild = 'created_at' , $ordering = 'DESC')
 {
-    $link = '';
-    if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] !== '' && $url == $_SERVER['HTTP_REFERER']) {
-        $link = 'Prevoius ';
-
-    } else {
-        $pageName = str_replace('.php', '', $url);
-        $link = $pageName;
-    }
-    echo "<div class='alert alert-$alertType' role='alert'>$msg</div>";
-    echo "<div class='alert alert-info' text-center>You Will Redirect To <strong>$link</strong> Page In <strong>$seconds</strong> Seconds</div>";
-    //  link to redirect url
-    header("refresh:$seconds;url=$url");
-    exit();
+    global $conn;
+    $rowStmt = $conn->prepare("SELECT $select FROM $tblName
+                               $where $and ORDER BY $orderFeild $ordering");
+    $rowStmt->execute();
+    $rows = $rowStmt->fetchAll();
+    return $rows;
 }
+
+/**
+ * get comments records function v4.1
+ * v3.0 update:-
+ *  - add inner join to display comment (category , username)
+ *  - when calling method you must path $where attr (colName) with table (Ex: comments.user_id )
+ *   to avoid fatal error (colname ambugios) 
+ * @return rows
+ */
+function getComments($where , $value, $and = NULL)
+{
+    global $conn;
+    $getComments = $conn->prepare("SELECT comments.* , users.username, items.name AS item_name 
+                                    FROM comments
+                                    INNER JOIN users ON users.user_id = comments.user_id 
+                                    INNER JOIN items ON items.item_id = comments.item_id 
+                                    WHERE $where = ? $and
+                                    ORDER BY created_at DESC");
+    $getComments->execute(array($value));
+    $comments = $getComments->fetchAll();
+    return $comments;
+}
+/**
+ * count number of items function v2.1
+ * count # of items row in specific [table , condition] 
+ * @param $item = colname   
+ * @param $tblName = table name
+ * @param $condition [optional] 
+ * 
+ * @return  fetchColumn Numbers
+ */
+function countItems($select, $tblName ,$where = NULL , $and = NULL)
+{
+    global $conn;
+    $countStmt = $conn->prepare("SELECT COUNT($select) FROM $tblName $where $and");
+    $countStmt ->execute();
+    // numbers of col retreived
+    return $countStmt ->fetchColumn();
+
+}
+
+
+/* function time_elapsed_string($datetime, $full = false) {
+    $now = new DateTime;
+    $ago = new DateTime($datetime);
+    $diff = $now->diff($ago);
+
+    $diff->w = floor($diff->d / 7);
+    $diff->d -= $diff->w * 7;
+
+    $string = array(
+        'y' => 'year',
+        'm' => 'month',
+        'w' => 'week',
+        'd' => 'day',
+        'h' => 'hour',
+        'i' => 'minute',
+        's' => 'second',
+    );
+    foreach ($string as $k => &$v) {
+        if ($diff->$k) {
+            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+        } else {
+            unset($string[$k]);
+        }
+    }
+
+    if (!$full) $string = array_slice($string, 0, 1);
+    return $string ? implode(', ', $string) . ' ago' : 'just now';
+} */
+
+function time_Ago($time) { 
+  
+    // Calculate difference between current 
+    // time and given timestamp in seconds 
+    $diff     = time() - $time; 
+      
+    // Time difference in seconds 
+    $sec     = $diff; 
+      
+    // Convert time difference in minutes 
+    $min     = round($diff / 60 ); 
+      
+    // Convert time difference in hours 
+    $hrs     = round($diff / 3600); 
+      
+    // Convert time difference in days 
+    $days     = round($diff / 86400 ); 
+      
+    // Convert time difference in weeks 
+    $weeks     = round($diff / 604800); 
+      
+    // Convert time difference in months 
+    $mnths     = round($diff / 2600640 ); 
+      
+    // Convert time difference in years 
+    $yrs     = round($diff / 31207680 ); 
+      
+    // Check for seconds 
+    if($sec <= 60) { 
+        echo "$sec seconds ago"; 
+    } 
+      
+    // Check for minutes 
+    else if($min <= 60) { 
+        if($min==1) { 
+            echo "one minute ago"; 
+        } 
+        else { 
+            echo "$min minutes ago"; 
+        } 
+    } 
+      
+    // Check for hours 
+    else if($hrs <= 24) { 
+        if($hrs == 1) {  
+            echo "an hour ago"; 
+        } 
+        else { 
+            echo "$hrs hours ago"; 
+        } 
+    } 
+      
+    // Check for days 
+    else if($days <= 7) { 
+        if($days == 1) { 
+            echo "Yesterday"; 
+        } 
+        else { 
+            echo "$days days ago"; 
+        } 
+    } 
+      
+    // Check for weeks 
+    else if($weeks <= 4.3) { 
+        if($weeks == 1) { 
+            echo "a week ago"; 
+        } 
+        else { 
+            echo "$weeks weeks ago"; 
+        } 
+    } 
+      
+    // Check for months 
+    else if($mnths <= 12) { 
+        if($mnths == 1) { 
+            echo "a month ago"; 
+        } 
+        else { 
+            echo "$mnths months ago"; 
+        } 
+    } 
+      
+    // Check for years 
+    else { 
+        if($yrs == 1) { 
+            echo "one year ago"; 
+        } 
+        else { 
+            echo "$yrs years ago"; 
+        } 
+    } 
+} 
+
 
 /**
  * (Dynamic SELECT query)
@@ -95,24 +223,94 @@ function isExist($colName, $tblName, $value)
     }
 }
 
-/**
- * count number of items function v2.0
- * count # of items row in specific [table , condition] 
- * @param $item = colname 
- * @param $tblName = table name
- * @param $condition [optional] 
- * 
- * @return  fetchColumn Numbers
- */
-function countItems($item, $tblName , $condition ='')
-{
-    global $conn;
-    $countStmt = $conn->prepare("SELECT COUNT($item) FROM $tblName $condition");
-    $countStmt ->execute();
-    // numbers of col retreived
-    return $countStmt ->fetchColumn();
 
+/**
+ * Home Redirect function V2.0
+ * [have params]
+ * @param $alertType = bootstrap alert type
+ * @param $msg= Echo the error msg
+ * @param $seconds = seconds before redirecting
+ * @param $url = url that redirect to it
+ */
+function redirect2Home($alertType, $msg, $seconds = 3, $url = 'index.php')
+{
+    $link = '';
+    if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] !== '' && $url == $_SERVER['HTTP_REFERER']) {
+        $link = 'Prevoius ';
+
+    } else {
+        $pageName = str_replace('.php', '', $url);
+        $link = $pageName;
+    }
+    echo "<div class='alert alert-$alertType' role='alert'>$msg</div>";
+    echo "<div class='alert alert-info' text-center>You Will Redirect To <strong>$link</strong> Page In <strong>$seconds</strong> Seconds</div>";
+    //  link to redirect url
+    header("refresh:$seconds;url=$url");
+    exit();
 }
+
+
+
+/**
+ * subDescription() fucn v1.0
+ * @param string
+ * @return substring
+ * 
+ * 
+ */
+
+function subDescription($string)
+ {
+   
+    if (strlen($string) > 66) {
+        // truncate string
+        $stringCut = substr($string, 0, 66);
+        $endPoint = strrpos($stringCut, ' ');
+    
+        //if the string doesn't contain any space then it will cut without word basis.
+        $string = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+        $string .= '... <a href="#">Read More</a>';
+    }
+    return $string;
+ }
+
+ function subProdTitle($string)
+ {
+    if (strlen($string) > 40) {
+        // truncate string
+        $stringCut = substr($string, 0, 40);
+        $endPoint = strrpos($stringCut, ' ');
+    
+        //if the string doesn't contain any space then it will cut without word basis.
+        $string = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+        $string .= '...';
+    }
+    return $string;
+ }
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/** back-end funcs */
+
+
+
 /**
  * get latest record function v1.0
  * $select = col to selected 
@@ -132,20 +330,6 @@ function getLatest($select, $tblName , $order , $limit = 5)
 }
 
 
-/**
- * get all rows fucntion v1.0
- * get all rows of selected colname without any condition 
- * $select = col to selected 
- * $tblName = table [EX: users , items , categories]
- */
-function getRows($select, $tblName)
-{
-    global $conn;
-    $rowStmt = $conn->prepare("SELECT $select FROM $tblName");
-    $rowStmt->execute();
-    $rows = $rowStmt->fetchAll();
-    return $rows;
-}
 
 /**
  * getRandomColor function v1.0

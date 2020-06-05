@@ -164,7 +164,7 @@ if (isset($_SESSION['admin'])) {
                                                 echo "<a href='#' class='product-title'> " .$item['name'] ."
                                                         <span class='badge badge-";
                                                         echo getRandomColor($item['price']);
-                                                        echo " float-right'>". $item['price'] ."</span>
+                                                        echo " float-right'>". '$'.$item['price'] ."</span>
                                                     </a>";
                                                 echo "<span class='product-description'>
                                                             ". $item['description'] ."
