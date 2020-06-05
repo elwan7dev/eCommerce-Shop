@@ -13,7 +13,10 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
     $userStmt = $conn->prepare("SELECT * FROM users WHERE username =? ");
     $userStmt->execute(array($_SESSION['username']));
     $row =$userStmt->fetch();
+
+    $userId = $row['user_id'];
     $createdAt = date('D, d M Y' , strtotime($row['created_at']));
+
     ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -114,6 +117,9 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
 
                             <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
                                 fermentum enim neque.</p>
+
+                            <a href="profile.php#settings" class="btn btn-danger btn-block"><i class="fas fa-edit mr-2"></i><b>Edit</b></a>
+                            
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -140,8 +146,9 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                             <div class="tab-content">
                                 <div class="active tab-pane" id="ads">
                                     <?php 
-                                        // retrieve all ads approved or not 
-                                        $items = getItems('member_id' , $row['user_id']);
+                                        // retrieve all ads of sign in user
+                                        $items = getAllRows("*" , "items" , "WHERE member_id = $userId");
+                                        // $items = getItems('member_id' , $row['user_id']);
                                         if (! empty($items)) {  
                                             echo '<div class="row">';
                                             foreach ($items as $item) { ?>
@@ -159,9 +166,9 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                                     </a>
                                                     <div class="card-body">
                                                         <a href="product.php?id=<?php echo $item['item_id'] ?>" >
-                                                            <h5 class="card-title"><?php echo subProdTitle($item['name']); ?> </h5>
+                                                            <h5 class="product-title"><?php echo $item['name']; ?> </h5>
                                                         </a>
-                                                        <p class="card-text"><?php echo subDescription($item['description']); ?> </p>
+                                                        <p class="product-description"><?php echo $item['description']; ?> </p>
                                                     </div>
                                                 </div>
                                             </div>

@@ -7,7 +7,8 @@ $pageTitle = "Categories | $catName";
 // initialize php file
 include 'init.php'; 
 
-$items = getItems('cat_id' , $catId, 1);
+// get all approved items in specific category 
+$items = getAllRows("*", "items" , "WHERE cat_id = $catId" , "AND approval=1");
 // Numbers of approved items in specific category
 $catItems = countItems('item_id', 'items', "WHERE cat_id=$catId AND approval = 1" );
 
@@ -51,10 +52,9 @@ $catItems = countItems('item_id', 'items', "WHERE cat_id=$catId AND approval = 1
                                         </a>
                                         <div class="card-body">
                                             <a href="product.php?id=<?php echo $item['item_id'] ?>">
-                                                <h5 class="card-title"><?php echo subProdTitle( $item['name']); ?> </h5>
+                                                <h5 class="product-title"><?php echo $item['name'];?> </h5>
                                             </a>
-                                            <p class="card-text"><?php echo subDescription($item['description']); ?> </p>
-                                            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                                            <p class="product-description"><?php echo $item['description']; ?> </p>
                                         </div>
                                     </div>
                                 </div>

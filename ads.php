@@ -245,7 +245,7 @@ if (isset($_SESSION['username'])) {
                                                         if(in_array('cat-empty' , $formErrors)){echo 'is-invalid'; }?>" required>
                                                     <option value="" selected>Choose...</option>
                                                     <?php
-                                                        $cats = getRows('cat_id , name' , 'categories');
+                                                        $cats = getAllRows('cat_id , name' , 'categories');
                                                         foreach ($cats as $cat) {
                                                             echo "<option value='". $cat['cat_id']."' >" .$cat['name'] . "</option>";
                                                         }

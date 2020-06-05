@@ -149,7 +149,7 @@ if (isset($_SESSION['admin'])) {
                 <select id="member" name="member" class="form-control" required>
                     <option value="0" selected>Choose...</option>
                     <?php
-                        $users = getRows('user_id , username' , 'users');
+                        $users = getAllRows('user_id , username' , 'users');
                         foreach ($users as $user) {
                             echo "<option value='". $user['user_id']."' >" .$user['username'] . "</option>";
                         }
@@ -161,7 +161,7 @@ if (isset($_SESSION['admin'])) {
                 <select id="category" name="category" class="form-control" required>
                     <option value="0" selected>Choose...</option>
                     <?php
-                        $cats = getRows('cat_id , name' , 'categories');
+                        $cats = getAllRows('cat_id , name' , 'categories');
                         foreach ($cats as $cat) {
                             echo "<option value='". $cat['cat_id']."' >" .$cat['name'] . "</option>";
                         }
@@ -345,7 +345,7 @@ if (isset($_SESSION['admin'])) {
                 <select id="member" name="member" class="form-control" required>
                     <option value="0" selected>Choose...</option>
                     <?php
-                        $users = getRows('user_id , username' , 'users');
+                        $users = getAllRows('user_id , username' , 'users');
                         foreach ($users as $user) {
                             echo "<option value='". $user['user_id']."'";
                                 if($row['member_id'] == $user['user_id']) {echo 'selected';}  //to type selected dynamic
@@ -359,7 +359,7 @@ if (isset($_SESSION['admin'])) {
                 <select id="category" name="category" class="form-control" required>
                     <option value="0">Choose...</option>
                     <?php
-                        $cats = getRows('cat_id , name' , 'categories');
+                        $cats = getAllRows('cat_id , name' , 'categories');
                         foreach ($cats as $cat) {
                             echo "<option value='". $cat['cat_id']."'";
                                 if($row['cat_id'] == $cat['cat_id']) {echo 'selected';} //to type selected dynamic

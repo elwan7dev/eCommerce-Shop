@@ -49,8 +49,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
-                <?php 
-                    foreach (getCats() as $cat) {
+                <?php
+                    // get ultimate get func
+                    $cats = getAllRows('name , cat_id','categories', NULL , NULL , 'created_at' , 'ASC');
+                    foreach ($cats as $cat) {
                         $pageName = str_replace(' ', '-' , $cat['name']);
                         echo "<li class='nav-item'>
                                     <a class='nav-link' href='categories.php?page=".$cat['cat_id']."&pagename=".$pageName ."'> ". $cat['name'] ."</a>

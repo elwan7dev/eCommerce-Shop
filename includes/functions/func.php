@@ -12,33 +12,27 @@ function getTitle()
 }
 
 /**
- * get categories records function v1.0
- * @return rows
+ * getAllRows() function v2.0 - 
+ * get ultimate function without INNER JOIN
+ * @param selectCols  $select = col to selected
+ * @param tableName  $tblName = table [EX: users , items , categories]
+ * @param where [optional default value = null] 
+ * @param and [and condition in query - optional default value = null] 
+ * @param orderFeild  
+ * @param ordering
+ *  
+ * @return allTableRows 
  */
-function getCats()
+function getAllRows($select, $tblName, $where = NULL , $and = NULL , $orderFeild = 'created_at' , $ordering = 'DESC')
 {
     global $conn;
-    $getCat = $conn->prepare("SELECT * FROM categories ORDER BY created_at");
-    $getCat->execute();
-    $cats = $getCat->fetchAll();
-    return $cats;
+    $rowStmt = $conn->prepare("SELECT $select FROM $tblName
+                               $where $and ORDER BY $orderFeild $ordering");
+    $rowStmt->execute();
+    $rows = $rowStmt->fetchAll();
+    return $rows;
 }
 
-/**
- * get items records function v4.0
- * @return rows
- */
-function getItems($where , $value, $approval = NULL)
-{
-    $condition = ($approval == NULL) ? '' : 'AND approval = 1';
-
-    global $conn;
-    $getItems = $conn->prepare("SELECT * FROM items 
-                                WHERE $where = ? $condition ORDER BY created_at DESC");
-    $getItems->execute(array($value));
-    $items = $getItems->fetchAll();
-    return $items;
-}
 /**
  * get comments records function v4.0
  * v3.0 update:-
@@ -297,6 +291,11 @@ function subDescription($string)
 
 
 
+ 
+
+
+
+
 
 
 
@@ -331,20 +330,6 @@ function getLatest($select, $tblName , $order , $limit = 5)
 }
 
 
-/**
- * get all rows fucntion v1.0
- * get all rows of selected colname without any condition 
- * $select = col to selected 
- * $tblName = table [EX: users , items , categories]
- */
-function getRows($select, $tblName)
-{
-    global $conn;
-    $rowStmt = $conn->prepare("SELECT $select FROM $tblName");
-    $rowStmt->execute();
-    $rows = $rowStmt->fetchAll();
-    return $rows;
-}
 
 /**
  * getRandomColor function v1.0
