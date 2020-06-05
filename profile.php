@@ -7,7 +7,6 @@ include 'init.php';
 
 if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
     $profileName = isset($_SESSION['username']) ?  $_SESSION['username'] : $_SESSION['admin']; 
-    print_r($_SESSION);
 
     // fetch user record from DB
     $userStmt = $conn->prepare("SELECT * FROM users WHERE username =? ");

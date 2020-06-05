@@ -3,7 +3,9 @@
         <div class="container">
             <?php 
                 if (isset($_SESSION['username']) || isset($_SESSION['admin'])) { 
-                    $profileName = isset($_SESSION['username']) ?  $_SESSION['username'] : $_SESSION['admin'] 
+                    $profileName = isset($_SESSION['username']) ?  $_SESSION['username'] : $_SESSION['admin']; 
+                    print_r($_SESSION);
+
                     ?>
             <ul class="navbar-nav ml-auto">
                         <li class="nav-item" title="Profile">
