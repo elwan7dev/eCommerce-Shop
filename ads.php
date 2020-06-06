@@ -5,7 +5,7 @@ $pageTitle = 'Ads';
 // initialize php file
 include 'init.php';
 
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
 
     // check if the user coming from post request
     if ($_SERVER['REQUEST_METHOD'] == "POST") {

@@ -10,7 +10,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
 
     // fetch user record from DB
     $userStmt = $conn->prepare("SELECT * FROM users WHERE username =? ");
-    $userStmt->execute(array($_SESSION['username']));
+    $userStmt->execute(array($profileName));
     $row =$userStmt->fetch();
 
     $userId = $row['user_id'];
