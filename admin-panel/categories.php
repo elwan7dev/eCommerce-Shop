@@ -28,10 +28,7 @@ if (isset($_SESSION['admin'])) {
         $colName = (isset($_GET['orderby']) && in_array($_GET['orderby'], $orderArr)) ? $_GET['orderby'] : 'created_at';
         
         // retreive all categories from DB  order by $colName 
-        $stmt = $conn->prepare("SELECT * FROM categories ORDER BY $colName $sort");
-        $stmt->execute();
-        // fetch all data and asign in array
-        $cats = $stmt->fetchAll();   ?>
+        $cats = getRows("*" , "categories" , NULL , NULL , $colName , $sort);  ?>
 
 <!-- start html componants -->
 <h1 class="text-center">Manage Categories</h1>
@@ -111,19 +108,34 @@ if (isset($_SESSION['admin'])) {
     <form action="?action=insert" method="POST">
         <!-- start Name & Order in same row field -->
         <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label for="name">Name</label>
                 <input type="text" name="name" class="form-control" required="required" placeholder="Category Name">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
+                <label for="parent">Parent</label>
+                <select id="parent" name="parent" class="form-control " required>
+                    <option value="0" selected>None</option>
+                    <?php
+                        $cats = getRows("cat_id , name", "categories" , 
+                                "WHERE parent_id = 0" , NULL, "created_at","DESC");
+                        foreach ($cats as $cat) {
+                            echo "<option value='". $cat['cat_id']."' >" .$cat['name'] . "</option>";
+                        }
+                    ?>
+                </select>
+              
+            </div>
+            <div class="form-group col-md-4">
                 <label for="order">Order</label>
-                <input type="text" name="order" class="form-control" placeholder="Arrange Categories by ordering">
+                <input type="number" name="order" class="form-control" placeholder="Arrange Categories by ordering">
             </div>
         </div>
         <!-- start description field -->
         <div class="form-group">
             <label for="desc">Description</label>
-            <input type="test" name="desc" class="form-control" placeholder="Category Description">
+            <textarea type="test" name="desc" class="form-control"
+             placeholder="Category Description"></textarea>
         </div>
         <!-- start radio fields button -->
         <div class="form-row">
@@ -181,13 +193,15 @@ if (isset($_SESSION['admin'])) {
 
             // get the vars from the form
             $name = $_POST['name'];
+            $parentId = $_POST['parent'];
             $order = intval($_POST['order']);  
             //finaly solved an hard fatal error
             /** solved using intval()
              * Fatal error: Uncaught PDOException: SQLSTATE[HY000]: 
              * General error: 1366 Incorrect integer value: '' for column 'ordering' 
              * 
-             * bacause i'mtrying to insert an empty string into a column that is expecting an integer
+             * bacause i'mtrying to insert an empty string into a column that
+             *  is expecting an integer
              */
             $desc = $_POST['desc'];
             $visible = $_POST['visible'];
@@ -208,12 +222,13 @@ if (isset($_SESSION['admin'])) {
                     // Insert user data into the DB
                     // registeration_status = 1 by default bacause the admin adding this users - so, approved
                     $stmt = $conn->prepare("INSERT INTO categories
-                                        (name, description, ordering, visibility ,allow_comments , allow_ads, created_at)
-                                        VALUES (:xname, :xdesc, :xorder, :xvisible , :xcomm , :xads , now())");
+                            (name, parent_id, ordering, description, visibility ,allow_comments , allow_ads, created_at)
+                            VALUES (:xname, :xparent, :xorder, :xdesc, :xvisible , :xcomm , :xads , now())");
                     $stmt->execute(array(
                         'xname' => $name,
-                        'xdesc' => $desc,
+                        'xparent' => $parentId,
                         'xorder' => $order,
+                        'xdesc' => $desc,
                         'xvisible' => $visible,
                         'xcomm' => $comments,
                         'xads' => $ads
@@ -270,14 +285,36 @@ if (isset($_SESSION['admin'])) {
 
         <!-- start Name & Order in same row field -->
         <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label for="name">Name</label>
                 <input type="text" name="name" class="form-control" required="required"
                     value="<?php echo $row['name']; ?>">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
+                <label for="parent">Parent</label>
+                <select id="parent" name="parent" class="form-control" required>
+                    <option value="0" <?php if($row['parent_id'] == 0) echo "selected"; ?>>None</option>
+                    <?php
+                        $cats = getRows("cat_id , name", "categories" , "WHERE parent_id = 0" , NULL, "created_at","DESC");
+                        foreach ($cats as $cat) { ?>
+                            <!-- echo "<option value=". $cat['cat_id'].">" .$cat['name'] . "</option>"; -->
+                            <option 
+                                value="<?php echo $cat['cat_id']?>" 
+                                <?php if($row['parent_id'] == $cat['cat_id']) echo "selected"; ?>>
+
+                            <?php echo $cat['name']; ?>
+                            </option>
+
+
+                            <?php
+                        }
+                    ?>
+                </select>
+              
+            </div>
+            <div class="form-group col-md-4">
                 <label for="Order">Order</label>
-                <input type="text" name="order" class="form-control" value="<?php echo $row['ordering']; ?>">
+                <input type="number" name="order" class="form-control" value="<?php echo $row['ordering']; ?>">
             </div>
         </div>
         <!-- start description field -->
@@ -341,7 +378,7 @@ if (isset($_SESSION['admin'])) {
             echo "</div>";
         } /*****************End cat-edit page */
 
-    }elseif ($action == 'update') { /***************Start cat-update page */
+    }elseif ($action == 'update') { /***************Start cats-update page */
         echo "<h1 class='text-center'>Update Category</h1>";
         echo "<div class='container' style='width: 70%;'>";
 
@@ -351,6 +388,7 @@ if (isset($_SESSION['admin'])) {
             // get the vars from the form
             $catID = $_POST['catid'];
             $name = $_POST['name'];
+            $parentId = $_POST['parent'];
             $order = intval($_POST['order']); 
             //finaly solved an hard fatal error
             /** solved using intval()
@@ -387,11 +425,12 @@ if (isset($_SESSION['admin'])) {
             if (empty($formErrors)) {
 
                 // Update the DB record with this info
-                $stmt = $conn->prepare("UPDATE categories SET name = ?, description = ?, ordering = ?, visibility = ?, allow_comments =? , allow_ads =?
-                                            WHERE cat_id =?");
+                $stmt = $conn->prepare("UPDATE categories 
+                        SET name = ?, parent_id = ?,  ordering = ?, description = ?, visibility = ?, allow_comments =? , allow_ads =?
+                        WHERE cat_id =?");
                 //if i used $_SESSION['userid'] instead if $_GET['userid'] = $userId
                 //fatal error update in current user only
-                $stmt->execute(array($name, $desc, $order, $visible, $comments, $ads, $catID ));
+                $stmt->execute(array($name, $parentId, $order, $desc, $visible, $comments, $ads, $catID ));
                 $count = $stmt->rowCount();
 
                 if ($count > 0) {
