@@ -10,6 +10,26 @@ function getTitle()
         echo 'title';
     }
 }
+/**
+ * getRows() fucntion v2.0
+ * get rows of selected colname 
+ * @param select $select = col to selected 
+ * @param tblName $tblName = table [EX: users , items , categories]
+ * @param where conditon 
+ * @param and  AND in query
+ * @param orderFeild 
+ * @param ordering
+ * @param limit
+ * @return rows 
+ */
+function getRows($select, $tblName , $where = NULL , $and = NULL, $orderFeild = 'created_at' , $ordering = 'ASC' , $limit = NULL) 
+{
+    global $conn;
+    $rowStmt = $conn->prepare("SELECT $select FROM $tblName $where $and ORDER BY $orderFeild $ordering $limit");
+    $rowStmt->execute();
+    $rows = $rowStmt->fetchAll();
+    return $rows;
+}
 
 /**
  * Home Redirect function V2.0
@@ -63,7 +83,7 @@ function isExist($colName, $tblName, $value)
 }
 
 /**
- * count number of items function v2.0
+ * count number of items function v3.0
  * count # of items row in specific [table , condition] 
  * @param $item = colname 
  * @param $tblName = table name
@@ -71,61 +91,28 @@ function isExist($colName, $tblName, $value)
  * 
  * @return  fetchColumn Numbers
  */
-function countItems($item, $tblName , $condition ='')
+function countItems($item, $tblName , $where = NULL )
 {
     global $conn;
-    $countStmt = $conn->prepare("SELECT COUNT($item) FROM $tblName $condition");
+    $countStmt = $conn->prepare("SELECT COUNT($item) FROM $tblName $where");
     $countStmt ->execute();
     // numbers of col retreived
     return $countStmt ->fetchColumn();
 
 }
-/**
- * get latest record function v1.0
- * $select = col to selected 
- * $tblName = table [EX: users , items , categories]
- * $order = col to order by it
- * $limit = number of records to get  [optional]
- * 
- * @return rows
- */
-function getLatest($select, $tblName , $order , $limit = 5)
-{
-    global $conn;
-    $latestStmt = $conn->prepare("SELECT $select FROM $tblName ORDER BY $order DESC LIMIT $limit");
-    $latestStmt->execute();
-    $rows = $latestStmt->fetchAll();
-    return $rows;
-}
-
 
 /**
- * get all rows fucntion v1.0
- * get all rows of selected colname without any condition 
- * $select = col to selected 
- * $tblName = table [EX: users , items , categories]
- */
-function getRows($select, $tblName)
-{
-    global $conn;
-    $rowStmt = $conn->prepare("SELECT $select FROM $tblName");
-    $rowStmt->execute();
-    $rows = $rowStmt->fetchAll();
-    return $rows;
-}
-
-/**
- * getRandomColor function v1.0
+ * getRandomColor function v2.0
  * return random bootstrap calss based on param value
  */
 function getRandomColor($value)
 {
     // Extrect integer from string
-    preg_match_all('!\d+!', $value, $matches);
+    /* preg_match_all('!\d+!', $value, $matches);
     foreach ($matches as $m) {
         $value = $m[0];
-    }
-    $value = intval($value);
+    } */
+    // $value = intval($value);
     if ($value >= 1 && $value < 100) {
         return 'primary';
     }elseif ($value >= 100 && $value < 500) {
