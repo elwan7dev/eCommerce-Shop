@@ -17,13 +17,10 @@ if (isset($_SESSION['admin'])) {
         case 'manage': // ************* Start Member Manage page [Members page] ***************
             // (Smart way) to create member-pending page that depent on condition (reg_status = 0)
             // if there is GET req  'page' = pending =>>> add this condition to query
-            $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "WHERE reg_status = 0" : '';
+            $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "WHERE reg_status = 0" : NULL;
             // retreive all users from DB except admins
-            $stmt = $conn->prepare("SELECT * FROM users $condition");
-            $stmt->execute();
-            // fetch all data and asign in array
-            $rows = $stmt->fetchAll();
-                # code...
+            $rows = getRows("*" , "users" , $condition);
+            
             ?>
 
 <!-- start html componants -->

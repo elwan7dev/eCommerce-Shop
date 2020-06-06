@@ -8,8 +8,8 @@ if (isset($_SESSION['admin'])) {
     // Page Code here
 
     // get the latest registered members and assign in array 
-    $latestMembers = getLatest('*' , 'users', 'created_at');
-    $latestItems = getLatest('*' , 'items', 'created_at');
+    $latestMembers = getRows("*" , "users" , NULL , NULL , "created_at" , "DESC" , "LIMIT 5");
+    $latestItems = getRows("*" , "items" , NULL , NULL , "created_at" , "DESC" , "LIMIT 5");
    
     ?>
 <!-- HTML Components -->
@@ -126,7 +126,7 @@ if (isset($_SESSION['admin'])) {
                         </div>
                         <!-- /.card-body -->
                                     <?php } else{
-                                        echo "<div class='alert alert-warning'> No Data Found</div>";
+                                        echo "<div class='alert alert-warning m-2'><b>No Data Found</b></div>";
                                     }  ?>
                         <div class="card-footer clearfix">
                             <a href="members.php?action=add" class="btn btn-sm btn-info float-left">Add New Member</a>
@@ -138,7 +138,7 @@ if (isset($_SESSION['admin'])) {
                 </div>
                 <div class="col-sm-6">
                     <!--  LATEST ITEMS -->
-                    <div class="card" id="my-card">
+                    <div class="card" id="items-card">
                         <div class="card-header border-transparent">
                             <i class="fas fa-tag"></i> Recently Added Products
 
@@ -177,7 +177,7 @@ if (isset($_SESSION['admin'])) {
                         </div>
                         <!-- /.card-body -->
                                 <?php } else{
-                                    echo "<div class='alert alert-warning'> No Data Found</div>";
+                                    echo "<div class='alert alert-warning m-2'><b>No Data Found</b></div>";
                                 } ?>
                         <div class="card-footer text-center">
                             <a href="items.php" class="uppercase">View All Products</a>

@@ -116,7 +116,8 @@ table .admin .fa-award  {
   border-top:none;
 }
 
-#users-card .card-header{
+#users-card .card-header
+, #items-card .card-header{
   border-bottom: none;
 }
 .latest .products-list .product-img {

@@ -60,7 +60,7 @@ if (isset($_SESSION['admin'])) {
                     echo "<th scope='row'>" . $row['item_id'] . " </th>";
                     echo "<td>" . $row['name'] . " </td>";
                     echo "<td>" . $row['description'] . " </td>";
-                    echo "<td>" . $row['price'] . " </td>";
+                    echo "<td>" .'$'. $row['price'] . " </td>";
                     echo "<td>" . $row['cat_name'] . " </td>";
                     echo "<td>" . $row['username'] . " </td>";
                     echo "<td>" . $row['created_at'] . " </td>";
@@ -104,7 +104,7 @@ if (isset($_SESSION['admin'])) {
             </div>
             <div class="form-group col-md-6">
                 <label for="price">Price</label>
-                <input type="tetx" name="price" class="form-control" required="required" placeholder="Item's Price">
+                <input type="number" name="price" class="form-control" required="required" placeholder="Item's Price">
             </div>
 
         </div>
