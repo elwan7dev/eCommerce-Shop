@@ -53,7 +53,7 @@
             <ul class="navbar-nav ml-auto">
                 <?php
                     // get ultimate get func
-                    $cats = getAllRows('name , cat_id','categories', NULL , NULL , 'created_at' , 'ASC');
+                    $cats = getAllRows('name , cat_id','categories', 'WHERE parent_id = 0' , NULL , 'created_at' , 'ASC');
                     foreach ($cats as $cat) {
                         $pageName = str_replace(' ', '-' , $cat['name']);
                         echo "<li class='nav-item'>
