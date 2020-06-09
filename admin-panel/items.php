@@ -149,7 +149,7 @@ if (isset($_SESSION['admin'])) {
                 <select id="member" name="member" class="form-control" required>
                     <option value="0" selected>Choose...</option>
                     <?php
-                        $users = getAllRows('user_id , username' , 'users');
+                        $users = getRows("user_id , username", "users");
                         foreach ($users as $user) {
                             echo "<option value='". $user['user_id']."' >" .$user['username'] . "</option>";
                         }
@@ -161,9 +161,16 @@ if (isset($_SESSION['admin'])) {
                 <select id="category" name="category" class="form-control" required>
                     <option value="0" selected>Choose...</option>
                     <?php
-                        $cats = getAllRows('cat_id , name' , 'categories');
+                        $cats = getRows('cat_id , name' , 'categories', "WHERE parent_id = 0");
                         foreach ($cats as $cat) {
                             echo "<option value='". $cat['cat_id']."' >" .$cat['name'] . "</option>";
+                            // get child cats that have parent_id of current category
+                            $childs = getRows("*", "categories", "WHERE parent_id = {$cat['cat_id']}");
+                            if (!empty($childs)) {
+                                foreach ($childs as $child) {
+                                    echo "<option value='". $child['cat_id']."' >-- " .$child['name'] . "</option>";
+                                }
+                            }
                         }
                     ?>
                 </select>
@@ -298,7 +305,7 @@ if (isset($_SESSION['admin'])) {
             </div>
             <div class="form-group col-md-6">
                 <label for="price">Price</label>
-                <input type="tetx" name="price" class="form-control" required="required"
+                <input type="number" name="price" class="form-control" required="required"
                     value="<?php echo $row['price']; ?>">
             </div>
 
@@ -345,7 +352,7 @@ if (isset($_SESSION['admin'])) {
                 <select id="member" name="member" class="form-control" required>
                     <option value="0" selected>Choose...</option>
                     <?php
-                        $users = getAllRows('user_id , username' , 'users');
+                        $users = getRows('user_id , username' , 'users');
                         foreach ($users as $user) {
                             echo "<option value='". $user['user_id']."'";
                                 if($row['member_id'] == $user['user_id']) {echo 'selected';}  //to type selected dynamic
@@ -359,11 +366,20 @@ if (isset($_SESSION['admin'])) {
                 <select id="category" name="category" class="form-control" required>
                     <option value="0">Choose...</option>
                     <?php
-                        $cats = getAllRows('cat_id , name' , 'categories');
+                        $cats = getRows('cat_id , name' , 'categories', 'WHERE parent_id = 0');
                         foreach ($cats as $cat) {
-                            echo "<option value='". $cat['cat_id']."'";
+                            echo "<option value='{$cat['cat_id']}'";
                                 if($row['cat_id'] == $cat['cat_id']) {echo 'selected';} //to type selected dynamic
                             echo " >" .$cat['name'] . "</option> ";
+                            // get child cats that have parent_id of current category
+                            $childs = getRows("*", "categories", "WHERE parent_id = {$cat['cat_id']}");
+                            if (!empty($childs)) {
+                                foreach ($childs as $child) {
+                                    echo "<option value='{$child['cat_id']}'";
+                                        if($row['cat_id'] == $child['cat_id']) {echo 'selected';} //to type selected dynamic
+                                    echo ">--  " .$child['name'] . "</option>";
+                                }
+                            }
                         }
                     ?>
                 </select>
