@@ -11,7 +11,7 @@ function getTitle()
     }
 }
 /**
- * getRows() fucntion v2.0
+ * getRows() fucntion v2.2
  * get rows of selected colname 
  * @param select $select = col to selected 
  * @param tblName $tblName = table [EX: users , items , categories]
@@ -22,7 +22,7 @@ function getTitle()
  * @param limit
  * @return rows 
  */
-function getRows($select, $tblName , $where = NULL , $and = NULL, $orderFeild = 'created_at' , $ordering = 'ASC' , $limit = NULL) 
+function getRows($select, $tblName , $where = NULL , $and = NULL, $orderFeild = 'created_at' , $ordering = 'DESC' , $limit = NULL) 
 {
     global $conn;
     $rowStmt = $conn->prepare("SELECT $select FROM $tblName $where $and ORDER BY $orderFeild $ordering $limit");

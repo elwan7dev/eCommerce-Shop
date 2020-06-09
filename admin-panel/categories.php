@@ -137,8 +137,7 @@ if (isset($_SESSION['admin'])) {
                 <select id="parent" name="parent" class="form-control " required>
                     <option value="0" selected>None</option>
                     <?php
-                        $cats = getRows("cat_id , name", "categories" , 
-                                "WHERE parent_id = 0" , NULL, "created_at","DESC");
+                        $cats = getRows("cat_id , name", "categories" , "WHERE parent_id = 0");
                         foreach ($cats as $cat) {
                             echo "<option value='". $cat['cat_id']."' >" .$cat['name'] . "</option>";
                         }
@@ -316,7 +315,7 @@ if (isset($_SESSION['admin'])) {
                     <option value="0" <?php if($row['parent_id'] == 0) echo "selected"; ?>>None</option>
                     <?php
                         // get parents only
-                        $cats = getRows("cat_id , name", "categories" , "WHERE parent_id = 0" , NULL, "created_at","DESC");
+                        $cats = getRows("cat_id , name", "categories" , "WHERE parent_id = 0");
                         foreach ($cats as $cat) { ?>
                             <!-- if current cat_id = parent_id of edit cat => then is his parent -->
                             <option 
