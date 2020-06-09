@@ -77,5 +77,16 @@ $(function () {
     
   });
 
+  // sub-categories in Categories page  
+  $('.child-link').hover(function () {
+      // over
+      // $('.show-delete').fadeIn();
+      $(this).find('.show-delete').fadeIn(100);
+    }, function () {
+      // out
+      $(this).find('.show-delete').fadeOut(100);
+    }
+  );
+
 
 });
