@@ -4,7 +4,7 @@ session_start();
 $noNavBar= '';
 $pageTitle = 'Register';
 
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
     header('location: index.php'); // redirect to  dashboard page
 }
 

@@ -211,7 +211,7 @@ if ($stmtItem->rowCount() > 0) {
                             <!-- comment row -->
                             <div class="row mb-4" id="comment">
                                 <div class="col w-100 ">
-                                    <?php if (isset($_SESSION['username'])) { 
+                                    <?php if (isset($_SESSION['username']) || isset($_SESSION['admin']) ) { 
                     
                                     
                                     if ($_SERVER['REQUEST_METHOD'] == "POST") {
