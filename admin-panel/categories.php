@@ -20,15 +20,15 @@ if (isset($_SESSION['admin'])) {
         // <!-- Dynamic order options  -->
         // $sort = 'ASC'; //INIT VALUE 
         $sortArr = array('ASC' , 'DESC');
-        // CHECK IF SORT REQ IN ARRAY OPT 
+        // CHECK IF SORT REQ IN ARRAY OPT  - default DESC
         $sort = (isset($_GET['sort']) && in_array($_GET['sort'], $sortArr)) ? $_GET['sort'] : 'DESC';
         
-        // more dynamic order var
+        // more dynamic order var - default created_at
         $orderArr = array('ordering' , 'created_at');
         $colName = (isset($_GET['orderby']) && in_array($_GET['orderby'], $orderArr)) ? $_GET['orderby'] : 'created_at';
         
-        // retreive all categories from DB  order by $colName 
-        $cats = getRows("*" , "categories" , NULL , NULL , $colName , $sort);  ?>
+        // retreive only parent categories from DB  order by $colName 
+        $cats = getRows("*" , "categories" , "WHERE parent_id = 0" , NULL , $colName , $sort);  ?>
 
 <!-- start html componants -->
 <h1 class="text-center">Manage Categories</h1>
@@ -58,6 +58,7 @@ if (isset($_SESSION['admin'])) {
 
             </div>
         </div>
+        <!-- /.card-header -->
         <div class="card-body p-0">
             <?php
                 foreach ($cats as $cat) {
@@ -68,17 +69,36 @@ if (isset($_SESSION['admin'])) {
                         echo "</div>";
                         echo "<h3>" . $cat['name'] . "</h3>";
                         echo "<div class='full-view'>";
-                            echo "<div class='tags'>";
-                                if($cat['visibility'] == 0){ echo "<span class='badge badge-pill badge-danger' title='Not Visible'><i class='far fa-eye-slash'></i> Hidden</span>";}
-                                if($cat['allow_comments'] == 0){ echo "<span class='badge badge-pill badge-primary' title='Comments Disabled'><i class='fas fa-comment-slash'></i> Comments Disabled</span>";}
-                                if($cat['allow_ads'] == 0){ echo "<span class='badge badge-pill badge-warning' title='Ads Disabled'><i class='fas fa-ad'></i> Ads Disabled</span>";}
-                            echo "</div>";
+                            if($cat['visibility'] == 0 || $cat['allow_comments'] == 0 || $cat['allow_ads'] == 0)
+                            {
+                                echo "<div class='tags'>";
+                                    if($cat['visibility'] == 0){ echo "<span class='badge badge-pill badge-danger' title='Not Visible'><i class='far fa-eye-slash'></i></span>";}
+                                    if($cat['allow_comments'] == 0){ echo "<span class='badge badge-pill badge-primary' title='Comments Disabled'><i class='fas fa-comment-slash'></i></span>";}
+                                    if($cat['allow_ads'] == 0){ echo "<span class='badge badge-pill badge-warning' title='Ads Disabled'><i class='fas fa-ad'></i></span>";}
+                                echo "</div>";
+                            }
                             if($cat['description'] != ''){ echo "<p>". $cat['description'] ."</p>"; }
-                            echo "<h5> Order# " . $cat['ordering'] . "</h5>";
-                            echo "<h6> cat_id# " . $cat['cat_id'] . "</h6>";
                         echo "</div>";
-                    echo "</div>"; 
-                    echo "<hr>";    
+                        // /.full-view dev
+
+                        // get child cats that have parent_id of current category
+                        $childs = getRows("*", "categories", "WHERE parent_id = {$cat['cat_id']}", NULL, $colName, $sort);
+                        if (!empty($childs)) {
+                            echo '<div class="cat-childs">';
+                                echo "<span>Sub-Categories</span>";
+                                echo "<ul class='list-unstyled'>";
+                                    foreach ($childs as $child) {
+                                        echo "<li class='child-link'>
+                                                <a href='categories.php?action=edit&catid=" . $child['cat_id'] . "'>{$child['name']}</a>
+                                                <a href='categories.php?action=delete&catid=" . $child['cat_id'] . "' class='show-delete confirm' title='Delete Sub-Cat'>Delete</a>
+                                            </li>";
+                                    }
+                                echo "</ul>";
+                            echo '</div>';
+                        }
+                    echo "</div>";
+                    // /.cat div
+                    echo "<hr>";
                 }
             ?>
         </div>
@@ -295,14 +315,13 @@ if (isset($_SESSION['admin'])) {
                 <select id="parent" name="parent" class="form-control" required>
                     <option value="0" <?php if($row['parent_id'] == 0) echo "selected"; ?>>None</option>
                     <?php
+                        // get parents only
                         $cats = getRows("cat_id , name", "categories" , "WHERE parent_id = 0" , NULL, "created_at","DESC");
                         foreach ($cats as $cat) { ?>
-                            <!-- echo "<option value=". $cat['cat_id'].">" .$cat['name'] . "</option>"; -->
+                            <!-- if current cat_id = parent_id of edit cat => then is his parent -->
                             <option 
-                                value="<?php echo $cat['cat_id']?>" 
-                                <?php if($row['parent_id'] == $cat['cat_id']) echo "selected"; ?>>
-
-                            <?php echo $cat['name']; ?>
+                                value="<?php echo $cat['cat_id']?>"
+                                <?php if($row['parent_id'] == $cat['cat_id']) echo "selected"; ?>> <?php echo $cat['name']; ?>
                             </option>
 
 
@@ -320,7 +339,7 @@ if (isset($_SESSION['admin'])) {
         <!-- start description field -->
         <div class="form-group">
             <label for="desc">Description</label>
-            <input type="test" name="desc" class="form-control" value="<?php echo $row['description']; ?>">
+            <textarea  name="desc" class="form-control" required><?php echo $row['description']; ?></textarea>
         </div>
         <!-- start radio fields button -->
         <div class="form-row">

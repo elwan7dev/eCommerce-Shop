@@ -208,9 +208,9 @@ h1 {
   margin-bottom: 0px;
 }
 .categories .cat .tags {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
-.categories .cat span {
+.categories .cat .tags span {
   margin-right: 5px;
   display: inline;
 }
@@ -238,4 +238,26 @@ h1 {
   margin-left: 5px;
 }
 
+.cat .cat-childs{
+  margin-top: 10px;
+
+}
+.cat .cat-childs span {
+  font-weight: 600;
+  color: #626263;
+}
+.cat .cat-childs ul {
+  margin-bottom: 0;
+  margin-left: 10px;
+}
+.cat .cat-childs li:before{
+  content: "- ";
+  color: #007bff;
+}
+.cat .cat-childs .show-delete {
+  color: #dc3545;
+  display: none;
+  margin-left: 5px;
+
+}
 /* End Categories page */
