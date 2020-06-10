@@ -17,6 +17,8 @@
     <!-- font awesome -->
     <link rel="stylesheet" href="<?php echo $css ?>all.min.css">
     <link rel="stylesheet" href="<?php echo $css ?>fontawesome.min.css">
+    <!-- tag-it for tags -->
+    <link rel="stylesheet" href="<?php echo $css ?>jquery.tagit.css">
     <!-- custom styles -->
     <link rel="stylesheet" href="<?php echo $css ?>main.css">
 

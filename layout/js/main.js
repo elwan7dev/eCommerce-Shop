@@ -79,5 +79,13 @@ $(function () {
     
   });
 
+  $("#myTags").tagit({
+    // Options
+    fieldName: "tags[]",
+    // availableTags: ["c++", "java", "php", "javascript", "ruby", "python", "c"],
+    autocomplete: {delay: 0, minLength: 2},
+  
+   });
+
 
 });
