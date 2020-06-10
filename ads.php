@@ -6,6 +6,7 @@ $pageTitle = 'Ads';
 include 'init.php';
 
 if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
+    $userId = isset($_SESSION['username']) ?  $_SESSION['userid'] : $_SESSION['adminid']; 
 
     // check if the user coming from post request
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -16,6 +17,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
        $country = filter_var($_POST['country'] , FILTER_SANITIZE_STRING);
        $status = filter_var($_POST['status'] , FILTER_SANITIZE_STRING);
        $categoryID = filter_var($_POST['category'] , FILTER_SANITIZE_STRING);
+       $tags = filter_var($_POST['tags'] , FILTER_SANITIZE_STRING);
         
        // validate Form in server side
        // declare empty errors array
@@ -46,8 +48,8 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
             // Insert user data into the DB
             // registeration_status = 1 by default bacause the admin adding this users - so, approved
             $stmtItem = $conn->prepare("INSERT INTO items
-                                (name, price, description, country_made, status , cat_id, member_id, created_at)
-                                VALUES (:xname, :xprice, :xdesc, :xcountry , :xstatus, :xcat, :xmember , now())");
+                                (name, price, description, country_made, status , cat_id, member_id,tags, created_at)
+                                VALUES (:xname, :xprice, :xdesc, :xcountry , :xstatus, :xcat, :xmember ,:xtags, now())");
             $stmtItem->execute(array(
                 'xname' => $name,
                 'xprice' => $price,
@@ -55,7 +57,8 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                 'xcountry' => $country,
                 'xstatus' => $status,
                 'xcat' => $categoryID,
-                'xmember' => $_SESSION['userid'],
+                'xmember' => $userId,
+                'xtags' => $tags,
             ));
 
             $count = $stmtItem->rowCount();
@@ -263,7 +266,10 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                                 ?>
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <label for="myTags">Tags</label>
+                                            <input type="text" name="tags" id="myTags" class="form-control">
+                                        </div>
                                         <!-- start button field -->
                                         <input type="submit" value="Add Item" class="btn btn-primary">
                                     </form>
