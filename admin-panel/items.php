@@ -95,92 +95,99 @@ if (isset($_SESSION['admin'])) {
 <!-- start html componants -->
 <h1 class="text-center">Add New Item</h1>
 <div class="container" style="width: 70%;">
-    <form action="?action=insert" method="POST">
-        <!-- start Name & Price , Image in same row field -->
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="name">Name</label>
-                <input type="text" name="name" class="form-control" required="required" placeholder="Item's Name">
-            </div>
-            <div class="form-group col-md-6">
-                <label for="price">Price</label>
-                <input type="number" name="price" class="form-control" required="required" placeholder="Item's Price">
-            </div>
-
-        </div>
-        <!-- start Description field -->
-        <div class="form-group">
-            <label for="desc">Description</label>
-            <input type="text" name="desc" class="form-control" required="required" placeholder="Item's Description">
-        </div>
-        <!-- start Full Name field -->
-        <div class="form-row">
-            <div class="form-group col-md-8">
-                <label for="country">Country Made</label>
-                <input type="text" name="country" class="form-control" required="required"
-                    placeholder="Country Made In">
-            </div>
-            <div class="form-group col-md-4">
-                <label for="status">Status</label>
-                <select id="status" name="status" class="form-control" required>
-                    <option value="0" selected>Choose...</option>
-                    <option value="1">new</option>
-                    <option value="2">old</option>
-                    <option value="3">like new</option>
-                </select>
-            </div>
-
-        </div>
-        <div class="form-group">
-            <label for="name">Image</label>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+    <div class="form-box">
+        <form action="?action=insert" method="POST">
+            <!-- start Name & Price , Image in same row field -->
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" class="form-control" required="required" placeholder="Item's Name">
                 </div>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="image" aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputGroupFileAddon01">Choose file</label>
+                <div class="form-group col-md-3">
+                    <label for="price">Price</label>
+                    <input type="number" name="price" class="form-control" required="required" placeholder="Item's Price">
                 </div>
+                <div class="form-group col-md-3">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" class="form-control " required>
+                        <option value="0" selected>Choose...</option>
+                        <option value="1">new</option>
+                        <option value="2">old</option>
+                        <option value="3">like new</option>
+                    </select>
+                </div>
+
             </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="member">Member</label>
-                <select id="member" name="member" class="form-control" required>
-                    <option value="0" selected>Choose...</option>
-                    <?php
-                        $users = getRows("user_id , username", "users");
-                        foreach ($users as $user) {
-                            echo "<option value='". $user['user_id']."' >" .$user['username'] . "</option>";
-                        }
-                    ?>
-                </select>
+            <!-- start Description field -->
+            <div class="form-group">
+                <label for="desc">Description</label>
+                <textarea  name="desc" class="form-control" placeholder="Item's Description" required pattern=".{20,}" title="The Description Field must be 20 characters at least.">
+                </textarea>
             </div>
-            <div class="form-group col-md-6">
-                <label for="category">Category</label>
-                <select id="category" name="category" class="form-control" required>
-                    <option value="0" selected>Choose...</option>
-                    <?php
-                        $cats = getRows('cat_id , name' , 'categories', "WHERE parent_id = 0");
-                        foreach ($cats as $cat) {
-                            echo "<option value='". $cat['cat_id']."' >" .$cat['name'] . "</option>";
-                            // get child cats that have parent_id of current category
-                            $childs = getRows("*", "categories", "WHERE parent_id = {$cat['cat_id']}");
-                            if (!empty($childs)) {
-                                foreach ($childs as $child) {
-                                    echo "<option value='". $child['cat_id']."' >-- " .$child['name'] . "</option>";
+            <!-- start Full Name field -->
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="country">Country Made</label>
+                    <input type="text" name="country" class="form-control" required="required"
+                        placeholder="Country Made In">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" class="form-control" required>
+                        <option value="0" selected>Choose...</option>
+                        <?php
+                            $cats = getRows('cat_id , name' , 'categories', "WHERE parent_id = 0");
+                            foreach ($cats as $cat) {
+                                echo "<option value='". $cat['cat_id']."' >" .$cat['name'] . "</option>";
+                                // get child cats that have parent_id of current category
+                                $childs = getRows("*", "categories", "WHERE parent_id = {$cat['cat_id']}");
+                                if (!empty($childs)) {
+                                    foreach ($childs as $child) {
+                                        echo "<option value='". $child['cat_id']."' >-- " .$child['name'] . "</option>";
+                                    }
                                 }
                             }
-                        }
-                    ?>
-                </select>
+                        ?>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="member">Member</label>
+                    <select id="member" name="member" class="form-control" required>
+                        <option value="0" selected>Choose...</option>
+                        <?php
+                            $users = getRows("user_id , username", "users");
+                            foreach ($users as $user) {
+                                echo "<option value='". $user['user_id']."' >" .$user['username'] . "</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
+                
+
             </div>
+            <div class="form-group">
+                <label for="name">Image</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="image" aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="inputGroupFileAddon01">Choose file</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="myTags">Tags</label>
+                <input type="text" name="tags" id="myTags" class="form-control">
+            </div>
+                
 
-        </div>
-
-        <!-- start button field -->
-        <input type="submit" value="Add Item" class="btn btn-primary">
-    </form>
+            <!-- start button field -->
+            <input type="submit" value="Add Item" class="btn btn-primary">
+        </form>
+    </div>
+    
 </div>
 
 <?php
@@ -200,6 +207,7 @@ if (isset($_SESSION['admin'])) {
             $status = $_POST['status'];
             $memberID = $_POST['member'];
             $categoryID = $_POST['category'];
+            $tags = $_POST['tags'];
 
             // validate Form in server side
             // declare empty errors array
@@ -241,8 +249,8 @@ if (isset($_SESSION['admin'])) {
                 // Insert user data into the DB
                 // registeration_status = 1 by default bacause the admin adding this users - so, approved
                 $stmt = $conn->prepare("INSERT INTO items
-                                    (name, price, description, country_made, status , cat_id, member_id, created_at)
-                                    VALUES (:xname, :xprice, :xdesc, :xcountry , :xstatus, :xcat, :xmember , now())");
+                                    (name, price, description, country_made, status , cat_id, member_id, tags, approval ,created_at)
+                                    VALUES (:xname, :xprice, :xdesc, :xcountry , :xstatus, :xcat, :xmember , :xtags, 1, now())");
                 $stmt->execute(array(
                     'xname' => $name,
                     'xprice' => $price,
@@ -251,6 +259,7 @@ if (isset($_SESSION['admin'])) {
                     'xstatus' => $status,
                     'xcat' => $categoryID,
                     'xmember' => $memberID,
+                    'xtags' => $tags,
                 ));
 
                 $count = $stmt->rowCount();
@@ -303,27 +312,12 @@ if (isset($_SESSION['admin'])) {
                 <input type="text" name="name" class="form-control" required="required"
                     value="<?php echo $row['name']; ?>">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-3">
                 <label for="price">Price</label>
                 <input type="number" name="price" class="form-control" required="required"
                     value="<?php echo $row['price']; ?>">
             </div>
-
-        </div>
-        <!-- start Description field -->
-        <div class="form-group">
-            <label for="desc">Description</label>
-            <input type="text" name="desc" class="form-control" required="required"
-                value="<?php echo $row['description']; ?>">
-        </div>
-        <!-- start Full Name field -->
-        <div class="form-row">
-            <div class="form-group col-md-8">
-                <label for="country">Country Made</label>
-                <input type="text" name="country" class="form-control" required="required"
-                    value="<?php echo $row['country_made']; ?>">
-            </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="status">Status</label>
                 <select id="status" name="status" class="form-control" required>
                     <option value="0">Choose...</option>
@@ -334,34 +328,20 @@ if (isset($_SESSION['admin'])) {
             </div>
 
         </div>
+        <!-- start Description field -->
         <div class="form-group">
-            <label for="name">Image</label>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                </div>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="image" aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputGroupFileAddon01">Choose file</label>
-                </div>
-            </div>
+            <label for="desc">Description</label>
+            <textarea type="text" name="desc" class="form-control" required
+                ><?php echo $row['description']; ?></textarea>
         </div>
+        <!-- start Full Name field -->
         <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="member">Member</label>
-                <select id="member" name="member" class="form-control" required>
-                    <option value="0" selected>Choose...</option>
-                    <?php
-                        $users = getRows('user_id , username' , 'users');
-                        foreach ($users as $user) {
-                            echo "<option value='". $user['user_id']."'";
-                                if($row['member_id'] == $user['user_id']) {echo 'selected';}  //to type selected dynamic
-                            echo " >" .$user['username'] . "</option> ";
-                        }
-                    ?>
-                </select>
+            <div class="form-group col-md-4">
+                <label for="country">Country Made</label>
+                <input type="text" name="country" class="form-control" required="required"
+                    value="<?php echo $row['country_made']; ?>">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label for="category">Category</label>
                 <select id="category" name="category" class="form-control" required>
                     <option value="0">Choose...</option>
@@ -384,8 +364,38 @@ if (isset($_SESSION['admin'])) {
                     ?>
                 </select>
             </div>
-
+            <div class="form-group col-md-4">
+                <label for="member">Member</label>
+                <select id="member" name="member" class="form-control" required>
+                    <option value="0" selected>Choose...</option>
+                    <?php
+                        $users = getRows('user_id , username' , 'users');
+                        foreach ($users as $user) {
+                            echo "<option value='". $user['user_id']."'";
+                                if($row['member_id'] == $user['user_id']) {echo 'selected';}  //to type selected dynamic
+                            echo " >" .$user['username'] . "</option> ";
+                        }
+                    ?>
+                </select>
+            </div>
         </div>
+        <div class="form-group">
+            <label for="name">Image</label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="image" aria-describedby="inputGroupFileAddon01">
+                    <label class="custom-file-label" for="inputGroupFileAddon01">Choose file</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+                <label for="myTags">Tags</label>
+                <input type="text" name="tags" id="myTags" class="form-control" 
+                    value="<?php echo $row['tags']; ?>" >
+            </div>
 
         <!-- start button field -->
         <input type="submit" value="Save" class="btn btn-primary">
@@ -417,6 +427,7 @@ if (isset($_SESSION['admin'])) {
             $status = $_POST['status'];
             $memberID = $_POST['member'];
             $catID = $_POST['category'];
+            $tags = $_POST['tags'];
             
 
             // validate Form in server side
@@ -460,13 +471,13 @@ if (isset($_SESSION['admin'])) {
                 // Update the DB record with this info
                 $stmt = $conn->prepare("UPDATE items 
                                         SET name =? , price =? , description =? , country_made =? , status =? ,
-                                            member_id =? , cat_id =?
+                                            member_id =? , cat_id =?, tags =?
 
                                         WHERE item_id =?");
                 //if i used $_SESSION['userid'] instead if $_GET['userid'] = $userId
                 //fatal error update in current user only
                 $stmt->execute(array(
-                    $name, $price, $desc , $country, $status , $memberID , $catID , $itemId));
+                    $name, $price, $desc , $country, $status , $memberID , $catID, $tags , $itemId));
                 $count = $stmt->rowCount();
 
                 if ($count > 0) {
