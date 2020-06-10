@@ -79,6 +79,19 @@ if ($stmtItem->rowCount() > 0) {
                                         <div class="product-image-thumb"><img src="layout/images/prod-5.jpg"
                                                 alt="Product Image"></div>
                                     </div>
+                                    <?php if(!empty($item['tags'])) { ?>
+                                        <div class="col-12 tags mt-4">
+                                            <h4>Tags</h4>
+                                            <hr>
+                                                <?php
+                                                    $tags = (explode(',', strtolower($item['tags']) ));
+                                                    foreach ($tags as $tag ) {
+                                                        $tagShow = ucfirst($tag);
+                                                        echo "<a href='tags.php?t={$tag}'> {$tagShow}</a>";
+                                                    }
+                                                ?>
+                                        </div>
+                                    <?php }?>
                                 </div>
                                 <!-- col desc -->
                                 <div class="col-12 col-sm-6">
@@ -211,12 +224,10 @@ if ($stmtItem->rowCount() > 0) {
                             <!-- comment row -->
                             <div class="row mb-4" id="comment">
                                 <div class="col w-100 ">
-                                    <?php if (isset($_SESSION['username']) || isset($_SESSION['admin']) ) { 
-                    
-                                    
+                                    <?php if (isset($_SESSION['username']) || isset($_SESSION['admin']) ) {                                     
                                     if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                         $comment = filter_var($_POST['comment'] , FILTER_SANITIZE_STRING);
-                                        $userId = $_SESSION['userid'];
+                                        $userId = isset($_SESSION['username']) ?  $_SESSION['userid'] : $_SESSION['adminid'];
                                         $itemId = $item['item_id'];
 
                                         // Validate 
