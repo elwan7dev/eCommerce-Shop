@@ -1,16 +1,17 @@
 <?php
 session_start();
-$catId = $_GET['page'];
-$catName = str_replace('-', ' ' ,$_GET['pagename']) ;
-$pageTitle = "Categories | $catName";
+// $catId = $_GET['page'];
+$tagShow = ucwords($_GET['t']);
+$tagName = $_GET['t'];
+$pageTitle = "Tags | $tagName";
 
 // initialize php file
 include 'init.php'; 
 
-// get all approved items in specific category 
-$items = getAllRows("*", "items" , "WHERE cat_id = $catId" , "AND approval=1");
-// Numbers of approved items in specific category
-$catItems = countItems('item_id', 'items', "WHERE cat_id=$catId" , "AND approval = 1" );
+// get all approved items in specific tag 
+$items = getAllRows("*", "items" , "WHERE tags LIKE '%$tagName%'" , "AND approval=1");
+// Numbers of approved items in specific tag
+$tagItems = countItems('item_id', 'items', "WHERE tags LIKE '%$tagName%'" , "AND approval = 1" );
 
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -20,14 +21,14 @@ $catItems = countItems('item_id', 'items', "WHERE cat_id=$catId" , "AND approval
         <div class="container">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1><?php echo $catName; ?></h1> 
-                    <span class="badge badge-primary"><?php echo $catItems ?> Items Found</span>
+                    <h1><?php echo $tagShow; ?></h1> 
+                    <span class="badge badge-primary"><?php echo $tagItems ?> Items Found</span>
                 </div>
                 <!-- breadcrumb -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/eCommerce">Home</a></li>
-                        <li class="breadcrumb-item active"><?php echo $catName  ?></li>
+                        <li class="breadcrumb-item active"><?php echo $tagShow  ?></li>
                     </ol>
                 </div>
             </div>
