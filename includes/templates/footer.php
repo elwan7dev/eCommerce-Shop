@@ -14,6 +14,8 @@
 <script src="<?php echo $js ?>fontawesome.min.js"></script>
 <!-- tag-it for tags -->
 <script src="<?php echo $js ?>tag-it.min.js"></script>
+<!-- bs-custom-File-input -->
+<script src="<?php echo $js ?>bs-custom-file-input.min.js"></script>
 <!-- custom js file -->
 <script src="<?php echo $js ?>main.js"></script>
 </body>

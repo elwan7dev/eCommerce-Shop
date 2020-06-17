@@ -18,7 +18,20 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
        $status = filter_var($_POST['status'] , FILTER_SANITIZE_STRING);
        $categoryID = filter_var($_POST['category'] , FILTER_SANITIZE_STRING);
        $tags = filter_var($_POST['tags'] , FILTER_SANITIZE_STRING);
+
+        /* upload post image  */
+
+        // print_r($_FILES['postImg']);
+        $imgNameWithExt = $_FILES['postImg']['name'];
+        $imgTmp = $_FILES['postImg']['tmp_name'];
+    
+        $imgExt = strtolower(pathinfo($imgNameWithExt , PATHINFO_EXTENSION));
+        // $imgName = pathinfo($imgNameWithExt , PATHINFO_FILENAME);
+
+        // allowed file extension in out system to prevent hacking
+        $allowedExt = array('jpeg', 'jpg', 'png', 'gif');
         
+
        // validate Form in server side
        // declare empty errors array
        $formErrors  = array();
@@ -42,14 +55,31 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
         if (empty($categoryID)) {
             $formErrors[] = "cat-empty";
         }
+        // validate img
+        if (empty($imgNameWithExt)) {
+            $formErrors[] = "img-empty";
+        }else {
+            // img not empty
+            if (! in_array($imgExt, $allowedExt)) {
+                $formErrors[] = "img-ext";
+            }
+        }
 
         // check if there is no errors - insert in DB
-        if (empty($formErrors)) {
+         if (empty($formErrors)) {
+            // no errors - img not empty and ext is valid 
+            $imgNameToStore = date('YmdHis') . "." . $imgExt;
+            // save img in speciefied destination
+            move_uploaded_file($imgTmp , "uploads/items/$imgNameToStore");
+
+            // approval for admin session
+            $approval = isset($_SESSION['admin']) ?  1 : 0; 
+
             // Insert user data into the DB
             // registeration_status = 1 by default bacause the admin adding this users - so, approved
             $stmtItem = $conn->prepare("INSERT INTO items
-                                (name, price, description, country_made, status , cat_id, member_id,tags, created_at)
-                                VALUES (:xname, :xprice, :xdesc, :xcountry , :xstatus, :xcat, :xmember ,:xtags, now())");
+                                (name, price, description, country_made, status , cat_id, member_id,tags,image,approval, created_at)
+                                VALUES (:xname, :xprice, :xdesc, :xcountry , :xstatus, :xcat, :xmember ,:xtags, :ximage , :xappro, now())");
             $stmtItem->execute(array(
                 'xname' => $name,
                 'xprice' => $price,
@@ -59,6 +89,9 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                 'xcat' => $categoryID,
                 'xmember' => $userId,
                 'xtags' => $tags,
+                'ximage' => $imgNameToStore,
+                'xappro' => $approval,
+
             ));
 
             $count = $stmtItem->rowCount();
@@ -115,7 +148,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                         <div class="col-md-8">
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+                                    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" enctype="multipart/form-data">
                                         <!-- start Name & Price , Image in same row field -->
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
@@ -124,8 +157,8 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                                     <?php 
                                                         if(in_array('name-empty' , $formErrors) ||
                                                             in_array('name-less' , $formErrors)){echo 'is-invalid'; }?>" 
-                                                    data-class=".live-name" placeholder="Item's Name" required pattern=".{8,}"
-                                                    title="The Name Field Must be 8 chracters at least.">
+                                                    data-class=".live-name" placeholder="Item's Name" required pattern=".{4,}"
+                                                    title="The Name Field Must be 4 chracters at least.">
                                                 <!-- Print form-errors -->
                                                 <?php
                                                     if(!empty($formErrors)){
@@ -226,20 +259,30 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
 
                                         <div class="form-row">
                                             <div class="form-group col-md-8">
-                                                <label for="name">Image</label>
-                                                <div class="input-group ">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"
-                                                            id="inputGroupFileAddon01">Upload</span>
-                                                    </div>
-                                                    <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="image"
-                                                            aria-describedby="inputGroupFileAddon01">
-                                                        <label class="custom-file-label"
-                                                            for="inputGroupFileAddon01">Choose
-                                                            file</label>
-                                                    </div>
+                                                <label>Image</label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input 
+                                                    <?php  if(in_array('img-empty' , $formErrors) ||
+                                                            in_array('img-ext' , $formErrors)){echo 'is-invalid'; }?>" 
+                                                        name="postImg" id="postImg" aria-describedby="postImg" required>
+                                                    <label class="custom-file-label" for="postImg">Choose Image...</label>
+                                                    <!-- Print form-errors -->
+                                                    <?php
+                                                        if(!empty($formErrors)){
+                                                            if(in_array('img-empty' , $formErrors)){
+                                                                echo "<span class='invalid-feedback' role='alert'>
+                                                                        <strong>The Image field is required.</strong>
+                                                                    </span>";
+                                                            }
+                                                            if (in_array('img-ext' , $formErrors)) {
+                                                                echo "<span class='invalid-feedback' role='alert'>
+                                                                        <strong>[ $imgExt ] Extension isn't allowed.</strong>
+                                                                    </span>";
+                                                            }
+                                                        }
+                                                    ?>
                                                 </div>
+                                                
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label for="category">Category</label>

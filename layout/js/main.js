@@ -88,4 +88,9 @@ $(function () {
    });
 
 
+  // Custom-file-input plugin
+  bsCustomFileInput.init();
+
+
+
 });
