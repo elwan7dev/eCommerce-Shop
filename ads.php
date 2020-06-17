@@ -70,7 +70,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
             // no errors - img not empty and ext is valid 
             $imgNameToStore = date('YmdHis') . "." . $imgExt;
             // save img in speciefied destination
-            move_uploaded_file($imgTmp , "uploads/items/$imgNameToStore");
+            move_uploaded_file($imgTmp , "data/uploads/items/$imgNameToStore");
 
             // approval for admin session
             $approval = isset($_SESSION['admin']) ?  1 : 0; 

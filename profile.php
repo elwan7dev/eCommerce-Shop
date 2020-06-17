@@ -158,7 +158,7 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                                 // default
                                                 $itemImgSrc = "layout/images/image.jpg";
                                             }else{
-                                                $itemImgSrc = "uploads/items/{$item['image']}";
+                                                $itemImgSrc = "data/uploads/items/{$item['image']}";
                                             } 
                                             
                                             ?>
