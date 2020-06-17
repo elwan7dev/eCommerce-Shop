@@ -27,7 +27,13 @@ $page = $item['cat_id'];
 // Format item created-at
 $createdAt = date('D, d M Y' , strtotime($item['created_at']));
 
-
+ // img destination
+ if (empty($item['image'])) {
+    // default
+    $itemImgSrc = "layout/images/prod-1.jpg";
+}else{
+    $itemImgSrc = "data/uploads/items/{$item['image']}";
+} 
 // if there is such ID - show the form
 if ($stmtItem->rowCount() > 0) {
 
@@ -65,7 +71,7 @@ if ($stmtItem->rowCount() > 0) {
                                 <div class="col-12 col-sm-6">
                                     <h3 class="d-inline-block d-sm-none"><?php echo $item['name']; ?></h3>
                                     <div class="col-12">
-                                        <img src="layout/images/prod-1.jpg" class="product-image" alt="Product Image">
+                                        <img src="<?php echo $itemImgSrc; ?>" class="product-image" alt="Product Image">
                                     </div>
                                     <div class="col-12 product-image-thumbs">
                                         <div class="product-image-thumb active"><img src="layout/images/prod-1.jpg"

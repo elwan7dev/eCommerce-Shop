@@ -180,6 +180,10 @@ if (isset($_SESSION['username']) || isset($_SESSION['admin'])) {
                                                         </a>
                                                         <p class="product-description"><?php echo $item['description']; ?> </p>
                                                     </div>
+                                                    <div class="card-footer">
+                                                        <a href="#" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                                        <a href="#" class="btn btn-secondary float-right"><i class="far fa-eye-slash"></i></a>
+                                                    </div>
                                                 </div>
                                             </div>
                                     <?php
