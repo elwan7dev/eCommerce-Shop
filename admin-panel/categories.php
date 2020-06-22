@@ -6,7 +6,7 @@
 
 session_start();
 
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['admin'])) {
     $pageTitle = 'Categories'; //page title to check it for title tag
     include 'init.php'; // initialize php file
     // Page Code here
@@ -20,38 +20,37 @@ if (isset($_SESSION['username'])) {
         // <!-- Dynamic order options  -->
         // $sort = 'ASC'; //INIT VALUE 
         $sortArr = array('ASC' , 'DESC');
-        // CHECK IF SORT REQ IN ARRAY OPT 
-        $sort = (isset($_GET['sort']) && in_array($_GET['sort'], $sortArr)) ? $_GET['sort'] : 'ASC';
+        // CHECK IF SORT REQ IN ARRAY OPT  - default DESC
+        $sort = (isset($_GET['sort']) && in_array($_GET['sort'], $sortArr)) ? $_GET['sort'] : 'DESC';
         
-        // more dynamic order var
-        $orderArr = array('ordering' , 'cat_id');
-        $colName = (isset($_GET['orderby']) && in_array($_GET['orderby'], $orderArr)) ? $_GET['orderby'] : 'ordering';
+        // more dynamic order var - default created_at
+        $orderArr = array('ordering' , 'created_at');
+        $colName = (isset($_GET['orderby']) && in_array($_GET['orderby'], $orderArr)) ? $_GET['orderby'] : 'created_at';
         
-        // retreive all categories from DB  order by $colName 
-        $stmt = $conn->prepare("SELECT * FROM categories ORDER BY $colName $sort");
-        $stmt->execute();
-        // fetch all data and asign in array
-        $cats = $stmt->fetchAll();                          ?>
+        // retreive only parent categories from DB  order by $colName 
+        $cats = getRows("*" , "categories" , "WHERE parent_id = 0" , NULL , $colName , $sort);  ?>
 
 <!-- start html componants -->
 <h1 class="text-center">Manage Categories</h1>
 <div class="container categories">
+    <?php  if (count($cats) > 0) { ?>
     <!--  CATEGORIES -->
     <div class="card">
         <div class="card-header border-transparent">
             <i class="fas fa-tag"></i> Categories
             <div class="options float-right">
                 <!-- Dynamic order options  -->
+                <i class="fas fa-sort"></i> Date: [
+                    <a class="<?php if($sort == 'ASC' && $colName == 'created_at' ) {echo 'active';} ?>"
+                        href="?sort=ASC&orderby=created_at">ASC</a> |
+                    <a class="<?php if($sort == 'DESC' && $colName == 'created_at') {echo 'active';} ?>"
+                        href="?sort=DESC&orderby=created_at">DESC</a>] &nbsp; &nbsp;
                 <i class="fas fa-sort"></i> Ordering: [
-                <a class="<?php if($sort == 'ASC' && $colName == 'ordering') {echo 'active';} ?>"
-                    href="?sort=ASC">ASC</a> |
-                <a class="<?php if($sort == 'DESC' && $colName == 'ordering') {echo 'active';} ?>"
-                    href="?sort=DESC">DESC</a>] &nbsp; &nbsp;
-                <i class="fas fa-sort"></i> Cat-ID: [
-                <a class="<?php if($sort == 'ASC' && $colName == 'cat_id' ) {echo 'active';} ?>"
-                    href="?sort=ASC&orderby=cat_id">ASC</a> |
-                <a class="<?php if($sort == 'DESC' && $colName == 'cat_id') {echo 'active';} ?>"
-                    href="?sort=DESC&orderby=cat_id">DESC</a>] &nbsp; &nbsp;
+                    <a class="<?php if($sort == 'ASC' && $colName == 'ordering') {echo 'active';} ?>"
+                        href="?sort=ASC&orderby=ordering">ASC</a> |
+                    <a class="<?php if($sort == 'DESC' && $colName == 'ordering') {echo 'active';} ?>"
+                        href="?sort=DESC&orderby=ordering">DESC</a>] &nbsp; &nbsp;
+               
                     <!-- Accessed by jQuery -->
                 <i class="far fa-eye"></i> View: [   
                 <span class="active" data-view="full" >Full</span> |
@@ -59,6 +58,7 @@ if (isset($_SESSION['username'])) {
 
             </div>
         </div>
+        <!-- /.card-header -->
         <div class="card-body p-0">
             <?php
                 foreach ($cats as $cat) {
@@ -69,17 +69,36 @@ if (isset($_SESSION['username'])) {
                         echo "</div>";
                         echo "<h3>" . $cat['name'] . "</h3>";
                         echo "<div class='full-view'>";
-                            echo "<div class='tags'>";
-                                if($cat['visibility'] == 0){ echo "<span class='badge badge-pill badge-danger' title='Not Visible'><i class='far fa-eye-slash'></i> Hidden</span>";}
-                                if($cat['allow_comments'] == 0){ echo "<span class='badge badge-pill badge-primary' title='Comments Disabled'><i class='fas fa-comment-slash'></i> Comments Disabled</span>";}
-                                if($cat['allow_ads'] == 0){ echo "<span class='badge badge-pill badge-warning' title='Ads Disabled'><i class='fas fa-ad'></i> Ads Disabled</span>";}
-                            echo "</div>";
+                            if($cat['visibility'] == 0 || $cat['allow_comments'] == 0 || $cat['allow_ads'] == 0)
+                            {
+                                echo "<div class='tags'>";
+                                    if($cat['visibility'] == 0){ echo "<span class='badge badge-pill badge-danger' title='Not Visible'><i class='far fa-eye-slash'></i></span>";}
+                                    if($cat['allow_comments'] == 0){ echo "<span class='badge badge-pill badge-primary' title='Comments Disabled'><i class='fas fa-comment-slash'></i></span>";}
+                                    if($cat['allow_ads'] == 0){ echo "<span class='badge badge-pill badge-warning' title='Ads Disabled'><i class='fas fa-ad'></i></span>";}
+                                echo "</div>";
+                            }
                             if($cat['description'] != ''){ echo "<p>". $cat['description'] ."</p>"; }
-                            echo "<h5> Order# " . $cat['ordering'] . "</h5>";
-                            echo "<h6> cat_id# " . $cat['cat_id'] . "</h6>";
                         echo "</div>";
-                    echo "</div>"; 
-                    echo "<hr>";    
+                        // /.full-view dev
+
+                        // get child cats that have parent_id of current category
+                        $childs = getRows("*", "categories", "WHERE parent_id = {$cat['cat_id']}", NULL, $colName, $sort);
+                        if (!empty($childs)) {
+                            echo '<div class="cat-childs">';
+                                echo "<span>Sub-Categories</span>";
+                                echo "<ul class='list-unstyled'>";
+                                    foreach ($childs as $child) {
+                                        echo "<li class='child-link'>
+                                                <a href='categories.php?action=edit&catid=" . $child['cat_id'] . "'>{$child['name']}</a>
+                                                <a href='categories.php?action=delete&catid=" . $child['cat_id'] . "' class='show-delete confirm' title='Delete Sub-Cat'>Delete</a>
+                                            </li>";
+                                    }
+                                echo "</ul>";
+                            echo '</div>';
+                        }
+                    echo "</div>";
+                    // /.cat div
+                    echo "<hr>";
                 }
             ?>
         </div>
@@ -90,6 +109,12 @@ if (isset($_SESSION['username'])) {
         <!-- /.card-footer -->
     </div>
     <!-- /.card -->
+        <?php
+            }else {
+                echo "<div class='alert alert-warning'> No Data Found</div>";
+                echo "<a href='?action=add' class='btn btn-primary'><i class='fas fa-plus'></i> New Category</a>";
+            }
+        ?>
 </div>
 <?php
     /***************End cat-manage page */
@@ -103,19 +128,33 @@ if (isset($_SESSION['username'])) {
     <form action="?action=insert" method="POST">
         <!-- start Name & Order in same row field -->
         <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label for="name">Name</label>
                 <input type="text" name="name" class="form-control" required="required" placeholder="Category Name">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
+                <label for="parent">Parent</label>
+                <select id="parent" name="parent" class="form-control " required>
+                    <option value="0" selected>None</option>
+                    <?php
+                        $cats = getRows("cat_id , name", "categories" , "WHERE parent_id = 0");
+                        foreach ($cats as $cat) {
+                            echo "<option value='". $cat['cat_id']."' >" .$cat['name'] . "</option>";
+                        }
+                    ?>
+                </select>
+              
+            </div>
+            <div class="form-group col-md-4">
                 <label for="order">Order</label>
-                <input type="text" name="order" class="form-control" placeholder="Arrange Categories by ordering">
+                <input type="number" name="order" class="form-control" placeholder="Arrange Categories by ordering">
             </div>
         </div>
         <!-- start description field -->
         <div class="form-group">
             <label for="desc">Description</label>
-            <input type="test" name="desc" class="form-control" placeholder="Category Description">
+            <textarea type="test" name="desc" class="form-control"
+             placeholder="Category Description"></textarea>
         </div>
         <!-- start radio fields button -->
         <div class="form-row">
@@ -173,13 +212,15 @@ if (isset($_SESSION['username'])) {
 
             // get the vars from the form
             $name = $_POST['name'];
+            $parentId = $_POST['parent'];
             $order = intval($_POST['order']);  
             //finaly solved an hard fatal error
             /** solved using intval()
              * Fatal error: Uncaught PDOException: SQLSTATE[HY000]: 
              * General error: 1366 Incorrect integer value: '' for column 'ordering' 
              * 
-             * bacause i'mtrying to insert an empty string into a column that is expecting an integer
+             * bacause i'mtrying to insert an empty string into a column that
+             *  is expecting an integer
              */
             $desc = $_POST['desc'];
             $visible = $_POST['visible'];
@@ -200,12 +241,13 @@ if (isset($_SESSION['username'])) {
                     // Insert user data into the DB
                     // registeration_status = 1 by default bacause the admin adding this users - so, approved
                     $stmt = $conn->prepare("INSERT INTO categories
-                                        (name, description, ordering, visibility ,allow_comments , allow_ads, date)
-                                        VALUES (:xname, :xdesc, :xorder, :xvisible , :xcomm , :xads , now())");
+                            (name, parent_id, ordering, description, visibility ,allow_comments , allow_ads, created_at)
+                            VALUES (:xname, :xparent, :xorder, :xdesc, :xvisible , :xcomm , :xads , now())");
                     $stmt->execute(array(
                         'xname' => $name,
-                        'xdesc' => $desc,
+                        'xparent' => $parentId,
                         'xorder' => $order,
+                        'xdesc' => $desc,
                         'xvisible' => $visible,
                         'xcomm' => $comments,
                         'xads' => $ads
@@ -262,20 +304,41 @@ if (isset($_SESSION['username'])) {
 
         <!-- start Name & Order in same row field -->
         <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label for="name">Name</label>
                 <input type="text" name="name" class="form-control" required="required"
                     value="<?php echo $row['name']; ?>">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
+                <label for="parent">Parent</label>
+                <select id="parent" name="parent" class="form-control" required>
+                    <option value="0" <?php if($row['parent_id'] == 0) echo "selected"; ?>>None</option>
+                    <?php
+                        // get parents only
+                        $cats = getRows("cat_id , name", "categories" , "WHERE parent_id = 0");
+                        foreach ($cats as $cat) { ?>
+                            <!-- if current cat_id = parent_id of edit cat => then is his parent -->
+                            <option 
+                                value="<?php echo $cat['cat_id']?>"
+                                <?php if($row['parent_id'] == $cat['cat_id']) echo "selected"; ?>> <?php echo $cat['name']; ?>
+                            </option>
+
+
+                            <?php
+                        }
+                    ?>
+                </select>
+              
+            </div>
+            <div class="form-group col-md-4">
                 <label for="Order">Order</label>
-                <input type="text" name="order" class="form-control" value="<?php echo $row['ordering']; ?>">
+                <input type="number" name="order" class="form-control" value="<?php echo $row['ordering']; ?>">
             </div>
         </div>
         <!-- start description field -->
         <div class="form-group">
             <label for="desc">Description</label>
-            <input type="test" name="desc" class="form-control" value="<?php echo $row['description']; ?>">
+            <textarea  name="desc" class="form-control" required><?php echo $row['description']; ?></textarea>
         </div>
         <!-- start radio fields button -->
         <div class="form-row">
@@ -333,7 +396,7 @@ if (isset($_SESSION['username'])) {
             echo "</div>";
         } /*****************End cat-edit page */
 
-    }elseif ($action == 'update') { /***************Start cat-update page */
+    }elseif ($action == 'update') { /***************Start cats-update page */
         echo "<h1 class='text-center'>Update Category</h1>";
         echo "<div class='container' style='width: 70%;'>";
 
@@ -343,6 +406,7 @@ if (isset($_SESSION['username'])) {
             // get the vars from the form
             $catID = $_POST['catid'];
             $name = $_POST['name'];
+            $parentId = $_POST['parent'];
             $order = intval($_POST['order']); 
             //finaly solved an hard fatal error
             /** solved using intval()
@@ -379,11 +443,12 @@ if (isset($_SESSION['username'])) {
             if (empty($formErrors)) {
 
                 // Update the DB record with this info
-                $stmt = $conn->prepare("UPDATE categories SET name = ?, description = ?, ordering = ?, visibility = ?, allow_comments =? , allow_ads =?
-                                            WHERE cat_id =?");
+                $stmt = $conn->prepare("UPDATE categories 
+                        SET name = ?, parent_id = ?,  ordering = ?, description = ?, visibility = ?, allow_comments =? , allow_ads =?
+                        WHERE cat_id =?");
                 //if i used $_SESSION['userid'] instead if $_GET['userid'] = $userId
                 //fatal error update in current user only
-                $stmt->execute(array($name, $desc, $order, $visible, $comments, $ads, $catID ));
+                $stmt->execute(array($name, $parentId, $order, $desc, $visible, $comments, $ads, $catID ));
                 $count = $stmt->rowCount();
 
                 if ($count > 0) {

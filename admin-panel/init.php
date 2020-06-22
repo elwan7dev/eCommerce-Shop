@@ -1,6 +1,6 @@
 <?php
 // connnect to database 
-include 'connectDB.php';
+include '../connectDB.php';
 
 
 // Routes - more dynamic for maintanence

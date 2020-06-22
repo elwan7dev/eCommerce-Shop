@@ -4,7 +4,7 @@ session_start();
 $noNavBar = ''; // this page has no navbar
 $pageTitle = 'Login';
 
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['admin'])) {
     header('location: dashboard.php'); // redirect to  dashboard page
 }
 
@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     // if (count > 0) this mean that the database contain record about this username
     $count = $stmt->rowCount();
     if ($count > 0) {
-        $_SESSION['username'] = $username; // regiter username in session
-        $_SESSION['userid'] = $row['user_id']; // register userid in session
+        $_SESSION['admin'] = $username; // regiter username in session
+        $_SESSION['adminid'] = $row['user_id']; // register userid in session
         header('location: dashboard.php'); // redirect to  dashboard page
         exit();
         
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 ?>
 <form class="login-form" action="<?php $_SERVER['PHP_SELF']?>" method="POST">
     <h4 class="text-center">Admin Login</h4>
-    <input class="form-control" type="text" name="username" placeholder="username" autocomplete="on">
+    <input class="form-control" type="text" name="username" placeholder="username" autocomplete="on" autofocus>
     <input class="form-control" type="text" name="pass" placeholder="password" autocomplete="on">
     <input class="btn btn-primary btn-block" type="submit" value="login">
 </form>

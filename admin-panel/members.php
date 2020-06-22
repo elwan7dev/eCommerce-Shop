@@ -5,7 +5,7 @@
  *
  */
 session_start();
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['admin'])) {
     $pageTitle = 'Members'; //page title to check it for title tag
     include 'init.php'; // initialize php file
     // Page Code here
@@ -15,20 +15,18 @@ if (isset($_SESSION['username'])) {
 
     switch ($action) {
         case 'manage': // ************* Start Member Manage page [Members page] ***************
-
             // (Smart way) to create member-pending page that depent on condition (reg_status = 0)
             // if there is GET req  'page' = pending =>>> add this condition to query
-            $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "AND reg_status = 0" : '';
-
+            $condition = (isset($_GET['page']) && $_GET['page'] == 'pending') ? "WHERE reg_status = 0" : NULL;
             // retreive all users from DB except admins
-            $stmt = $conn->prepare("SELECT * FROM users WHERE group_id != 1 $condition");
-            $stmt->execute();
-            // fetch all data and asign in array
-            $rows = $stmt->fetchAll();?>
+            $rows = getRows("*" , "users" , $condition);
+            
+            ?>
 
 <!-- start html componants -->
 <h1 class="text-center">Manage Members</h1>
 <div class="container">
+    <?php  if (!empty($rows)) { ?>
     <div class="table-responsive">
         <table class="table main-table table-bordered  text-center">
             <thead class="thead-light">
@@ -43,17 +41,22 @@ if (isset($_SESSION['username'])) {
             </thead>
             <tbody>
                 <?php
-// loop on $rows array and print dynamic data
+            // loop on $rows array and print dynamic data
             foreach ($rows as $row) {
                 // trick to change style of pending user row
+                $created_at = date("d-m-Y", strtotime($row['created_at']));
                 $class = ($row['reg_status'] == 0) ? "class='table-secondary text-muted' title='Pending Member'" : '';
 
                 echo "<tr $class>"; 
                 echo "<th scope='row'>" . $row['user_id'] . " </th>";
-                echo "<td>" . $row['username'] . " </td>";
+                echo "<td>" . $row['username'] ; 
+                    if ($row['group_id'] == 1) {
+                        echo "<span class='admin ' title='admin'><i class='fas fa-award'></i></span> "; 
+                    }
+                echo "</td>";
                 echo "<td>" . $row['email'] . " </td>";
                 echo "<td>" . $row['full_name'] . " </td>";
-                echo "<td>" . $row['date'] . " </td>";
+                echo "<td>" . $created_at . " </td>";
                 echo "<td>
                             <a href='members.php?action=edit&userid=" . $row['user_id'] . "' class='btn btn-success btn-sm mb-2' title='Edit Member'><i class='fas fa-edit'></i></a>
                             <a href='members.php?action=delete&userid=" . $row['user_id'] . "' class='btn btn-danger btn-sm mb-2 confirm' title='Delete Member'><i class='fas fa-trash-alt'></i></a>";
@@ -68,11 +71,17 @@ if (isset($_SESSION['username'])) {
             </tbody>
         </table>
     </div>
+        <?php
+            }else {
+                echo "<div class='alert alert-warning'> No Data Found</div>";
+            }
+        ?>
     <a href='?action=add' class="btn btn-primary"><i class="fas fa-plus"></i> New Member</a>
 
 </div>
 
 <?php
+            
 break; // ********* End Member Manage page [Members page] ************
 
         case 'activate': // ************* start Member activate page ***************
@@ -207,7 +216,7 @@ break; // ************* End Member Add page *******************
                         // Insert user data into the DB
                         // registeration_status = 1 by default bacause the admin adding this users - so, approved
                         $stmt = $conn->prepare("INSERT INTO users
-                                            (username, password, email, full_name ,group_id , reg_status, date)
+                                            (username, password, email, full_name ,group_id , reg_status, created_at)
                                             VALUES (:xuser, :xpass, :xmail, :xname , :xgroup , 1 , now())");
                         $stmt->execute(array(
                             'xuser' => $userName,
@@ -347,23 +356,35 @@ break; // ************* End Member Add page *******************
                 // if there is no errors - update in DB
                 if (empty($formErrors)) {
 
-                    // Update the DB record with this info
+                    $stmt1 = $conn->prepare("SELECT * FROM users WHERE username = ? AND user_id != ?");
+                    $stmt1->execute(array($userName , $userId));
+                    $count1 = $stmt1->rowCount();
+                    // Check if this username taken or not
+                    if ($count1 > 0) {
+                        $msg = "This Username has already been taken!";
+                        redirect2Home('danger', $msg, 3, $_SERVER['HTTP_REFERER']);
+                    } else {
+                        // Update the DB record with this info
                     $stmt = $conn->prepare("UPDATE users SET username = ?, email = ?, full_name = ?, password = ?
-                                                WHERE user_id =?");
+                                            WHERE user_id =?");
                     //if i used $_SESSION['userid'] instead if $_GET['userid'] = $userId
                     //fatal error update in current user only
                     $stmt->execute(array($userName, $email, $fullName, $pass, $userId));
                     $count = $stmt->rowCount();
 
                     if ($count > 0) {
-                        // Successful updating Message
-                        $msg = "<strong>$count</strong> Record Have Been Updated";
-                        redirect2Home('success', $msg, 3, 'members.php');
+                    // Successful updating Message
+                    $msg = "<strong>$count</strong> Record Have Been Updated";
+                    redirect2Home('success', $msg, 3, 'members.php');
                     } else {
-                        // Error Updating Message - No Data Updated Yet!
-                        $msg = "No Data Updated Yet!";
-                        redirect2Home('info', $msg, 3, $_SERVER['HTTP_REFERER']);
+                    // Error Updating Message - No Data Updated Yet!
+                    $msg = "No Data Updated Yet!";
+                    redirect2Home('info', $msg, 3, $_SERVER['HTTP_REFERER']);
                     }
+                        
+                    }
+                    
+                    
 
                 }
 

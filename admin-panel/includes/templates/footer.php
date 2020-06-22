@@ -12,6 +12,8 @@
 <!-- JS - font awesome -->
 <script src="<?php echo $js ?>all.min.js"></script>
 <script src="<?php echo $js ?>fontawesome.min.js"></script>
+<!-- JS tags -->
+<script src="<?php echo $js ?>tag-it.min.js" type="text/javascript" charset="utf-8"></script>
 <!-- custom js file -->
 <script src="<?php echo $js ?>main.js"></script>
 </body>
